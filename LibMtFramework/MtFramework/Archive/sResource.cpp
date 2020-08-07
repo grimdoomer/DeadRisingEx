@@ -12,27 +12,30 @@
 
 sResource **g_sResourceInstance = GetModuleAddress<sResource**>((void*)0x141CF27F8);
 
-/*
+MtDTI **g_rTextureDTI = GetModuleAddress<MtDTI**>((void*)0x141CF2AE0);
+
 cResource* sResourceImpl::GetGameResourceAsType(void *pTypeDTI, char *psFileName, int dwFlags)
 {
-	return (cResource*)ThisPtrCall((void*)0x14063BC60, GetModulePointer<void*>(g_sResourceSingletonInst), pTypeDTI, psFileName, (void*)dwFlags, nullptr);
+	return (cResource*)ThisPtrCall((void*)0x14063BC60, *g_sResourceInstance, pTypeDTI, psFileName, (void*)dwFlags, nullptr);
 }
 
 void sResourceImpl::IncrementResourceRefCount(cResource *pResource)
 {
-	ThisPtrCall((void*)0x14063B3B0, GetModulePointer<void*>(g_sResourceSingletonInst), pResource, nullptr, nullptr, nullptr);
+	ThisPtrCall((void*)0x14063B3B0, *g_sResourceInstance, pResource, nullptr, nullptr, nullptr);
 }
 
 // Forward declarations for command functions.
 __int64 PrintLoadedResources(WCHAR **argv, int argc);
 __int64 GetResourceByIndex(WCHAR **argv, int argc);
+__int64 CalculateResourceIdTest(WCHAR **argv, int argc);
 
 // Table of commands for sResource objects.
-const int g_sResourceCommandsLength = 2;
+const int g_sResourceCommandsLength = 3;
 const CommandEntry g_sResourceCommands[g_sResourceCommandsLength] =
 {
 	{ L"list_resources", L"Lists all loaded resources", PrintLoadedResources },
-	{ L"GetResourceByIndex", L"Gets the resource at the specified index", GetResourceByIndex }
+	{ L"GetResourceByIndex", L"Gets the resource at the specified index", GetResourceByIndex },
+	{ L"CalculateResourceId", L"", CalculateResourceIdTest }
 };
 
 __int64 PrintLoadedResources(WCHAR **argv, int argc)
@@ -62,10 +65,10 @@ __int64 PrintLoadedResources(WCHAR **argv, int argc)
 	}
 
 	// Acquire the list lock.
-	EnterCriticalSection((LPCRITICAL_SECTION)(GetModulePointer<__int64>(g_sResourceSingletonInst) + 8));
+	EnterCriticalSection((LPCRITICAL_SECTION)((__int64)*g_sResourceInstance + 8));
 
 	// Loop through the hash table and print each entry.
-	cResource **pTableEntries = (cResource**)(GetModulePointer<__int64>(g_sResourceSingletonInst) + 0x2248);
+	cResource **pTableEntries = (cResource**)((__int64)*g_sResourceInstance + 0x2248);
 	for (int i = 0; i < 8192; i++)
 	{
 		// Check if this entry is allocated.
@@ -96,7 +99,7 @@ __int64 PrintLoadedResources(WCHAR **argv, int argc)
 	}
 
 	// Release the list lock.
-	LeaveCriticalSection((LPCRITICAL_SECTION)(GetModulePointer<__int64>(g_sResourceSingletonInst) + 8));
+	LeaveCriticalSection((LPCRITICAL_SECTION)((__int64)*g_sResourceInstance + 8));
 
 	return 0;
 }
@@ -123,10 +126,10 @@ __int64 GetResourceByIndex(WCHAR **argv, int argc)
 	}
 
 	// Acquire the list lock.
-	EnterCriticalSection((LPCRITICAL_SECTION)(GetModulePointer<__int64>(g_sResourceSingletonInst) + 8));
+	EnterCriticalSection((LPCRITICAL_SECTION)((__int64)*g_sResourceInstance + 8));
 
 	// Get the resource list table pointer and make sure the resource we want is not null.
-	cResource **pTableEntries = (cResource**)(GetModulePointer<__int64>(g_sResourceSingletonInst) + 0x2248);
+	cResource **pTableEntries = (cResource**)((__int64)*g_sResourceInstance + 0x2248);
 	if (pTableEntries[index] != nullptr)
 	{
 		// Set the return value.
@@ -137,12 +140,34 @@ __int64 GetResourceByIndex(WCHAR **argv, int argc)
 	}
 
 	// Release the list lock.
-	LeaveCriticalSection((LPCRITICAL_SECTION)(GetModulePointer<__int64>(g_sResourceSingletonInst) + 8));
+	LeaveCriticalSection((LPCRITICAL_SECTION)((__int64)*g_sResourceInstance + 8));
 
 	// Return the resource.
 	return (__int64)pResource;
 }
-*/
+
+__int64 CalculateResourceIdTest(WCHAR **argv, int argc)
+{
+	// Setup the unicode converter.
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> unicConvert;
+
+	// Make sure there is at least 1 argument to parse.
+	if (argc != 1)
+	{
+		// Invalid command syntax.
+		wprintf(L"Invalid command syntax\n");
+		return 0;
+	}
+
+	// Convert the unicode file name to ascii.
+	std::string sFileName = unicConvert.to_bytes(argv[0]);
+
+	// Calculate the resource id.
+	ULONGLONG resourceId = sResource::CalculateResourceId(*g_rTextureDTI, (char*)sFileName.c_str());
+	wprintf(L"0x%016llx\n", resourceId);
+
+	return 0;
+}
 
 void sResourceImpl::InitializeTypeInfo()
 {
@@ -150,5 +175,5 @@ void sResourceImpl::InitializeTypeInfo()
 	RegisterTypeInfo(&cResourceTypeInfo);
 
 	// Register commands:
-	//RegisterCommands(g_sResourceCommands, g_sResourceCommandsLength);
+	RegisterCommands(g_sResourceCommands, g_sResourceCommandsLength);
 }

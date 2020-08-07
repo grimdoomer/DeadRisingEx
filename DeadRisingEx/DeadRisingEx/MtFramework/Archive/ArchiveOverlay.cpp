@@ -35,53 +35,53 @@ bool ArchiveOverlay::Initialize()
 	return true;
 }
 
-std::vector<std::string> ArchiveOverlay::GetModDirectoryFiles()
-{
-	std::vector<std::string> vModFiles;
-	WIN32_FIND_DATAA FindFileInfo = { 0 };
-
-	// Initialize the mod list with any overlay arc files from the mod config.
-	for (int i = 0; i < ModConfig::Instance()->OverlayArchives.size(); i++)
-	{
-		// Add the overlay arc file to the list of mods to load.
-		vModFiles.push_back(ModConfig::Instance()->OverlayArchives.at(i));
-	}
-
-	// Create our search path string.
-	std::string sGameDir = ModConfig::Instance()->GameDirectory;
-	std::string sSearchPath = sGameDir + "\\nativeWin64\\Mods\\*.arc";
-
-	// Initiate the search.
-	HANDLE hSearch = FindFirstFile(sSearchPath.c_str(), &FindFileInfo);
-	if (hSearch == INVALID_HANDLE_VALUE)
-	{
-		// Failed to initiate search.
-		DbgPrint("ArchiveOverlay::GetModDirectoryFiles(): failed to initiate mod file search %d!\n", GetLastError());
-		return vModFiles;
-	}
-
-	// Loop and process all files in the directory.
-	do
-	{
-		// Make sure we don't already have this file in the list.
-		if (std::find(ModConfig::Instance()->OverlayArchives.begin(), ModConfig::Instance()->OverlayArchives.end(),
-			std::string(FindFileInfo.cFileName)) != ModConfig::Instance()->OverlayArchives.end())
-		{
-			// Skip adding the file.
-			continue;
-		}
-
-		// Add the file to the list.
-		vModFiles.push_back(FindFileInfo.cFileName);
-
-	} while (FindNextFile(hSearch, &FindFileInfo) != 0);
-
-	// Close the search handle.
-	FindClose(hSearch);
-
-	// Return the list of mod files to load.
-	return vModFiles;
-}
+//std::vector<std::string> ArchiveOverlay::GetModDirectoryFiles()
+//{
+//	std::vector<std::string> vModFiles;
+//	WIN32_FIND_DATAA FindFileInfo = { 0 };
+//
+//	// Initialize the mod list with any overlay arc files from the mod config.
+//	for (int i = 0; i < ModConfig::Instance()->OverlayArchives.size(); i++)
+//	{
+//		// Add the overlay arc file to the list of mods to load.
+//		vModFiles.push_back(ModConfig::Instance()->OverlayArchives.at(i));
+//	}
+//
+//	// Create our search path string.
+//	std::string sGameDir = ModConfig::Instance()->GameDirectory;
+//	std::string sSearchPath = sGameDir + "\\nativeWin64\\Mods\\*.arc";
+//
+//	// Initiate the search.
+//	HANDLE hSearch = FindFirstFile(sSearchPath.c_str(), &FindFileInfo);
+//	if (hSearch == INVALID_HANDLE_VALUE)
+//	{
+//		// Failed to initiate search.
+//		DbgPrint("ArchiveOverlay::GetModDirectoryFiles(): failed to initiate mod file search %d!\n", GetLastError());
+//		return vModFiles;
+//	}
+//
+//	// Loop and process all files in the directory.
+//	do
+//	{
+//		// Make sure we don't already have this file in the list.
+//		if (std::find(ModConfig::Instance()->OverlayArchives.begin(), ModConfig::Instance()->OverlayArchives.end(),
+//			std::string(FindFileInfo.cFileName)) != ModConfig::Instance()->OverlayArchives.end())
+//		{
+//			// Skip adding the file.
+//			continue;
+//		}
+//
+//		// Add the file to the list.
+//		vModFiles.push_back(FindFileInfo.cFileName);
+//
+//	} while (FindNextFile(hSearch, &FindFileInfo) != 0);
+//
+//	// Close the search handle.
+//	FindClose(hSearch);
+//
+//	// Return the list of mod files to load.
+//	return vModFiles;
+//}
 
 bool ArchiveOverlay::LoadArcFile(std::string sFilePath)
 {
@@ -177,7 +177,7 @@ sResource * __stdcall Hook_sResource_ctor(void *thisptr)
 	sResource *ret = sResource::ctor(thisptr);
 
 	// Build a list of mod files to load, honoring the load order in the mod config file.
-	std::vector<std::string> vModFiles = ArchiveOverlay::Instance()->GetModDirectoryFiles();
+	std::vector<std::string> vModFiles(ModConfig::Instance()->OverlayArchives);
 	std::reverse(vModFiles.begin(), vModFiles.end());
 
 	// Loop through the list in reverse so we honor the load order.

@@ -27,8 +27,12 @@ bool ModConfig::LoadConfigFile(std::string sConfigFile)
 	// Get the game directory folder path.
 	GetCurrentDirectory(sizeof(this->GameDirectory), this->GameDirectory);
 
+	// Format the file path for the config file.
+	std::string sConfigFilePath = this->GameDirectory;
+	sConfigFilePath += "\\" + sConfigFile;
+
 	// Get a list of all keys under the load order section.
-	int length = GetPrivateProfileString("ModLoadOrder", nullptr, nullptr, psBuffer, SCRATCH_BUFFER_SIZE, sConfigFile.c_str());
+	int length = GetPrivateProfileString("ModLoadOrder", nullptr, nullptr, psBuffer, SCRATCH_BUFFER_SIZE, sConfigFilePath.c_str());
 	if (length > 0)
 	{
 		// Loop and read each file name.
@@ -42,7 +46,7 @@ bool ModConfig::LoadConfigFile(std::string sConfigFile)
 				break;
 
 			// Get the file name for the current key.
-			GetPrivateProfileString("ModLoadOrder", pKeyName, nullptr, sFileName, sizeof(sFileName), sConfigFile.c_str());
+			GetPrivateProfileString("ModLoadOrder", pKeyName, nullptr, sFileName, sizeof(sFileName), sConfigFilePath.c_str());
 			this->OverlayArchives.push_back(sFileName);
 
 			// Next key name.

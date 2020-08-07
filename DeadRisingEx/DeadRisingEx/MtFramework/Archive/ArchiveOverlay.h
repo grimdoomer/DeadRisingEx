@@ -26,7 +26,7 @@ protected:
 	std::vector<ArcOverlayFile> vArcFiles;
 	std::map<ULONGLONG, DWORD> mFileOverlayMap;
 
-	std::vector<std::string> GetModDirectoryFiles();
+	//std::vector<std::string> GetModDirectoryFiles();
 
 	bool LoadArcFile(std::string sFilePath);
 
