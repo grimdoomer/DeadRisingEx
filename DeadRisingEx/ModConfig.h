@@ -21,6 +21,7 @@ public:
 
 	bool LoadConfigFile(std::string sConfigFile);
 
+	bool EnableConsole;				// Determines if the debug console window should be opened or not
 
 	char GameDirectory[MAX_PATH];					// Game directory folder path
 

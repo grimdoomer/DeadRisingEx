@@ -3,7 +3,19 @@
 */
 
 #include "ModConfig.h"
+#include <cstring>
 #include "DeadRisingEx/Utilities.h"
+
+bool GetPrivateProfileBool(LPCSTR lpAppName, LPCSTR lpKeyName, LPCSTR lpDefault, LPCSTR lpFileName)
+{
+	CHAR stringValue[16] = { 0 };
+
+	// Get the string value from the config file.
+	GetPrivateProfileString(lpAppName, lpKeyName, lpDefault, stringValue, sizeof(stringValue) - 1, lpFileName);
+
+	// Check if the string is 'true' or not.
+	return _stricmp(stringValue, "true") == 0;
+}
 
 ModConfig::ModConfig()
 {
@@ -30,6 +42,9 @@ bool ModConfig::LoadConfigFile(std::string sConfigFile)
 	// Format the file path for the config file.
 	std::string sConfigFilePath = this->GameDirectory;
 	sConfigFilePath += "\\" + sConfigFile;
+
+	// Load game settings.
+	this->EnableConsole = GetPrivateProfileBool("GameSettings", "EnableConsole", "false", sConfigFilePath.c_str());
 
 	// Get a list of all keys under the load order section.
 	int length = GetPrivateProfileString("ModLoadOrder", nullptr, nullptr, psBuffer, SCRATCH_BUFFER_SIZE, sConfigFilePath.c_str());

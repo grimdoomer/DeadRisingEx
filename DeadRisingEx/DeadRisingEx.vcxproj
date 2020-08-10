@@ -29,6 +29,9 @@
     <ClInclude Include="DeadRisingEx\Utilities.h" />
     <ClInclude Include="ModConfig.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="DeadRisingEx.def" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{4372BE1E-F5FB-4C7E-A03A-958D1886422C}</ProjectGuid>
@@ -110,6 +113,7 @@
       <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Detours\lib.x64;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>detours.lib;LibMtFramework.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>DeadRisingEx.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

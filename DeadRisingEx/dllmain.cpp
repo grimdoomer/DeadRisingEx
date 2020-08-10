@@ -95,6 +95,48 @@ DWORD __stdcall ProcessConsoleWorker(LPVOID)
 	return 0;
 }
 
+__declspec(dllexport) void DummyExport()
+{
+	// Required for detours.
+}
+
+bool __declspec(dllexport) LaunchDeadRisingEx(const char *psGameDirectory)
+{
+	CHAR sGameExe[MAX_PATH];
+	CHAR sExDll[MAX_PATH];
+	STARTUPINFO StartupInfo = { 0 };
+	PROCESS_INFORMATION ProcInfo = { 0 };
+
+	// Initialize the startup info structure.
+	StartupInfo.cb = sizeof(STARTUPINFO);
+
+	// Format the file paths for the game exe and ex dll.
+	snprintf(sGameExe, sizeof(sGameExe), "%s\\DeadRising.exe", psGameDirectory);
+	snprintf(sExDll, sizeof(sExDll), "%s\\DeadRisingEx.dll", psGameDirectory);
+
+	// Build our list of dlls to inject.
+	LPCSTR DllsToInject[1] =
+	{
+		sExDll
+	};
+
+	// Create the game process in a suspended state with our dll.
+	if (DetourCreateProcessWithDllsA(sGameExe, NULL, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, 
+		psGameDirectory, &StartupInfo, &ProcInfo, 1, DllsToInject, NULL) == FALSE)
+	{
+		// Failed to create the game process.
+		return false;
+	}
+
+	// Resume the process.
+	ResumeThread(ProcInfo.hThread);
+
+	// Close the process and thread handles.
+	CloseHandle(ProcInfo.hProcess);
+	CloseHandle(ProcInfo.hThread);
+	return true;
+}
+
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
                        LPVOID lpReserved
@@ -104,8 +146,22 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     {
     case DLL_PROCESS_ATTACH:
 	{
+		CHAR sModulePath[MAX_PATH] = { 0 };
+		CHAR sModuleName[32] = { 0 };
+
 		// Set the module handle.
 		SnatcherModuleHandle = GetModuleHandle(NULL);
+
+		// Get the name of the exe we are running under.
+		GetModuleFileName(GetModuleHandle(NULL), sModulePath, sizeof(sModulePath));
+		_splitpath_s(sModulePath, nullptr, 0, nullptr, 0, sModuleName, sizeof(sModuleName), nullptr, 0);
+
+		// Check if we were run from the launcher or the game process.
+		if (_stricmp(sModuleName, "DeadRisingLauncher") == 0)
+		{
+			// Bail out as we are not in the game process.
+			return TRUE;
+		}
 
 		// Register all commands.
 		RegisterCommands(g_CommandManagerCommands, g_CommandManagerCommandsLength);
@@ -153,13 +209,17 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 			TerminateProcess(GetCurrentProcess(), 0xBAD0C0DE);
 		}
 
-		// Setup the console window.
-		OutputDebugString("DRDebugger DllMain\n");
-		SetupConsole();
+		// Check if we should enable the console window or not.
+		if (ModConfig::Instance()->EnableConsole == true)
+		{
+			// Setup the console window.
+			OutputDebugString("DRDebugger DllMain\n");
+			SetupConsole();
 
-		// Create a worker thread to process console commands.
-		HANDLE hThread = CreateThread(NULL, NULL, ProcessConsoleWorker, NULL, NULL, NULL);
-		CloseHandle(hThread);
+			// Create a worker thread to process console commands.
+			HANDLE hThread = CreateThread(NULL, NULL, ProcessConsoleWorker, NULL, NULL, NULL);
+			CloseHandle(hThread);
+		}
 		break;
 	}
     case DLL_THREAD_ATTACH:

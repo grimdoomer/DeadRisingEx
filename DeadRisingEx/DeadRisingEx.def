@@ -1,0 +1,5 @@
+LIBRARY DeadRisingEx
+
+EXPORTS
+	DummyExport @1
+	LaunchDeadRisingEx @2
