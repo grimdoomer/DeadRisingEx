@@ -30,15 +30,15 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnLoadOrderDown = new System.Windows.Forms.Button();
+            this.btnLoadOrderUp = new System.Windows.Forms.Button();
             this.lstModArchives = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.chkEnableDebugger = new System.Windows.Forms.CheckBox();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.btnLoadOrderUp = new System.Windows.Forms.Button();
-            this.btnLoadOrderDown = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.chkEnableDebugger = new System.Windows.Forms.CheckBox();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -71,16 +71,37 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Mod Files";
             // 
-            // tabPage2
+            // label1
             // 
-            this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPage2.Controls.Add(this.chkEnableDebugger);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(399, 351);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Settings";
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(117, 328);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(97, 13);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "Modify Load Order:";
+            // 
+            // btnLoadOrderDown
+            // 
+            this.btnLoadOrderDown.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btnLoadOrderDown.Location = new System.Drawing.Point(260, 323);
+            this.btnLoadOrderDown.Name = "btnLoadOrderDown";
+            this.btnLoadOrderDown.Size = new System.Drawing.Size(34, 23);
+            this.btnLoadOrderDown.TabIndex = 2;
+            this.btnLoadOrderDown.Text = "▼";
+            this.btnLoadOrderDown.UseVisualStyleBackColor = true;
+            this.btnLoadOrderDown.Click += new System.EventHandler(this.btnLoadOrderDown_Click);
+            // 
+            // btnLoadOrderUp
+            // 
+            this.btnLoadOrderUp.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btnLoadOrderUp.Location = new System.Drawing.Point(220, 323);
+            this.btnLoadOrderUp.Name = "btnLoadOrderUp";
+            this.btnLoadOrderUp.Size = new System.Drawing.Size(34, 23);
+            this.btnLoadOrderUp.TabIndex = 1;
+            this.btnLoadOrderUp.Text = "▲";
+            this.btnLoadOrderUp.UseVisualStyleBackColor = true;
+            this.btnLoadOrderUp.Click += new System.EventHandler(this.btnLoadOrderUp_Click);
             // 
             // lstModArchives
             // 
@@ -95,10 +116,37 @@
             this.lstModArchives.HideSelection = false;
             this.lstModArchives.Location = new System.Drawing.Point(0, 0);
             this.lstModArchives.Name = "lstModArchives";
+            this.lstModArchives.ShowItemToolTips = true;
             this.lstModArchives.Size = new System.Drawing.Size(399, 317);
             this.lstModArchives.TabIndex = 0;
             this.lstModArchives.UseCompatibleStateImageBehavior = false;
             this.lstModArchives.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "File name";
+            this.columnHeader1.Width = 395;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage2.Controls.Add(this.chkEnableDebugger);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(399, 351);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Settings";
+            // 
+            // chkEnableDebugger
+            // 
+            this.chkEnableDebugger.AutoSize = true;
+            this.chkEnableDebugger.Location = new System.Drawing.Point(8, 6);
+            this.chkEnableDebugger.Name = "chkEnableDebugger";
+            this.chkEnableDebugger.Size = new System.Drawing.Size(138, 17);
+            this.chkEnableDebugger.TabIndex = 0;
+            this.chkEnableDebugger.Text = "Enable console window";
+            this.chkEnableDebugger.UseVisualStyleBackColor = true;
             // 
             // btnOk
             // 
@@ -122,53 +170,6 @@
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
-            // btnLoadOrderUp
-            // 
-            this.btnLoadOrderUp.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnLoadOrderUp.Location = new System.Drawing.Point(220, 323);
-            this.btnLoadOrderUp.Name = "btnLoadOrderUp";
-            this.btnLoadOrderUp.Size = new System.Drawing.Size(34, 23);
-            this.btnLoadOrderUp.TabIndex = 1;
-            this.btnLoadOrderUp.Text = "▲";
-            this.btnLoadOrderUp.UseVisualStyleBackColor = true;
-            this.btnLoadOrderUp.Click += new System.EventHandler(this.btnLoadOrderUp_Click);
-            // 
-            // btnLoadOrderDown
-            // 
-            this.btnLoadOrderDown.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnLoadOrderDown.Location = new System.Drawing.Point(260, 323);
-            this.btnLoadOrderDown.Name = "btnLoadOrderDown";
-            this.btnLoadOrderDown.Size = new System.Drawing.Size(34, 23);
-            this.btnLoadOrderDown.TabIndex = 2;
-            this.btnLoadOrderDown.Text = "▼";
-            this.btnLoadOrderDown.UseVisualStyleBackColor = true;
-            this.btnLoadOrderDown.Click += new System.EventHandler(this.btnLoadOrderDown_Click);
-            // 
-            // label1
-            // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(117, 328);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(97, 13);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "Modify Load Order:";
-            // 
-            // chkEnableDebugger
-            // 
-            this.chkEnableDebugger.AutoSize = true;
-            this.chkEnableDebugger.Location = new System.Drawing.Point(8, 6);
-            this.chkEnableDebugger.Name = "chkEnableDebugger";
-            this.chkEnableDebugger.Size = new System.Drawing.Size(138, 17);
-            this.chkEnableDebugger.TabIndex = 0;
-            this.chkEnableDebugger.Text = "Enable console window";
-            this.chkEnableDebugger.UseVisualStyleBackColor = true;
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "File name";
-            this.columnHeader1.Width = 395;
             // 
             // SettingsDialog
             // 
