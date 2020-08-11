@@ -18,7 +18,7 @@ A example of this is how DeadRisingEx overrides the game's file manager to load 
 - Support for interacting with more game objects and systems
 
 ## Installation
-Installing the DeadRisingEx game update is as simple as copying the DeadRisingEx files into the root of your Dead Rising install folder. You will be asked if you want to merge files for the nativeWin64 folder, just click yes here. And that's it! The game update is now installed.
+Download the latest update [here](https://github.com/grimdoomer/DeadRisingEx/releases/tag/v1.0). Installing the DeadRisingEx game update is as simple as copying the DeadRisingEx files into the root of your Dead Rising install folder. You will be asked if you want to merge files for the nativeWin64 folder, just click yes here. And that's it! The game update is now installed.
 
 ![](/Images/install_files.png)
 
