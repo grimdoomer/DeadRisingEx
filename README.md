@@ -45,7 +45,7 @@ The code base is broken into 2 main areas:
 - DeadRisingEx/DeadRisingLauncher: The unofficial update for the game that is based on LibMtFramework, and the launcher application for running the game with the update
 
 ### LibMtFramework
-This is the SDK library for making code modifications to the game. It contains a bunch of header and source files that can be used to interact with various game objects and hook into different game components. For more information I will be creating a wiki on how to use LibMtFramework and interact with different game components. This is still a WIP!
+This is the SDK library for making code modifications to the game. It contains a bunch of header and source files that can be used to interact with various game objects and hook into different game components. For more information I will be creating a wiki on how to use LibMtFramework and interact with different game components. This is still a WIP! Also full disclosure the library is not at all documented or cleaned up for the first release of this.
 
 ### DeadRisingEx
 This is the code for the DeadRisingEx update which uses LibMtFramework. Here is where you can see how I created all the features in the update and use it as a reference for writing your own code modifications. More information on this soon.
