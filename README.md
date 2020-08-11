@@ -1,24 +1,25 @@
 # DeadRisingEx
 An unofficial update and SDK for Dead Rising 1 on PC. The purpose of DeadRisingEx is to add in new features to the game to further support and expand modding capabilities. Modding the vanilla version of the game has a lot of limitations and drawbacks which this update aims to remove. 
 
-One of the biggest features the update adds to the game is the mod manager, allowing you to keep all of your mods in separate from the original game files, and choose what mods to load and in what order to load them when starting the game. If you have ever played Skyrim or Fallout with mods, this feature works very similarly to the way they manage and load mods.
+One of the biggest features the update adds to the game is the mod manager, allowing you to keep all of your mods separate from the original game files, and choose what mods to load and in what order to load them when starting the game. If you have ever played Skyrim or Fallout with mods, this feature works very similarly to the way they manage and load mods.
 
 DeadRisingEx also doubles as a SDK for anyone who wants to make code modifications to the game. Using LibMtFramework, the C++ library that DeadRisingEx is built on, you can interact with different game objects and hook into various game systems to alter behavior. 
 
-A good example of this is how DeadRisingEx overrides the game's file manager to load mod files from a custom directory and override the original game files. With LibMtFramework you will eventually be able to hook into different game objects like weapons, vehicles, npcs, and more.
+A example of this is how DeadRisingEx overrides the game's file manager to load mod files from a custom directory and override the original game files. With LibMtFramework you will eventually be able to hook into different game objects like weapons, vehicles, npcs, and more.
 
 ### Current Features
 - Mod management system that lets you load multiple mods at the same time without touching the original game files
-- Mod manager allows you to choose what mods to load and in what order to load them
+- Customizable load order for mods
 - Some basic object introspection is available through a console window, though it is highly experimental at this point in time
 
 ### Future Features
 - Better object introspection and scripting functionality in the console window
-- Create new file types for weapons/vehicles/items/etc. that move hard coded parameters out into modable files
+- Create new file types for weapons/vehicles/items/etc. that move hard coded parameters out of the game code and into modable files
 - Support for interacting with more game objects and systems
 
 ## Installation
 Installing the DeadRisingEx game update is as simple as copying the DeadRisingEx files into the root of your Dead Rising install folder. You will be asked if you want to merge files for the nativeWin64 folder, just click yes here. And that's it! The game update is now installed.
+
 ![](/Images/install_files.png)
 
 ## Running DeadRisingEx
