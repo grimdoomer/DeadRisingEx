@@ -1,13 +1,10 @@
 /*
-	DRDebugger - Open source SDK/debugger for Dead Rising PC
 
-	rModelTypeInfo.h - rModel object definition
-
-	Author - Grimdoomer
 */
 
 #pragma once
-#include "DRDebugger.h"
+#include "DeadRisingEx.h"
+#include <MtFramework/Graphics/rModel.h>
 
 TYPE_INFO_BEGIN(Joint,)
 	FIELD_NUMBER(Joint, Index),
@@ -118,3 +115,9 @@ TYPE_INFO_BEGIN(rModel, cResource)
 	FIELD_VECTOR4(rModel, Unk),
 	FIELD_TERM()
 TYPE_INFO_END()
+
+class rModelImpl
+{
+public:
+    static void InitializeTypeInfo();
+};

@@ -6,16 +6,17 @@
 #include <codecvt>
 #include <Windows.h>
 #include <shellapi.h>
-#include "DRDebugger.h"
+#include "LibMtFramework.h"
 #include <detours.h>
 #include "Misc/AsmHelpers.h"
-#include "MtFramework/Archive/sResource.h"
-#include "MtFramework/Graphics/rModel.h"
-#include "MtFramework/Graphics/sRender.h"
-#include "MtFramework/Graphics/sShader.h"
 #include "MtFramework/Utils/Utilities.h"
-#include "ModConfig.h"
+#include "DeadRisingEx/ModConfig.h"
 #include "DeadRisingEx/MtFramework/Archive/ArchiveOverlay.h"
+#include "DeadRisingEx/MtFramework/Archive/sResourceImpl.h"
+#include "DeadRisingEx/MtFramework/Graphics/rModelImpl.h"
+#include "DeadRisingEx/MtFramework/Graphics/sRenderImpl.h"
+#include "DeadRisingEx/MtFramework/Graphics/sShaderImpl.h"
+#include "DeadRisingEx/MtFramework/Player/uPlayerImpl.h"
 
 void SetupConsole()
 {
@@ -178,14 +179,14 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 		sRenderImpl::RegisterTypeInfo();
 		sShaderImpl::RegisterTypeInfo();
 
-		rModelImpl::Test(nullptr);
-
 		// Begin the detour transaction.
 		DetourTransactionBegin();
 		DetourUpdateThread(GetCurrentThread());
 
 		// Hook functions.
 		Utilities::InstallHooks();
+
+        uPlayerImpl::RegisterTypeInfo();
 
 		// Load the mod config file.
 		if (ModConfig::Instance()->LoadConfigFile("DeadRisingEx.ini") == false)

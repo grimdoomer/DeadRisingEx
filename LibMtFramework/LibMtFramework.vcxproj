@@ -19,15 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CommandManager.h" />
-    <ClInclude Include="DRDebugger.h" />
+    <ClInclude Include="LibMtFramework.h" />
     <ClInclude Include="Misc\AsmHelpers.h" />
-    <ClInclude Include="Misc\TypeInfo.h" />
     <ClInclude Include="MtFramework\Archive\cResource.h" />
     <ClInclude Include="MtFramework\Archive\rArchive.h" />
     <ClInclude Include="MtFramework\Graphics\rModel.h" />
-    <ClInclude Include="MtFramework\Graphics\rModelTypeInfo.h" />
-    <ClInclude Include="MtFramework\Graphics\sRender.h" />
+    <ClInclude Include="MtFramework\Graphics\cTrans.h" />
     <ClInclude Include="MtFramework\Graphics\sShader.h" />
     <ClInclude Include="MtFramework\IO\MtDataReader.h" />
     <ClInclude Include="MtFramework\IO\MtFile.h" />
@@ -47,13 +44,7 @@
     </MASM>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CommandManager.cpp" />
     <ClCompile Include="Misc\Module.cpp" />
-    <ClCompile Include="Misc\TypeInfo.cpp" />
-    <ClCompile Include="MtFramework\Graphics\rModel.cpp" />
-    <ClCompile Include="MtFramework\Graphics\sRender.cpp" />
-    <ClCompile Include="MtFramework\Graphics\sShader.cpp" />
-    <ClCompile Include="MtFramework\Archive\sResource.cpp" />
     <ClCompile Include="MtFramework\Utils\Utilities.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -178,14 +169,17 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)Detours\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -193,6 +187,12 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>detours.lib</AdditionalDependencies>
+    </Lib>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)detours\lib.x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -7,7 +7,7 @@
 */
 
 #pragma once
-#include "DRDebugger.h"
+#include "LibMtFramework.h"
 #include "MtFramework/Archive/cResource.h"
 
 // sizeof = 0x18
@@ -173,17 +173,3 @@ struct rModel : cResource
 	/* 0x120 */ Vector4		Unk; // gets set to BBMin at load
 };
 static_assert(sizeof(rModel) == 0x130, "rModel incorrect struct size");
-
-class rModelImpl
-{
-public:
-	static void InitializeTypeInfo();
-
-	static DWORD Test(rModel *pModel)
-	{
-		if (pModel == nullptr)
-			return 0;
-
-		return pModel->Count1 + pModel->Count2;
-	}
-};

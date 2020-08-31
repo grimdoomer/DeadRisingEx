@@ -26,13 +26,12 @@ protected:
 	std::vector<ArcOverlayFile> vArcFiles;
 	std::map<ULONGLONG, DWORD> mFileOverlayMap;
 
-	//std::vector<std::string> GetModDirectoryFiles();
-
 	bool LoadArcFile(std::string sFilePath);
 
-	friend sResource * __stdcall Hook_sResource_ctor(void *thisptr);
+	friend sResource * __stdcall Hook_sResource_ctor(sResource *thisptr);
 	friend void __stdcall Hook_sResource_ResourceDecoderProc(int threadIndex);
-	friend cResource * __stdcall Hook_sResource_LoadResourceFromArchive(void *thisptr, rArchive::DecompressStream *pStream, MtDTI *pDTI, rArchiveFileEntry *pFileEntry);
+	friend cResource * __stdcall Hook_sResource_LoadResourceFromArchive(sResource *thisptr, rArchive::DecompressStream *pStream, MtDTI *pDTI, rArchiveFileEntry *pFileEntry);
+    friend cResource * __stdcall Hook_sResource_LoadGameResourceSynchronous(sResource *thisptr, MtDTI *pObjectType, char *psFileName, ULONGLONG resourceId, DWORD flags);
 
 public:
 	static ArchiveOverlay * Instance()

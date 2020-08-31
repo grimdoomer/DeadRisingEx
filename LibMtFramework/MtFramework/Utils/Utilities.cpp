@@ -5,6 +5,7 @@
 #include "Utilities.h"
 #include "Misc/AsmHelpers.h"
 #include "detours.h"
+#include <stdio.h>
 
 // Function pointers/trampolines:
 void(__stdcall *DbgPrintError)(void **pPrintFunctions, const char *psFormat, __int64 arg1, __int64 arg2) = (void(__stdcall*)(void**, const char*, __int64, __int64))GetModuleAddress<__int64>((void*)0x14002F6D0);

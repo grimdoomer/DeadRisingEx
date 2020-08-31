@@ -18,28 +18,13 @@
     <ClInclude Include="Misc\AsmHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Misc\TypeInfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MtFramework\Graphics\rModel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MtFramework\Graphics\rModelTypeInfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MtFramework\Graphics\sRender.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MtFramework\Graphics\sShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MtFramework\Utils\Utilities.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DRDebugger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CommandManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MtFramework\MtObject.h">
@@ -78,36 +63,24 @@
     <ClInclude Include="MtFramework\IO\MtDataReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LibMtFramework.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Graphics\cTrans.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Misc\AsmHelpers.asm">
-      <Filter>Source Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Misc\TypeInfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MtFramework\Graphics\rModel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MtFramework\Graphics\sRender.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MtFramework\Graphics\sShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MtFramework\Utils\Utilities.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CommandManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MtFramework\Archive\sResource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Misc\Module.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="Misc\AsmHelpers.asm">
+      <Filter>Source Files</Filter>
+    </MASM>
   </ItemGroup>
 </Project>

@@ -69,6 +69,9 @@ bool ModConfig::LoadConfigFile(std::string sConfigFile)
 		}
 	}
 
+	// Free the scratch buffer.
+	free(psBuffer);
+
 	// Config file successfully parsed.
 	return true;
 }

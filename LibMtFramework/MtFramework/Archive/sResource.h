@@ -3,15 +3,13 @@
 */
 
 #pragma once
-#include "DRDebugger.h"
+#include "LibMtFramework.h"
 #include "MtFramework/MtObject.h"
 #include "cResource.h"
 #include "MtFramework/System/MtThread.h"
 #include "rArchive.h"
 
 struct sResource;
-
-extern sResource **g_sResourceInstance;
 
 // sizeof = 0x24458
 struct sResource
@@ -48,14 +46,25 @@ struct sResource
 		/* 0x70 */ DWORD				CurrentPosition;	// Current position in the decompressed data
 		/* 0x74 */ DWORD				DecompressedSize;	// Basically the length of the stream (in a decompressed state)
 
-		static DecompressStream * ctor(DecompressStream *thisptr, DecompressStreamContext *context, DecodeFileRequest *pDecodeReq)
+        inline static DecompressStream * (__stdcall *_ctor)(DecompressStream *thisptr, DecompressStreamContext *context, DecodeFileRequest *pDecodeReq) =
+            GetModuleAddress<DecompressStream*(__stdcall*)(DecompressStream*, DecompressStreamContext*, DecodeFileRequest*)>(0x14063AB60);
+
+        inline static DecompressStream * (__stdcall *_dtor)(DecompressStream *thisptr, bool bFreeMemory) =
+            GetModuleAddress<DecompressStream*(__stdcall*)(DecompressStream*, bool)>(0x14063B2C0);
+
+        /*
+            Parameters:
+                - context: Decompression context to read compressed data from
+                - pDecodeReq: Decode request for the file
+        */
+		DecompressStream(DecompressStreamContext *context, DecodeFileRequest *pDecodeReq)
 		{
-			return (DecompressStream*)ThisPtrCall((void*)0x14063AB60, thisptr, context, pDecodeReq);
+			_ctor(this, context, pDecodeReq);
 		}
 
-		void dtor(bool bFreeMemory = false)
+		~DecompressStream()
 		{
-			ThisPtrCallNoFixup(this->vtable[0], this, (void*)bFreeMemory);
+            ThisPtrCallNoFixup<void, bool>(this->vtable[0], this, false);
 		}
 	};
 	static_assert(sizeof(DecompressStream) == 0x78, "sResource::DecompressStream incorrect struct size");
@@ -116,43 +125,126 @@ struct sResource
 	/* 0x24438 */ HANDLE			DecoderWorkCompletedEvent[4];	// Events signaled when the decoding work for the thread is done
 
 
-#define RLF_SYNCHRONOUS		1
-#define RLF_ASYNC			2
-#define RLF_HDD_CACHE		4	// Load from flat file, do not use archives
+    // sResource singleton instance:
+    inline static sResource **_Instance = GetModuleAddress<sResource**>(0x141CF27F8);
 
-	inline static sResource * (__stdcall *ctor)(void *thisptr) = GetModuleAddress<sResource*(__stdcall*)(void*)>((void*)0x14063AC10);
+	inline static sResource * (__stdcall *_ctor)(sResource *thisptr) = 
+        GetModuleAddress<sResource*(__stdcall*)(sResource*)>(0x14063AC10);
 
-	inline static cResource * (__stdcall *LoadResourceFromArchive)(void *thisptr, rArchive::DecompressStream *pStream, MtDTI *pDTI, rArchiveFileEntry *pFileEntry) =
-		GetModuleAddress<cResource*(__stdcall*)(void*, rArchive::DecompressStream*, MtDTI*, rArchiveFileEntry*)>((void*)0x14063B9E0);
+    inline static ULONGLONG(__stdcall *_CalculateResourceId)(sResource *thisptr, MtDTI *pObjectType, char *psFileName) =
+        GetModuleAddress<ULONGLONG(__stdcall*)(sResource*, MtDTI*, char*)>(0x14063DCB0);
 
+    inline static void(__stdcall *_EmplaceResource)(sResource *thisptr, cResource *pResource, int bitIndex) =
+        GetModuleAddress<void(__stdcall*)(sResource*, cResource*, int)>(0x14063E240);
+
+    inline static cResource * (__stdcall *_FindResourceById)(sResource *thisptr, ULONGLONG resourceId) =
+        GetModuleAddress<cResource*(__stdcall*)(sResource*, ULONGLONG)>(0x14063BDB0);
+
+	inline static cResource * (__stdcall *_LoadResourceFromArchive)(sResource *thisptr, rArchive::DecompressStream *pStream, MtDTI *pDTI, rArchiveFileEntry *pFileEntry) =
+		GetModuleAddress<cResource*(__stdcall*)(sResource*, rArchive::DecompressStream*, MtDTI*, rArchiveFileEntry*)>(0x14063B9E0);
+
+	inline static void * (__stdcall *_LoadGameResource)(sResource *thisptr, MtDTI *pObjectType, char *psFileName, DWORD flags) =
+		GetModuleAddress<void*(__stdcall*)(sResource*, MtDTI*, char*, DWORD)>(0x14063BC60);
+
+    inline static cResource * (__stdcall * _LoadGameResourceSynchronous)(sResource *thisptr, MtDTI *pObjectType, char *psFileName, ULONGLONG resourceId, DWORD flags) =
+        GetModuleAddress<cResource*(__stdcall*)(sResource*, MtDTI*, char*, ULONGLONG, DWORD)>(0x14063D520);
+
+	inline static void(__stdcall *_ResourceDecoderProc)(int threadIndex) = 
+        GetModuleAddress<void(__stdcall*)(int)>(0x14063C9B0);
+
+
+    /*
+        Description: Gets the sResource singleton instance
+    */
+    inline static sResource * Instance()
+    {
+        return *sResource::_Instance;
+    }
+
+    /*
+        Description: sResource constructor
+    */
+    sResource()
+    {
+        _ctor(this);
+    }
+
+    // Resource load flags:
+    #define RLF_SYNCHRONOUS		    1	    // File is loaded synchronously
+    #define RLF_ASYNC			    2	    // A load file request is placed into the AsyncLoadQueue queue, file is loaded asynchronously
+    #define RLF_HDD_CACHE		    4	    // Load from flat file, do not use archives
+    #define RLF_LOAD_AS_ARCHIVE     0x10    // Converts file path into archive file name for loading, e.x.: arc\rom\om\om0001\om0001 -> arcromomom0001om0001
+
+    /*
+        Description: Loads and decompresses the specified resource and emplaces it into the pResourceEntries table. Loading
+            can happen synchronously or asynchronously depending on the flags specified.
+
+        Parameters:
+            - pObjectType: Pointer to the MtDTI type info for the file type
+            - psFileName: File path for the file to be loaded
+            - flags: Loading flags, see RLF_* above
+
+        Returns: A pointer to the object instance if loading was successful, or nullptr if loading failed
+    */
 	template<typename T> T* LoadGameResource(MtDTI *pObjectType, char *psFileName, DWORD flags)
 	{
-		return (T*)ThisPtrCall(0x14063BC60, this, pObjectType, psFileName, (void*)flags);
+		return (T*)_LoadGameResource(this, pObjectType, psFileName, flags);
 	}
 
-	static ULONGLONG CalculateResourceId(MtDTI *pObjectType, char *psFileName)
+    /*
+        Description: Loads the specified resource synchronously
+
+        Parameters:
+            - pObjectType: Pointer to the MtDTI type info for the file type
+            - psFileName: File path for the file to be loaded
+            - resourceId: Resource id for the file being loaded
+            - flags: Loading flags, see RLF_* above
+
+        Returns: A pointer to the object instance if loading was successful, or nullptr if loading failed
+    */
+    template<typename T> T* LoadGameResourceSynchronous(MtDTI *pObjectType, char *psFileName, ULONGLONG resourceId, DWORD flags)
+    {
+        return (T*)_LoadGameResourceSynchronous(this, pObjectType, psFileName, resourceId, flags);
+    }
+
+    /*
+        Description: Calculates the resource if for a file
+
+        Parameters:
+            - pObjectType: Pointer to the MtDTI type info for the file type
+            - psFileName: File path for the file
+
+        Returns: Resource id for the specified resource
+    */
+	ULONGLONG CalculateResourceId(MtDTI *pObjectType, char *psFileName)
 	{
-		return (ULONGLONG)ThisPtrCall((void*)0x14063DCB0, *g_sResourceInstance, pObjectType, psFileName);
+        return _CalculateResourceId(this, pObjectType, psFileName);
 	}
+
+    /*
+        Description: Adds the specified resource to the pResourceEntries list at the next available index.
+
+        Parameters:
+            - pResource: Resource instance to add
+            - bitIndex: Starting bit index for resource id collision algorithm
+    */
+    void EmplaceResource(cResource *pResource, int bitIndex = 0)
+    {
+        _EmplaceResource(this, pResource, bitIndex);
+    }
+
+    /*
+        Description: Searches for a loaded resource with the specified resource id.
+
+        Parameters:
+            - resourceId: unique resource id to search for
+
+        Returns: The resource instance if it was found, or nullptr otherwise. If the resource was found
+            the reference count is incremented before returning.
+    */
+    template<typename T> T* FindResourceById(ULONGLONG resourceId)
+    {
+        return (T*)_FindResourceById(this, resourceId);
+    }
 };
 static_assert(sizeof(sResource) == 0x24458, "sResource incorrect struct size");
-
-inline static void(__stdcall *sResource_ResourceDecoderProc)(int threadIndex) = GetModuleAddress<void(__stdcall*)(int)>((void*)0x14063C9B0);
-
-
-class sResourceImpl
-{
-protected:
-
-public:
-	template<typename T> static T GetGameResourceAsType(void *pTypeDTI, char *psFileName, int dwFlags)
-	{
-		return (T)GetGameResourceAsType(pTypeDTI, psFileName, dwFlags);
-	}
-
-	static cResource* GetGameResourceAsType(void *pTypeDTI, char *psFileName, int dwFlags);
-
-	static void IncrementResourceRefCount(cResource *pResource);
-
-	static void InitializeTypeInfo();
-};

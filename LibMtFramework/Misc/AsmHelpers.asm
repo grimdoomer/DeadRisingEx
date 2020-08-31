@@ -1,6 +1,6 @@
 
 PUBLIC ThisPtrCall
-PUBLIC ThisPtrCallNoFixup
+PUBLIC _ThisPtrCallNoFixup
 
 EXTERNDEF SnatcherModuleHandle:qword
 
@@ -38,8 +38,8 @@ EXTERNDEF SnatcherModuleHandle:qword
 
 	ThisPtrCall ENDP
 
-	; __int64 __stdcall ThisPtrCallNoFixup(void *functionPtr, void *thisPtr, void *arg1, void *arg2, void *arg3, void *arg4)
-	ThisPtrCallNoFixup PROC
+	; __int64 __stdcall _ThisPtrCallNoFixup(void *functionPtr, void *thisPtr, void *arg1, void *arg2, void *arg3, void *arg4)
+	_ThisPtrCallNoFixup PROC
 
 		; Setup the stack.
 		push	r12
@@ -62,6 +62,6 @@ EXTERNDEF SnatcherModuleHandle:qword
 		pop		r12
 		ret
 
-	ThisPtrCallNoFixup ENDP
+	_ThisPtrCallNoFixup ENDP
 
 END

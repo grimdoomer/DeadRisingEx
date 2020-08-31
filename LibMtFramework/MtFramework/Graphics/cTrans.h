@@ -3,9 +3,8 @@
 */
 
 #pragma once
-#include "DRDebugger.h"
+#include "LibMtFramework.h"
 #include "MtFramework/MtObject.h"
-#include "Misc/AsmHelpers.h"
 
 static const char *SemanticNames[14] =
 {
@@ -153,22 +152,17 @@ static const char *FormatName[122] =
 
 struct cTrans
 {
-#pragma pack(push, 1)
-
-	// sizeof = 0x14
-	struct Element
+	// sizeof = 0x18
+	struct Element : public MtObject
 	{
-		/* 0x00 */ void		*vtable;
-
 		// It seems there are 2 "IsBeingAccessed" values, for what appears to
 		// be 2 render calls back to back. Perhaps this is something like
 		// double buffering?
-		/* 0x08 */ DWORD	IsBeingAccessed[2];
+		/* 0x08 */ DWORD	mProtect[2];
 		/* 0x10 */ DWORD	mRefCount;
+        /* 0x14 */ DWORD	Flags;
 	};
-	static_assert(sizeof(Element) == 0x14, "cTrans::Element incorrect struct size");
-
-#pragma pack(pop)
+	static_assert(sizeof(Element) == 0x18, "cTrans::Element incorrect struct size");
 
 	// sizeof = 0x8
 	struct VertexDeclElement
@@ -184,23 +178,16 @@ struct cTrans
 	// sizeof = 0x30
 	struct VertexDecl : public Element
 	{
-		/* 0x14 */ // padding?
 		/* 0x18 */ void					*Unk1;
 		/* 0x20 */ VertexDeclElement	*pElements;		// Element array, last element slot = 0xFF
 		/* 0x28 */ DWORD				mElementNum;
 		/* 0x2C */ DWORD				Id;				// Checksum? (0x140688ED0)
-
-		MtDTI * GetDTIInfo()
-		{
-			return (MtDTI*)ThisPtrCallNoFixup((void*)((__int64*)this->vtable)[4], this);
-		}
 	};
 	static_assert(sizeof(VertexDecl) == 0x30, "cTrans::VertexDecl incorrect struct size");
 
 	// sizeof = 0x30
 	struct VertexBuffer : public Element
 	{
-		/* 0x14 */ DWORD			Flags;
 		/* 0x18 */ void				*pVertexBuffer;		// ID3D11Buffer
 		/* 0x20 */ void				*pRawBuffer;
 		/* 0x28 */ DWORD			Size;
@@ -210,18 +197,9 @@ struct cTrans
 	// sizeof = 0x30
 	struct IndexBuffer : public Element
 	{
-		/* 0x14 */ DWORD			Flags;
 		/* 0x18 */ void				*pIndexBuffer;		// ID3D11Buffer
 		/* 0x20 */ void				*pRawBuffer;
 		/* 0x28 */ DWORD			Size;
 	};
 	static_assert(sizeof(IndexBuffer) == 0x30, "cTrans::IndexBuffer incorrect struct size");
-};
-
-class sRenderImpl
-{
-protected:
-
-public:
-	static void RegisterTypeInfo();
 };

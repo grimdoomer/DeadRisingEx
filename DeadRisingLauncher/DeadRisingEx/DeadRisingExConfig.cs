@@ -100,7 +100,7 @@ namespace DeadRisingLauncher
             {
                 // Write the config data to file.
                 FileIniDataParser fileParser = new FileIniDataParser();
-                fileParser.WriteFile(this.ConfigFilePath, configData);
+                fileParser.WriteFile(this.ConfigFilePath, configData, Encoding.ASCII);
             }
             catch (Exception e)
             {

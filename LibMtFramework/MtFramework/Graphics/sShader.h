@@ -3,7 +3,7 @@
 */
 
 #pragma once
-#include "DRDebugger.h"
+#include "LibMtFramework.h"
 
 // sizeof = 0xB560
 struct sShader
@@ -45,10 +45,4 @@ struct sShader
 		/* 0x10 */ DWORD	mID;		// Hashcode of the shader name
 	};
 	static_assert(sizeof(TechniqueDesc) == 0x18, "sShader::TechniqueDesc incorrect struct size");
-};
-
-class sShaderImpl
-{
-public:
-	static void RegisterTypeInfo();
 };
