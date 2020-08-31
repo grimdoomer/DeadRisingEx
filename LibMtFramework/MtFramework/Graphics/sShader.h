@@ -11,16 +11,16 @@ struct sShader
     // sizeof = 0x30
     struct ParameterDesc
     {
-        /* 0x00 */ void        *vtable;
-        /* 0x08 */ char        *mName;
+        /* 0x00 */ void     *vtable;
+        /* 0x08 */ char     *mName;
         /* 0x10 */ DWORD    mID;
-        /* 0x14 */ BYTE        Type;
-        /* 0x15 */ BYTE        RegCount;
-        /* 0x16 */ BYTE        SomethingIndex;        // Index into sShader->0xA29C
+        /* 0x14 */ BYTE     Type;
+        /* 0x15 */ BYTE     RegCount;
+        /* 0x16 */ BYTE     SomethingIndex;        // Index into sShader->0xA29C
         union
         {
             /* 0x18 */ DWORD    IntValue;
-            /* 0x18 */ void        *pValue;
+            /* 0x18 */ void     *pValue;
         };
 
         /*
@@ -40,8 +40,8 @@ struct sShader
     // sizeof = 0x18
     struct TechniqueDesc
     {
-        /* 0x00 */ void        *vtable;
-        /* 0x08 */ char        *mName;        // Shader name
+        /* 0x00 */ void     *vtable;
+        /* 0x08 */ char     *mName;     // Shader name
         /* 0x10 */ DWORD    mID;        // Hashcode of the shader name
     };
     static_assert(sizeof(TechniqueDesc) == 0x18, "sShader::TechniqueDesc incorrect struct size");

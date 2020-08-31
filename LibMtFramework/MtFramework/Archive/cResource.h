@@ -26,7 +26,7 @@ struct cResource : public MtObject
 #define RESS_RESOURCE_LOADED        1        // pResource->LoadResource returned true
 #define RESS_RESOURCE_LOAD_FAILED    0x10    // pResource->LoadResource failed
 
-    /* 0x08 */ char            mPath[64];
+    /* 0x08 */ char         mPath[64];
     /* 0x48 */ DWORD        mRefCount;
     /* 0x4C */ DWORD        mAttr;          // See RESF_* above
     /* 0x50 */ DWORD        mState;         // See RESS_* above

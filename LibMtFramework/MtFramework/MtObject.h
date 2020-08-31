@@ -19,8 +19,8 @@ struct MtDTI
             0x08 cResource * CreateInstance()
     */
 
-    /* 0x00 */ void        **vtable;
-    /* 0x08 */ char        *pObjectName;
+    /* 0x00 */ void     **vtable;
+    /* 0x08 */ char     *pObjectName;
     /* 0x10 */ MtDTI    *pFLink;
     /* 0x18 */ MtDTI    *pBLink;
     /* 0x20 */ MtDTI    *pParentObject;
@@ -32,7 +32,7 @@ struct MtDTI
     };
 
     /* 0x2C */ DWORD    FileTypeId;
-    /* 0x30 */ void        *pUnknown3;
+    /* 0x30 */ void     *pUnknown3;
 
     inline static MtDTI * (__stdcall *_ctor)(MtDTI *thisptr, const char *psTypeName, MtDTI *pParentType, DWORD dwSizeOf, DWORD dwFileType, BYTE flags) =
         GetModuleAddress<MtDTI*(__stdcall*)(MtDTI*, const char*, MtDTI*, DWORD, DWORD, BYTE)>(0x1406184C0);

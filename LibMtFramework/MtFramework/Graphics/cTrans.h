@@ -178,7 +178,7 @@ struct cTrans
     // sizeof = 0x30
     struct VertexDecl : public Element
     {
-        /* 0x18 */ void                    *Unk1;
+        /* 0x18 */ void                 *Unk1;
         /* 0x20 */ VertexDeclElement    *pElements;        // Element array, last element slot = 0xFF
         /* 0x28 */ DWORD                mElementNum;
         /* 0x2C */ DWORD                Id;                // Checksum? (0x140688ED0)
@@ -188,18 +188,18 @@ struct cTrans
     // sizeof = 0x30
     struct VertexBuffer : public Element
     {
-        /* 0x18 */ void                *pVertexBuffer;        // ID3D11Buffer
-        /* 0x20 */ void                *pRawBuffer;
-        /* 0x28 */ DWORD            Size;
+        /* 0x18 */ void     *pVertexBuffer;        // ID3D11Buffer
+        /* 0x20 */ void     *pRawBuffer;
+        /* 0x28 */ DWORD    Size;
     };
     static_assert(sizeof(VertexBuffer) == 0x30, "cTrans::VertexBuffer incorrect struct size");
 
     // sizeof = 0x30
     struct IndexBuffer : public Element
     {
-        /* 0x18 */ void                *pIndexBuffer;        // ID3D11Buffer
-        /* 0x20 */ void                *pRawBuffer;
-        /* 0x28 */ DWORD            Size;
+        /* 0x18 */ void     *pIndexBuffer;        // ID3D11Buffer
+        /* 0x20 */ void     *pRawBuffer;
+        /* 0x28 */ DWORD    Size;
     };
     static_assert(sizeof(IndexBuffer) == 0x30, "cTrans::IndexBuffer incorrect struct size");
 };

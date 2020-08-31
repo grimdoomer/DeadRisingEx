@@ -15,14 +15,14 @@ struct MtAllocator : public MtObject
             0x38 DWORD gets some info about an allocation (void *pAddress);
     */
 
-    #define MTALLOC_ATTR_LOCK_ON_ACCESS            2    // Acquire list lock on access
+    #define MTALLOC_ATTR_LOCK_ON_ACCESS           2    // Acquire list lock on access
     #define MTALLOC_ATTR_USE_GLOBAL_LOCK_FIELD    4    // Refer to byte_141CF23C8 for locking
 
     /* 0x08 */ ULONGLONG    mUsedSize;
     /* 0x10 */ ULONGLONG    mTotalSize;
-    /* 0x18 */ char            *mName;
-    /* 0x20 */ WORD            mType;
-    /* 0x22 */ WORD            mAttr;                  // See MTALLOC_ATTR_* above
+    /* 0x18 */ char         *mName;
+    /* 0x20 */ WORD         mType;
+    /* 0x22 */ WORD         mAttr;                  // See MTALLOC_ATTR_* above
     /* 0x24 */ DWORD        CreatorThreadId;
     /* 0x28 */ CRITICAL_SECTION        ListLock;
 

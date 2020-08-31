@@ -35,7 +35,7 @@ struct rArchive : public cResource
 {
     /* 0x60 */ cResource    **pResources;           // Array of resource instances loaded from the archive
     /* 0x68 */ DWORD        ResourceNum;            // Number of resources in the pResources array
-    /* 0x6C */ DWORD        DecompressedSize;        // Size of all decompressed files
+    /* 0x6C */ DWORD        DecompressedSize;       // Size of all decompressed files
     /* 0x70 */
 
     /*

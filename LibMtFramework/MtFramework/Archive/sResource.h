@@ -79,50 +79,50 @@ struct sResource
     static_assert(sizeof(TypeInfo) == 0x20, "sResource::TypeInfo incorrect struct size");
 
 
-    /* 0x00 */ void                    **vtable;
-    /* 0x08 */ CRITICAL_SECTION        ListLock;
-    /* 0x30 */ bool                    LockOnAccess;        // Determines if the lock is held on read operations?
-    /* 0x38 */ TypeInfo                mTypeInfo[256]; // pointer or not?
-    /* 0x2038 */ DWORD                TypeInfoCount;
-    /* 0x203C */ char                RootPath[MAX_PATH];        // GameDir + "\\resource"
-    /* 0x2140 */ char                NativePath[MAX_PATH];    // GameDir + "\\nativeWin64"
+    /* 0x00 */ void                 **vtable;
+    /* 0x08 */ CRITICAL_SECTION     ListLock;
+    /* 0x30 */ bool                 LockOnAccess;               // Determines if the lock is held on read operations?
+    /* 0x38 */ TypeInfo             mTypeInfo[256];             // pointer or not?
+    /* 0x2038 */ DWORD              TypeInfoCount;
+    /* 0x203C */ char               RootPath[MAX_PATH];         // GameDir + "\\resource"
+    /* 0x2140 */ char               NativePath[MAX_PATH];       // GameDir + "\\nativeWin64"
     /* 0x2244 */ // padding?
-    /* 0x2248 */ cResource            *pResourceEntries[8192];
-    /* 0x12248 */ void**            ppFunctionTableThing;    // Function pointer array for something, have not seen it used yet...
-    /* 0x12250 */ char*                mPCName;            // Remote PC name for arc loading
-    /* 0x12258 */ char*                mPCFolderName;        // Remote folder path for arc loading
-    /* 0x12260 */ bool                EnableRemote;
-    /* 0x12261 */ bool                mOptimizeEnable;
-    /* 0x12262 */ bool                mBuildComplete;
-    /* 0x12263 */ bool                mForceHDDCache;
+    /* 0x2248 */ cResource          *pResourceEntries[8192];
+    /* 0x12248 */ void**            ppFunctionTableThing;       // Function pointer array for something, have not seen it used yet...
+    /* 0x12250 */ char*             mPCName;                    // Remote PC name for arc loading
+    /* 0x12258 */ char*             mPCFolderName;              // Remote folder path for arc loading
+    /* 0x12260 */ bool              EnableRemote;
+    /* 0x12261 */ bool              mOptimizeEnable;
+    /* 0x12262 */ bool              mBuildComplete;
+    /* 0x12263 */ bool              mForceHDDCache;
     // padding?
-    /* 0x12268 */ MtThread            *pLoaderThread;        // Thread worker for loading resource asynchronously
-    /* 0x12270 */ DWORD                Unknown2;
-    /* 0x12274 */ DWORD                mAsyncPriority;
-    /* 0x12278 */ bool                WorkerThreadsShouldExit;    // Flags the loader and decoder threads to exit
-    /* 0x12279 */ bool                mAutoUpdate;
-    /* 0x1227A */ bool                LoadFromHDDCache;            // True if files should be loaded from cache instead of archives
+    /* 0x12268 */ MtThread          *pLoaderThread;             // Thread worker for loading resource asynchronously
+    /* 0x12270 */ DWORD             Unknown2;
+    /* 0x12274 */ DWORD             mAsyncPriority;
+    /* 0x12278 */ bool              WorkerThreadsShouldExit;    // Flags the loader and decoder threads to exit
+    /* 0x12279 */ bool              mAutoUpdate;
+    /* 0x1227A */ bool              LoadFromHDDCache;           // True if files should be loaded from cache instead of archives
     // padding?
-    /* 0x12280 */ cResource            *AsyncLoadQueue[1024];        // Queue of files to be loaded asynchronously
-    /* 0x14280 */ DWORD                AsycLoadQueueCount;            // Number of files in the queue
-    /* 0x14284 */ char                OpenArchiveFilePath[MAX_PATH];        // File path of the archive that is currently open for decoding
+    /* 0x12280 */ cResource         *AsyncLoadQueue[1024];              // Queue of files to be loaded asynchronously
+    /* 0x14280 */ DWORD             AsycLoadQueueCount;                 // Number of files in the queue
+    /* 0x14284 */ char              OpenArchiveFilePath[MAX_PATH];      // File path of the archive that is currently open for decoding
     /* 0x14388 */ //DecompressStreamContext        DecompressContext;
         /* 0x14388 */ MtFileStream        *pArchiveStream;
         /* 0x14390 */ CRITICAL_SECTION    AsyncDecodeLock;
         /* 0x143B8 */ void                *pScratchBuffer;
         /* 0x143C0 */ DWORD                ScratchBufferSize;
-        /* 0x143C4 */ DWORD                CurrentArchiveOffset;            // Current position in the archive for async decoding
-        /* 0x143C8 */ DWORD                AsyncBytesRead;                    // Number of bytes read from the archive during async decoding
-    /* 0x143CC */ DWORD                AsyncDecodeCount;                // Number decode requests submitted for this archive
-    /* 0x143D0 */ DWORD                AsyncLoadCount;                    // Number of resources loaded (pResource->LoadResource()) for this archive
-    /* 0x143D4 */ DWORD                AsyncDecodeRequestsProcessed;    // Number of async decoding requests processed?
-    /* 0x143D8 */ DWORD                Unknown1;                        // Some sort of completion signal, AsyncDecodeLock must be held while accessing it
+        /* 0x143C4 */ DWORD                CurrentArchiveOffset;        // Current position in the archive for async decoding
+        /* 0x143C8 */ DWORD                AsyncBytesRead;              // Number of bytes read from the archive during async decoding
+    /* 0x143CC */ DWORD             AsyncDecodeCount;                   // Number decode requests submitted for this archive
+    /* 0x143D0 */ DWORD             AsyncLoadCount;                     // Number of resources loaded (pResource->LoadResource()) for this archive
+    /* 0x143D4 */ DWORD             AsyncDecodeRequestsProcessed;       // Number of async decoding requests processed?
+    /* 0x143D8 */ DWORD             Unknown1;                           // Some sort of completion signal, AsyncDecodeLock must be held while accessing it
     // padding?
-    /* 0x143E0 */ DecodeFileRequest    AsyncDecodeQueue[2048];        // array element size = 0x20, count = 2048
-    /* 0x243E0 */ void                *_pUnused;                    // Doesn't seem to be used
-    /* 0x243E8 */ MtThread            *pDecoderThreads[6];        // Performs zlib decompression for arc files (only 4 threads are used in game)
-    /* 0x24418 */ HANDLE            DecoderWorkAvailableEvent[4];    // Events signaled when there is work for a decoder thread to do
-    /* 0x24438 */ HANDLE            DecoderWorkCompletedEvent[4];    // Events signaled when the decoding work for the thread is done
+    /* 0x143E0 */ DecodeFileRequest     AsyncDecodeQueue[2048];         // array element size = 0x20, count = 2048
+    /* 0x243E0 */ void                  *_pUnused;                      // Doesn't seem to be used
+    /* 0x243E8 */ MtThread              *pDecoderThreads[6];            // Performs zlib decompression for arc files (only 4 threads are used in game)
+    /* 0x24418 */ HANDLE                DecoderWorkAvailableEvent[4];   // Events signaled when there is work for a decoder thread to do
+    /* 0x24438 */ HANDLE                DecoderWorkCompletedEvent[4];   // Events signaled when the decoding work for the thread is done
 
 
     // sResource singleton instance:
