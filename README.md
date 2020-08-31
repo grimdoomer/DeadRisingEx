@@ -14,18 +14,18 @@ A example of this is how DeadRisingEx overrides the game's file manager to load 
 
 ### Future Features
 - Better object introspection and scripting functionality in the console window
-- Create new file types for weapons/vehicles/items/etc. that move hard coded parameters out of the game code and into modable files
+- Create new file types for weapons/vehicles/items/etc. that move hard coded parameters out of the game code and into moddable files
 - Support for interacting with more game objects and systems
 
 ## Installation
 Download the latest update [here](https://github.com/grimdoomer/DeadRisingEx/releases/tag/v1.0). Installing the DeadRisingEx game update is as simple as copying the DeadRisingEx files into the root of your Dead Rising install folder. You will be asked if you want to merge files for the nativeWin64 folder, just click yes here. And that's it! The game update is now installed.
 
-![](/Images/install_files.png)
+![](/Images/install_files.gif)
 
 ## Running DeadRisingEx
 When you want to run the game with the DeadRisingEx update you will need to use the DeadRisingLauncher.exe application in order to start the game. Steam must be also be running in the background before you start the game. If steam is not running when you launch the game it will run without the update, so when in doubt make sure steam is running. For quick access to the DeadRisingLauncher application you can create a desktop shortcut or add it as an external game in steam.
 
-![](/Images/dead_rising_launcher.png)
+![](/Images/launcher.gif)
 
 All of your mod files can be placed into "Dead Rising\nativeWin64\Mods" and the settings dialog will scan this folder and all folders within it. By default new mods added are disabled and must be enabled manually.
 
@@ -45,7 +45,7 @@ The code base is broken into 2 main areas:
 - DeadRisingEx/DeadRisingLauncher: The unofficial update for the game that is based on LibMtFramework, and the launcher application for running the game with the update
 
 ### LibMtFramework
-This is the SDK library for making code modifications to the game. It contains a bunch of header and source files that can be used to interact with various game objects and hook into different game components. For more information I will be creating a wiki on how to use LibMtFramework and interact with different game components. This is still a WIP!
+This is the SDK library for making code modifications to the game. It contains a bunch of header and source files that can be used to interact with various game objects and hook into different game components. For more information I will be creating a wiki on how to use LibMtFramework and interact with different game components. This is still a WIP! Also full disclosure the library is not at all documented or cleaned up for the first release of this.
 
 ### DeadRisingEx
 This is the code for the DeadRisingEx update which uses LibMtFramework. Here is where you can see how I created all the features in the update and use it as a reference for writing your own code modifications. More information on this soon.
