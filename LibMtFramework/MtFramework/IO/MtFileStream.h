@@ -9,7 +9,7 @@
 // sizeof = 0x10
 struct MtFileStream : public MtStream
 {
-	/* 0x08 */ MtFile *pFile;
+    /* 0x08 */ MtFile *pFile;
 
     inline static MtFileStream * (__stdcall *_ctor)(MtFileStream *thisptr, MtFile *pFile) =
         GetModuleAddress<MtFileStream*(__stdcall*)(MtFileStream*, MtFile*)>(0x14062C7A0);
@@ -55,14 +55,14 @@ struct MtFileStream : public MtStream
         Parameters:
             - pFile: Underlying file to read/write
     */
-	MtFileStream(MtFile *pFile)
-	{
+    MtFileStream(MtFile *pFile)
+    {
         _ctor(this, pFile);
-	}
+    }
 
-	~MtFileStream()
-	{
-		ThisPtrCallNoFixup<void, bool>(this->vtable[0], this, false);
-	}
+    ~MtFileStream()
+    {
+        ThisPtrCallNoFixup<void, bool>(this->vtable[0], this, false);
+    }
 };
 static_assert(sizeof(MtFileStream) == 0x10, "MtFileStream incorrect struct size");

@@ -15,5 +15,5 @@ inline static void(__stdcall *SetEventHelper)(HANDLE *pEvent) =
 class Utilities
 {
 public:
-	static bool InstallHooks();
+    static bool InstallHooks();
 };

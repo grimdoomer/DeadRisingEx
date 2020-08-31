@@ -9,32 +9,32 @@
 // sizeof = 0x148
 struct MtFile : public MtObject
 {
-	/*
-		VTable:
+    /*
+        VTable:
             0x28 bool OpenFile(const char *psFileName, DWORD flags);
             0x30 void CloseFile();
-			0x38 DWORD ReadFile(void *pBuffer, DWORD dwNumberOfBytes);
-			0x40 DWORD ReadFileAsync(void *pBuffer, DWORD dwNumberOfBytes);  // This might actually be a read file with buffer function, both seem to be synchronous
-			0x48 void WaitForCompletion();
+            0x38 DWORD ReadFile(void *pBuffer, DWORD dwNumberOfBytes);
+            0x40 DWORD ReadFileAsync(void *pBuffer, DWORD dwNumberOfBytes);  // This might actually be a read file with buffer function, both seem to be synchronous
+            0x48 void WaitForCompletion();
             0x50 DWORD WriteFile(void *pBuffer, DWORD dwNumberOfBytes);
-			0x58 DWORD Seek(DWORD dwOffset, int seekOrigin);
-			0x60 DWORD GetCurrentPosition();
-			0x68 DWORD GetFileSize();
+            0x58 DWORD Seek(DWORD dwOffset, int seekOrigin);
+            0x60 DWORD GetCurrentPosition();
+            0x68 DWORD GetFileSize();
             0x70 DWORD SetFileFile(DWORD dwLength);
             0x78 bool CanRead();
             0x80 bool CanWrite();
             0x88 bool
 
-	*/
+    */
 
-	/* 0x08 */ HANDLE hFile;
+    /* 0x08 */ HANDLE hFile;
     /* 0x10 */ DWORD Flags;     // See FOF_* flags
 
-	/* 0x1C */
+    /* 0x1C */
 
     /* 0x140 */ // void *ScratchBuffer;
 
-	BYTE _[0x134];
+    BYTE _[0x134];
 
     inline static MtFile * (__stdcall *_ctor)(MtFile *thisptr, const char *psFileName, DWORD flags) =
         GetModuleAddress<MtFile*(__stdcall*)(MtFile*, const char*, DWORD)>(0x140618ED0);
@@ -96,14 +96,14 @@ struct MtFile : public MtObject
             - flags: Flags for how to open the file, see FOF_* above
     */
     MtFile(const char *psFileName, DWORD flags)
-	{
+    {
         _ctor(this, psFileName, flags);
-	}
+    }
 
-	~MtFile()
-	{
-		ThisPtrCallNoFixup<void, bool>(this->vtable[0], this, false);
-	}
+    ~MtFile()
+    {
+        ThisPtrCallNoFixup<void, bool>(this->vtable[0], this, false);
+    }
 
     /*
         Description: Opens the specified file

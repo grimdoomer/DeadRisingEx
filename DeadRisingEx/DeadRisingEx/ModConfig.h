@@ -10,20 +10,20 @@
 class ModConfig
 {
 protected:
-	ModConfig();
+    ModConfig();
 
 public:
-	static ModConfig * Instance()
-	{
-		static ModConfig *pSingleton = new ModConfig();
-		return pSingleton;
-	}
+    static ModConfig * Instance()
+    {
+        static ModConfig *pSingleton = new ModConfig();
+        return pSingleton;
+    }
 
-	bool LoadConfigFile(std::string sConfigFile);
+    bool LoadConfigFile(std::string sConfigFile);
 
-	bool EnableConsole;				// Determines if the debug console window should be opened or not
+    bool EnableConsole;                // Determines if the debug console window should be opened or not
 
-	char GameDirectory[MAX_PATH];					// Game directory folder path
+    char GameDirectory[MAX_PATH];                    // Game directory folder path
 
-	std::vector<std::string> OverlayArchives;		// List of archives to overlay the game files
+    std::vector<std::string> OverlayArchives;        // List of archives to overlay the game files
 };

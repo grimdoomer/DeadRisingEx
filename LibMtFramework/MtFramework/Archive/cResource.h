@@ -9,29 +9,29 @@
 // sizeof = 0x60
 struct cResource : public MtObject
 {
-	/*
-		VTable:
-			0x28 MtFile::FileInfo * GetFileInfo(MtFile::FileInfo *pFileInfo); // ???
-			0x30 const char * GetFileExtension();
-			0x38 bool
-			0x40 bool LoadResource(MtStream *pStream);
-			0x48 bool
-			0x50 bool
-			0x58 void CleanupResources()
-	*/
+    /*
+        VTable:
+            0x28 MtFile::FileInfo * GetFileInfo(MtFile::FileInfo *pFileInfo); // ???
+            0x30 const char * GetFileExtension();
+            0x38 bool
+            0x40 bool LoadResource(MtStream *pStream);
+            0x48 bool
+            0x50 bool
+            0x58 void CleanupResources()
+    */
 
-#define RESF_USE_NATIVE_DIR		1	// Load the resource from the nativeWin64 directory
-	// 0x80 resource allocated? uninitialized?
+#define RESF_USE_NATIVE_DIR        1    // Load the resource from the nativeWin64 directory
+    // 0x80 resource allocated? uninitialized?
 
-#define RESS_RESOURCE_LOADED		1		// pResource->LoadResource returned true
-#define RESS_RESOURCE_LOAD_FAILED	0x10	// pResource->LoadResource failed
+#define RESS_RESOURCE_LOADED        1        // pResource->LoadResource returned true
+#define RESS_RESOURCE_LOAD_FAILED    0x10    // pResource->LoadResource failed
 
-	/* 0x08 */ char			mPath[64];
-	/* 0x48 */ DWORD		mRefCount;
-	/* 0x4C */ DWORD		mAttr;          // See RESF_* above
-	/* 0x50 */ DWORD		mState;         // See RESS_* above
-	/* 0x54 */ DWORD		mSize;
-	/* 0x58 */ ULONGLONG	mID;
+    /* 0x08 */ char            mPath[64];
+    /* 0x48 */ DWORD        mRefCount;
+    /* 0x4C */ DWORD        mAttr;          // See RESF_* above
+    /* 0x50 */ DWORD        mState;         // See RESS_* above
+    /* 0x54 */ DWORD        mSize;
+    /* 0x58 */ ULONGLONG    mID;
 
     inline static cResource * (__stdcall *_ctor)(cResource *thisptr) =
         GetModuleAddress<cResource*(__stdcall*)(cResource*)>(0x140630C90);
@@ -59,10 +59,10 @@ struct cResource : public MtObject
     /*
         Gets the file extension for this object type.
     */
-	const char * GetFileExtension()
-	{
-		return ThisPtrCallNoFixup<const char*>(this->vtable[6], this);
-	}
+    const char * GetFileExtension()
+    {
+        return ThisPtrCallNoFixup<const char*>(this->vtable[6], this);
+    }
 
     /*
         Description: Parses the file contents of pStream and performs object initialization.
@@ -72,10 +72,10 @@ struct cResource : public MtObject
 
         Returns: True if the object was loaded successfully, false otherwise.
     */
-	bool LoadResource(MtStream *pStream)
-	{
-		return ThisPtrCallNoFixup<bool>(this->vtable[8], this, pStream);
-	}
+    bool LoadResource(MtStream *pStream)
+    {
+        return ThisPtrCallNoFixup<bool>(this->vtable[8], this, pStream);
+    }
 
     /*
         Releases all game resources owned by this object, free'ing them from memory if their

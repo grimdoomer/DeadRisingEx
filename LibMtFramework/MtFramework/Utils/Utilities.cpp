@@ -15,21 +15,21 @@ void __stdcall Hook_DbgPrintError(void **pPrintFunctions, const char *psFormat, 
 
 bool Utilities::InstallHooks()
 {
-	// Hook debug print functions.
-	DetourAttach((void**)&DbgPrintError, Hook_DbgPrintError);
+    // Hook debug print functions.
+    DetourAttach((void**)&DbgPrintError, Hook_DbgPrintError);
 
-	return true;
+    return true;
 }
 
 void __stdcall Hook_DbgPrintError(void **pPrintFunctions, const char *psFormat, __int64 arg1, __int64 arg2)
 {
-	char sMessage[512] = { 0 };
+    char sMessage[512] = { 0 };
 
-	// Format the error message.
-	snprintf(sMessage, sizeof(sMessage), psFormat, arg1, arg2);
+    // Format the error message.
+    snprintf(sMessage, sizeof(sMessage), psFormat, arg1, arg2);
 
-	// TODO: Print to console
+    // TODO: Print to console
 
-	// Print to the debugger.
-	OutputDebugStringA(sMessage);
+    // Print to the debugger.
+    OutputDebugStringA(sMessage);
 }

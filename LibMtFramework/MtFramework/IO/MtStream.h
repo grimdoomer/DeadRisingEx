@@ -8,23 +8,23 @@
 // sizeof = 0x8
 struct MtStream : public MtObject
 {
-	/*
-		VTable:
-			0x28 bool CanRead();
+    /*
+        VTable:
+            0x28 bool CanRead();
             0x30 bool CanWrite();
             0x38 bool
             0x40 bool
-			0x48 DWORD GetCurrentPosition();
-			0x50 void Close();
+            0x48 DWORD GetCurrentPosition();
+            0x50 void Close();
             0x58 
-			0x60 DWORD ReadData(void *pBuffer, DWORD dwNumberOfBytes);
-			0x68 DWORD ReadDataAsync(void *pBuffer, DWORD dwNumberOfBytes); // I think this one is async or something
-			0x70 void WaitForCompletion();
+            0x60 DWORD ReadData(void *pBuffer, DWORD dwNumberOfBytes);
+            0x68 DWORD ReadDataAsync(void *pBuffer, DWORD dwNumberOfBytes); // I think this one is async or something
+            0x70 void WaitForCompletion();
             0x78 DWORD WriteData(void *pBuffer, DWORD dwNumberOfBytes);
             0x80
-			0x88 DWORD GetLength()
-			0x90 void Seek(DWORD dwOffset, int seekOrigin);
-	*/
+            0x88 DWORD GetLength()
+            0x90 void Seek(DWORD dwOffset, int seekOrigin);
+    */
 
     inline static MtStream * (__stdcall* _dtor)(MtStream *thisptr, bool bFreeMemory) =
         GetModuleAddress<MtStream*(__stdcall*)(MtStream*, bool)>(0x1400C72B0);

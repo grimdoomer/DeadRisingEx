@@ -13,26 +13,26 @@ typedef void MtPropertyList;
 // sizeof = 0x38
 struct MtDTI
 {
-	/*
-		VTable:
-			0x00 ~MtDTI()
-			0x08 cResource * CreateInstance()
-	*/
+    /*
+        VTable:
+            0x00 ~MtDTI()
+            0x08 cResource * CreateInstance()
+    */
 
-	/* 0x00 */ void		**vtable;
-	/* 0x08 */ char		*pObjectName;
-	/* 0x10 */ MtDTI	*pFLink;
-	/* 0x18 */ MtDTI	*pBLink;
-	/* 0x20 */ MtDTI	*pParentObject;
+    /* 0x00 */ void        **vtable;
+    /* 0x08 */ char        *pObjectName;
+    /* 0x10 */ MtDTI    *pFLink;
+    /* 0x18 */ MtDTI    *pBLink;
+    /* 0x20 */ MtDTI    *pParentObject;
 
-	union
-	{
-		/* 0x28 */ DWORD	ObjectSize : 24;		// Upper 8 bits are flags, lower 24 bits are object size
-		/* 0x2B */ DWORD	Flags : 8;
-	};
+    union
+    {
+        /* 0x28 */ DWORD    ObjectSize : 24;        // Upper 8 bits are flags, lower 24 bits are object size
+        /* 0x2B */ DWORD    Flags : 8;
+    };
 
-	/* 0x2C */ DWORD	FileTypeId;
-	/* 0x30 */ void		*pUnknown3;
+    /* 0x2C */ DWORD    FileTypeId;
+    /* 0x30 */ void        *pUnknown3;
 
     inline static MtDTI * (__stdcall *_ctor)(MtDTI *thisptr, const char *psTypeName, MtDTI *pParentType, DWORD dwSizeOf, DWORD dwFileType, BYTE flags) =
         GetModuleAddress<MtDTI*(__stdcall*)(MtDTI*, const char*, MtDTI*, DWORD, DWORD, BYTE)>(0x1406184C0);
@@ -68,21 +68,21 @@ struct MtDTI
         ThisPtrCallNoFixup<void, bool>(this->vtable[0], this, false);
     }
 
-	/*
-		Creates a new instance of this object type.
-	*/
-	cResource * CreateInstance()
-	{
-		return ThisPtrCallNoFixup<cResource*>(this->vtable[1], this);
-	}
+    /*
+        Creates a new instance of this object type.
+    */
+    cResource * CreateInstance()
+    {
+        return ThisPtrCallNoFixup<cResource*>(this->vtable[1], this);
+    }
 
-	/*
-		Creates a new instance of this object type and casts it to type T.
-	*/
-	template<typename T> T* CreateInstance()
-	{
-		return (T*)CreateInstance();
-	}
+    /*
+        Creates a new instance of this object type and casts it to type T.
+    */
+    template<typename T> T* CreateInstance()
+    {
+        return (T*)CreateInstance();
+    }
 
     /*
         Description: Checks pRoot and all children recursively for a MtDTI object with the specified file type.
@@ -140,16 +140,16 @@ inline static MyDTI *DebugTypeInfo = GetModuleAddress<MyDTI*>(dtiAddr)
 // sizeof = 0x8
 struct MtObject
 {
-	/*
-		VTable:
-			0x00 ~MtObject();
-			0x08
-			0x10 bool
-			0x18 void RegisterDebugOptions(MtPropertyList *pPropList)
-			0x20 MtDTI * GetDTI();
-	*/
+    /*
+        VTable:
+            0x00 ~MtObject();
+            0x08
+            0x10 bool
+            0x18 void RegisterDebugOptions(MtPropertyList *pPropList)
+            0x20 MtDTI * GetDTI();
+    */
 
-	/* 0x00 */ void **vtable;
+    /* 0x00 */ void **vtable;
 
     /*
         Description: Adds debug menu options for this object to the propery list.
@@ -162,12 +162,12 @@ struct MtObject
         ThisPtrCallNoFixup<void, MtPropertyList*>(this->vtable[3], this, pPropList);
     }
 
-	/*
-		Gets the debug type info for this object.
-	*/
-	MtDTI * GetDTI()
-	{
-		return ThisPtrCallNoFixup<MtDTI*>(this->vtable[4], this);
-	}
+    /*
+        Gets the debug type info for this object.
+    */
+    MtDTI * GetDTI()
+    {
+        return ThisPtrCallNoFixup<MtDTI*>(this->vtable[4], this);
+    }
 };
 static_assert(sizeof(MtObject) == 8, "MtObject incorrect struct size");
