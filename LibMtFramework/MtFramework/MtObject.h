@@ -7,6 +7,7 @@
 #include "Misc/AsmHelpers.h"
 
 struct cResource;
+struct MtObject;
 
 typedef void MtPropertyList;
 
@@ -71,9 +72,9 @@ struct MtDTI
     /*
         Creates a new instance of this object type.
     */
-    cResource * CreateInstance()
+    MtObject * CreateInstance()
     {
-        return ThisPtrCallNoFixup<cResource*>(this->vtable[1], this);
+        return ThisPtrCallNoFixup<MtObject*>(this->vtable[1], this);
     }
 
     /*
@@ -133,7 +134,19 @@ struct MyDTI : public MtDTI \
     } \
 }; \
 \
-inline static MyDTI *DebugTypeInfo = GetModuleAddress<MyDTI*>(dtiAddr)
+inline static MtDTI *DebugTypeInfo = GetModuleAddress<MyDTI*>(dtiAddr)
+
+
+/*
+    Implements a singleton pattern for the object.
+*/
+#define IMPLEMENT_SINGLETON(type, instanceAddr) \
+inline static type **_Instance = GetModuleAddress<type**>(instanceAddr); \
+\
+inline static type * Instance() \
+{ \
+    return *type::_Instance; \
+}
 
 
 

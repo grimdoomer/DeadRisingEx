@@ -39,6 +39,7 @@
             this.chkEnableDebugger = new System.Windows.Forms.CheckBox();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.chkRecursiveGrenade = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -130,6 +131,7 @@
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage2.Controls.Add(this.chkRecursiveGrenade);
             this.tabPage2.Controls.Add(this.chkEnableDebugger);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
@@ -171,6 +173,16 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // chkRecursiveGrenade
+            // 
+            this.chkRecursiveGrenade.AutoSize = true;
+            this.chkRecursiveGrenade.Location = new System.Drawing.Point(8, 29);
+            this.chkRecursiveGrenade.Name = "chkRecursiveGrenade";
+            this.chkRecursiveGrenade.Size = new System.Drawing.Size(118, 17);
+            this.chkRecursiveGrenade.TabIndex = 1;
+            this.chkRecursiveGrenade.Text = "Recursive Grenade";
+            this.chkRecursiveGrenade.UseVisualStyleBackColor = true;
+            // 
             // SettingsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -206,5 +218,6 @@
         private System.Windows.Forms.CheckBox chkEnableDebugger;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.CheckBox chkRecursiveGrenade;
     }
 }

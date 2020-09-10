@@ -20,11 +20,11 @@ struct cResource : public MtObject
             0x58 void CleanupResources()
     */
 
-#define RESF_USE_NATIVE_DIR        1    // Load the resource from the nativeWin64 directory
+#define RESF_USE_NATIVE_DIR         1       // Load the resource from the nativeWin64 directory
     // 0x80 resource allocated? uninitialized?
 
-#define RESS_RESOURCE_LOADED        1        // pResource->LoadResource returned true
-#define RESS_RESOURCE_LOAD_FAILED    0x10    // pResource->LoadResource failed
+#define RESS_RESOURCE_LOADED        1       // pResource->LoadResource returned true
+#define RESS_RESOURCE_LOAD_FAILED   0x10    // pResource->LoadResource failed
 
     /* 0x08 */ char         mPath[64];
     /* 0x48 */ DWORD        mRefCount;

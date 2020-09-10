@@ -45,6 +45,7 @@ bool ModConfig::LoadConfigFile(std::string sConfigFile)
 
     // Load game settings.
     this->EnableConsole = GetPrivateProfileBool("GameSettings", "EnableConsole", "false", sConfigFilePath.c_str());
+    this->RecursiveGrenade = GetPrivateProfileBool("GameSettings", "RecursiveGrenade", "false", sConfigFilePath.c_str());
 
     // Get a list of all keys under the load order section.
     int length = GetPrivateProfileString("ModLoadOrder", nullptr, nullptr, psBuffer, SCRATCH_BUFFER_SIZE, sConfigFilePath.c_str());

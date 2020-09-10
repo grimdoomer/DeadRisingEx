@@ -38,6 +38,8 @@ struct rArchive : public cResource
     /* 0x6C */ DWORD        DecompressedSize;       // Size of all decompressed files
     /* 0x70 */
 
+    IMPLEMENT_MYDTI(rArchive, 0x141CF30F8, 0x1400AF010, 0x140650980);
+
     /*
         Performs ZLib decompression on the data read from the underlying file stream. Used for reading compressed
         data from a rArchive file.

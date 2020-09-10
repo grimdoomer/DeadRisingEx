@@ -17,3 +17,4 @@ struct MtHeapAllocator : public MtAllocator
 static_assert(sizeof(MtHeapAllocator) == 0x78, "MtHeapAllocator incorrect struct size");
 
 inline static MtHeapAllocator **g_pTempHeapAllocator = GetModuleAddress<MtHeapAllocator**>((void*)0x141928458);
+inline static MtHeapAllocator **g_pUnitHeapAllocator = GetModuleAddress<MtHeapAllocator**>((void*)0x141CF2B70);

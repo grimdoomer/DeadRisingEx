@@ -16,6 +16,8 @@
 #include "DeadRisingEx/MtFramework/Graphics/rModelImpl.h"
 #include "DeadRisingEx/MtFramework/Graphics/sRenderImpl.h"
 #include "DeadRisingEx/MtFramework/Graphics/sShaderImpl.h"
+#include "DeadRisingEx/MtFramework/Item/uItemImpl.h"
+#include "DeadRisingEx/MtFramework/Item/Items/uOm08Impl.h"
 #include "DeadRisingEx/MtFramework/Player/uPlayerImpl.h"
 
 void SetupConsole()
@@ -164,6 +166,13 @@ BOOL APIENTRY DllMain( HMODULE hModule,
             return TRUE;
         }
 
+        // Load the mod config file.
+        if (ModConfig::Instance()->LoadConfigFile("DeadRisingEx.ini") == false)
+        {
+            // Failed to load the mod config.
+            DbgPrint("Failed to load mod config file, using default settings!\n");
+        }
+
         // Register all commands.
         RegisterCommands(g_CommandManagerCommands, g_CommandManagerCommandsLength);
         RegisterCommands(g_TypeInfoCommands, g_TypeInfoCommandsLength);
@@ -178,6 +187,10 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         rModelImpl::InitializeTypeInfo();
         sRenderImpl::RegisterTypeInfo();
         sShaderImpl::RegisterTypeInfo();
+        uItemImpl::RegisterTypeInfo();
+
+        if (ModConfig::Instance()->RecursiveGrenade == true)
+            uOm08Impl::RegisterTypeInfo();
 
         // Begin the detour transaction.
         DetourTransactionBegin();
@@ -187,13 +200,6 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         Utilities::InstallHooks();
 
         uPlayerImpl::RegisterTypeInfo();
-
-        // Load the mod config file.
-        if (ModConfig::Instance()->LoadConfigFile("DeadRisingEx.ini") == false)
-        {
-            // Failed to load the mod config.
-            DbgPrint("Failed to load mod config file, using default settings!\n");
-        }
 
         // Initialize the archive file overlay system.
         if (ArchiveOverlay::Instance()->Initialize() == false)

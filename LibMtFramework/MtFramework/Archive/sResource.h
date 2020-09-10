@@ -125,9 +125,6 @@ struct sResource
     /* 0x24438 */ HANDLE                DecoderWorkCompletedEvent[4];   // Events signaled when the decoding work for the thread is done
 
 
-    // sResource singleton instance:
-    inline static sResource **_Instance = GetModuleAddress<sResource**>(0x141CF27F8);
-
     inline static sResource * (__stdcall *_ctor)(sResource *thisptr) = 
         GetModuleAddress<sResource*(__stdcall*)(sResource*)>(0x14063AC10);
 
@@ -143,8 +140,8 @@ struct sResource
     inline static cResource * (__stdcall *_LoadResourceFromArchive)(sResource *thisptr, rArchive::DecompressStream *pStream, MtDTI *pDTI, rArchiveFileEntry *pFileEntry) =
         GetModuleAddress<cResource*(__stdcall*)(sResource*, rArchive::DecompressStream*, MtDTI*, rArchiveFileEntry*)>(0x14063B9E0);
 
-    inline static void * (__stdcall *_LoadGameResource)(sResource *thisptr, MtDTI *pObjectType, char *psFileName, DWORD flags) =
-        GetModuleAddress<void*(__stdcall*)(sResource*, MtDTI*, char*, DWORD)>(0x14063BC60);
+    inline static void * (__stdcall *_LoadGameResource)(sResource *thisptr, MtDTI *pObjectType, const char *psFileName, DWORD flags) =
+        GetModuleAddress<void*(__stdcall*)(sResource*, MtDTI*, const char*, DWORD)>(0x14063BC60);
 
     inline static cResource * (__stdcall * _LoadGameResourceSynchronous)(sResource *thisptr, MtDTI *pObjectType, char *psFileName, ULONGLONG resourceId, DWORD flags) =
         GetModuleAddress<cResource*(__stdcall*)(sResource*, MtDTI*, char*, ULONGLONG, DWORD)>(0x14063D520);
@@ -152,14 +149,8 @@ struct sResource
     inline static void(__stdcall *_ResourceDecoderProc)(int threadIndex) = 
         GetModuleAddress<void(__stdcall*)(int)>(0x14063C9B0);
 
+    IMPLEMENT_SINGLETON(sResource, 0x141CF27F8);
 
-    /*
-        Description: Gets the sResource singleton instance
-    */
-    inline static sResource * Instance()
-    {
-        return *sResource::_Instance;
-    }
 
     /*
         Description: sResource constructor
@@ -170,9 +161,9 @@ struct sResource
     }
 
     // Resource load flags:
-    #define RLF_SYNCHRONOUS            1        // File is loaded synchronously
-    #define RLF_ASYNC                2        // A load file request is placed into the AsyncLoadQueue queue, file is loaded asynchronously
-    #define RLF_HDD_CACHE            4        // Load from flat file, do not use archives
+    #define RLF_SYNCHRONOUS         1       // File is loaded synchronously
+    #define RLF_ASYNC               2       // A load file request is placed into the AsyncLoadQueue queue, file is loaded asynchronously
+    #define RLF_HDD_CACHE           4       // Load from flat file, do not use archives
     #define RLF_LOAD_AS_ARCHIVE     0x10    // Converts file path into archive file name for loading, e.x.: arc\rom\om\om0001\om0001 -> arcromomom0001om0001
 
     /*
@@ -186,7 +177,7 @@ struct sResource
 
         Returns: A pointer to the object instance if loading was successful, or nullptr if loading failed
     */
-    template<typename T> T* LoadGameResource(MtDTI *pObjectType, char *psFileName, DWORD flags)
+    template<typename T> T* LoadGameResource(MtDTI *pObjectType, const char *psFileName, DWORD flags)
     {
         return (T*)_LoadGameResource(this, pObjectType, psFileName, flags);
     }

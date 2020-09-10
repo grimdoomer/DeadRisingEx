@@ -45,6 +45,15 @@
     <ClCompile Include="DeadRisingEx\ModConfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DeadRisingEx\MtFramework\Item\uItemImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeadRisingEx\MtFramework\Item\Items\uOm08Impl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeadRisingEx\MtFramework\Item\Items\uOmRecursiveGrenade.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DeadRisingEx.h">
@@ -81,6 +90,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DeadRisingEx\ModConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeadRisingEx\MtFramework\Item\uItemImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeadRisingEx\MtFramework\Item\Items\uOm08Impl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeadRisingEx\MtFramework\Item\Items\uOmRecursiveGrenade.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

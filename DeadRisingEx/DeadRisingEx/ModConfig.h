@@ -21,7 +21,9 @@ public:
 
     bool LoadConfigFile(std::string sConfigFile);
 
-    bool EnableConsole;                // Determines if the debug console window should be opened or not
+    bool EnableConsole;             // Determines if the debug console window should be opened or not
+
+    bool RecursiveGrenade;          // Enables the recursive grenade mod
 
     char GameDirectory[MAX_PATH];                    // Game directory folder path
 

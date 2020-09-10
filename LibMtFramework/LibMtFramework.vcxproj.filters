@@ -69,6 +69,30 @@
     <ClInclude Include="MtFramework\Graphics\cTrans.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MtFramework\Item\sItemCtrl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Game\cSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Object\cUnit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Item\uItem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Area\sAreaHit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Item\rItemLayout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Item\Items\uOm08.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Item\Items\uOm23.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MtFramework\Utils\Utilities.cpp">

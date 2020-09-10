@@ -17,6 +17,7 @@ namespace DeadRisingLauncher
         private const string ModLoadOrderSection = "ModLoadOrder";
 
         private const string EnableConsoleKey = "EnableConsole";
+        private const string RecursiveGrenadeKey = "RecursiveGrenade";
 
         /// <summary>
         /// Full file path to the game's config file path
@@ -26,7 +27,12 @@ namespace DeadRisingLauncher
         /// <summary>
         /// Determines if the console window will be displayed or not
         /// </summary>
-        public bool EnableConsoleWindow { get; set; }
+        public bool EnableConsoleWindow { get; set; } = false;
+        /// <summary>
+        /// Determins if the recursive grenade mod will be enabled or not
+        /// </summary>
+        public bool RecursiveGrenade { get; set; } = false;
+
         /// <summary>
         /// Mod file load order
         /// </summary>
@@ -67,6 +73,7 @@ namespace DeadRisingLauncher
 
             // Read all the values from the ini file.
             this.EnableConsoleWindow = GetConfigBool(configData, GameSettingsSection, EnableConsoleKey);
+            this.RecursiveGrenade = GetConfigBool(configData, GameSettingsSection, RecursiveGrenadeKey);
 
             // Parse the mod load order.
             if (configData.Sections.ContainsSection(ModLoadOrderSection) == true)
@@ -87,6 +94,7 @@ namespace DeadRisingLauncher
             // Game Settings:
             configData.Sections.AddSection(GameSettingsSection);
             configData[GameSettingsSection].AddKey(EnableConsoleKey, this.EnableConsoleWindow.ToString());
+            configData[GameSettingsSection].AddKey(RecursiveGrenadeKey, this.RecursiveGrenade.ToString());
 
             // Mod Load Order:
             configData.Sections.AddSection(ModLoadOrderSection);

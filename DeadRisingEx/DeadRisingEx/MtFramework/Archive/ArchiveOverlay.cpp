@@ -413,7 +413,7 @@ cResource * __stdcall Hook_sResource_LoadGameResourceSynchronous(sResource *this
     }
 
     // Create a new instance of the resource object type.
-    pResource = pObjectType->CreateInstance();
+    pResource = pObjectType->CreateInstance<cResource>();
     if (pResource == nullptr)
     {
         // Failed to create resource instance.

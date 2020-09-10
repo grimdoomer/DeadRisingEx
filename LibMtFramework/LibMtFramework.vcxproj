@@ -23,6 +23,8 @@
     <ClInclude Include="Misc\AsmHelpers.h" />
     <ClInclude Include="MtFramework\Archive\cResource.h" />
     <ClInclude Include="MtFramework\Archive\rArchive.h" />
+    <ClInclude Include="MtFramework\Area\sAreaHit.h" />
+    <ClInclude Include="MtFramework\Game\cSystem.h" />
     <ClInclude Include="MtFramework\Graphics\rModel.h" />
     <ClInclude Include="MtFramework\Graphics\cTrans.h" />
     <ClInclude Include="MtFramework\Graphics\sShader.h" />
@@ -30,10 +32,16 @@
     <ClInclude Include="MtFramework\IO\MtFile.h" />
     <ClInclude Include="MtFramework\IO\MtFileStream.h" />
     <ClInclude Include="MtFramework\IO\MtStream.h" />
+    <ClInclude Include="MtFramework\Item\Items\uOm08.h" />
+    <ClInclude Include="MtFramework\Item\Items\uOm23.h" />
+    <ClInclude Include="MtFramework\Item\rItemLayout.h" />
+    <ClInclude Include="MtFramework\Item\sItemCtrl.h" />
     <ClInclude Include="MtFramework\Memory\MtAllocator.h" />
     <ClInclude Include="MtFramework\Memory\MtHeapAllocator.h" />
     <ClInclude Include="MtFramework\MtObject.h" />
     <ClInclude Include="MtFramework\Archive\sResource.h" />
+    <ClInclude Include="MtFramework\Object\cUnit.h" />
+    <ClInclude Include="MtFramework\Item\uItem.h" />
     <ClInclude Include="MtFramework\System\MtThread.h" />
     <ClInclude Include="MtFramework\Utils\Utilities.h" />
     <ClInclude Include="MtFramework\Utils\Zlib.h" />

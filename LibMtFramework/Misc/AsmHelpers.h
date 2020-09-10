@@ -29,6 +29,11 @@ template<typename T> T GetModulePointer(void *pAddress)
     return *(T*)GetModuleAddress<void*>(pAddress);
 }
 
+template<typename T> T GetModulePointer(__int64 address)
+{
+    return *(T*)GetModuleAddress<void*>(address);
+}
+
 /*
     Gets a pointer value at the specified address after adjusting it for module relocation, adds the
     specified offset, and then returns the new pointer as type S.

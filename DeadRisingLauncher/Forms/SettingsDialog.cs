@@ -62,6 +62,7 @@ namespace DeadRisingLauncher
 
             // Setup the game settings tab.
             this.chkEnableDebugger.Checked = this.configData.EnableConsoleWindow;
+            this.chkRecursiveGrenade.Checked = this.configData.RecursiveGrenade;
         }
 
         private string[] GetArchivesFromModsFolder()
@@ -123,6 +124,7 @@ namespace DeadRisingLauncher
 
             // Update game settings.
             this.configData.EnableConsoleWindow = this.chkEnableDebugger.Checked;
+            this.configData.RecursiveGrenade = this.chkRecursiveGrenade.Checked;
 
             // Write the config file.
             if (this.configData.WriteToFile() == false)

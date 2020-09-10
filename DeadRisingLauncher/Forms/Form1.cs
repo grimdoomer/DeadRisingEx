@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,37 @@ namespace DeadRisingLauncher
         public Form1()
         {
             InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            // Run bugfix routine and fix the unicode encoding on the settings file.
+            BugFix_ConvertSettingsToAscii();
+        }
+
+        private void BugFix_ConvertSettingsToAscii()
+        {
+            // Check if the settings file exists.
+            if (File.Exists(Application.StartupPath + "\\DeadRisingEx.ini") == true)
+            {
+                // Open the file for reading.
+                BinaryReader reader = new BinaryReader(new FileStream(Application.StartupPath + "\\DeadRisingEx.ini", FileMode.Open, FileAccess.Read, FileShare.Read));
+
+                // Read the first byte of the file and close the reader.
+                byte unicMarking = reader.ReadByte();
+                reader.Close();
+
+                // Check if the file is unicode encoded or not.
+                if (unicMarking == 0xEF)
+                {
+                    // Parse the config file and then write it back in ascii.
+                    DeadRisingExConfig configData = new DeadRisingExConfig(Application.StartupPath + "\\DeadRisingEx.ini");
+                    configData.ReadFromFile();
+
+                    // Write back in ascii encoding.
+                    configData.WriteToFile();
+                }
+            }
         }
 
         private void PanelMouseEnterEvent(object sender, EventArgs e)

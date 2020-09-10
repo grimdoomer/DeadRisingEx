@@ -25,6 +25,9 @@
     <ClCompile Include="DeadRisingEx\MtFramework\Graphics\rModelImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Graphics\sRenderImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Graphics\sShaderImpl.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Item\Items\uOm08Impl.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Item\Items\uOmRecursiveGrenade.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Item\uItemImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Player\uPlayerImpl.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="DeadRisingEx\ModConfig.cpp" />
@@ -40,6 +43,9 @@
     <ClInclude Include="DeadRisingEx\MtFramework\Graphics\rModelImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Graphics\sRenderImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Graphics\sShaderImpl.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Item\Items\uOm08Impl.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Item\Items\uOmRecursiveGrenade.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Item\uItemImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Player\uPlayerImpl.h" />
     <ClInclude Include="DeadRisingEx\Utilities.h" />
     <ClInclude Include="DeadRisingEx\ModConfig.h" />
