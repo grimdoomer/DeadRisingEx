@@ -48,6 +48,9 @@ void uOmRecursiveGrenade::SpawnGrenades()
         // Set some flag value on the item.
         *(DWORD*)(((BYTE*)pGrenade) + 0x2F48) |= 0x1000;
 
+        // Set initial velocity.
+        //*(float*)(((BYTE*)pGrenade) + 0x2F60) = 10.0f;
+
         // Set the recursion counter.
         pGrenade->RecursionCounter = this->RecursionCounter - 1;
 

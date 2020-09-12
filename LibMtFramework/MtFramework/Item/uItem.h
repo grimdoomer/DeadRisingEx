@@ -18,7 +18,7 @@ enum eItemHealthType : int
     HealthType_UseCount = 3
 };
 
-// sizeof = ?
+// sizeof = 0x80?
 struct ItemProperties0
 {
     /* 0x00 */ // DWORD 0x140178F8B
@@ -28,7 +28,7 @@ struct ItemProperties0
     /* 0x10 */ // DWORD bitmask that describes how much damage the item takes on use? 0x1401898C6
 };
 
-// sizeof = ?
+// sizeof = 0x10?
 struct ItemProperties1
 {
     /* 0x00 */ Vector4  vUnknown;       // Something related to getting the item's position 0x14018ACB8
@@ -39,9 +39,9 @@ struct ItemProperties
 {
     /* 0x00 */ ItemProperties0      *pProperties0;
     /* 0x08 */ ItemProperties1      *pProperties1;
-    /* 0x10 */ void                 *pProperties2;
-    /* 0x18 */ void                 *pProperties3;
-    /* 0x20 */ void                 *pProperties4;
+    /* 0x10 */ void                 *pProperties2;      // Entry size = 0x20
+    /* 0x18 */ void                 *pProperties3;      // Entry size = 0x20
+    /* 0x20 */ void                 *pProperties4;      // Entry size = 0x30
 };
 static_assert(sizeof(ItemProperties) == 0x28, "ItemProperties incorrect struct size");
 
@@ -89,6 +89,11 @@ struct uItem : public MtObject //: public uSnatcherModel
     /* 0x2E28 */ float          StartingHealth;         // Initial health of the item
     /* 0x2E2C */ WORD           CurrentUseCount;        // Current ammo/use count
     /* 0x2E2E */ WORD           StartingUseCount;       // Initial use count for the item
+
+    /* 0x2F60 */ // float also has something to do with velocity, scale mb?
+    /* 0x2F64 */ //float initial velocity? 0x1401DC072
+
+    /* 0x2F88 */ // void* set to uPlayer during profile fire 0x1401DC039
 
     /* 0x2FA0 */ void           **pItemProperties;
 
