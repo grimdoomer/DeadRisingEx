@@ -11,6 +11,7 @@ A example of this is how DeadRisingEx overrides the game's file manager to load 
 - Mod management system that lets you load multiple mods at the same time without touching the original game files
 - Customizable load order for mods
 - Some basic object introspection is available through a console window, though it is highly experimental at this point in time
+- Console commands for item spawning
 
 ### Future Features
 - Better object introspection and scripting functionality in the console window
