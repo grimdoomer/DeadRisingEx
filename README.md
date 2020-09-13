@@ -40,6 +40,9 @@ DeadRisingEx comes with a test mod that you can use to verify the update install
 
 ![](/Images/install_test.png)
 
+## Developer Console
+For instructions on how to enable and use the developer console, as well as a list of console commands, please see the [wiki](https://github.com/grimdoomer/DeadRisingEx/wiki).
+
 ## Source Code and SDK
 The code base is broken into 2 main areas:
 - LibMtFramework: The SDK library, contains header files describing internal structures of the game and the systems that use them
