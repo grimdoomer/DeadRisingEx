@@ -24,7 +24,9 @@
     <ClInclude Include="MtFramework\Archive\cResource.h" />
     <ClInclude Include="MtFramework\Archive\rArchive.h" />
     <ClInclude Include="MtFramework\Area\sAreaHit.h" />
+    <ClInclude Include="MtFramework\Debug\sToolBase.h" />
     <ClInclude Include="MtFramework\Game\cSystem.h" />
+    <ClInclude Include="MtFramework\Game\sSnatcherMain.h" />
     <ClInclude Include="MtFramework\Graphics\rModel.h" />
     <ClInclude Include="MtFramework\Graphics\cTrans.h" />
     <ClInclude Include="MtFramework\Graphics\sShader.h" />
@@ -42,7 +44,9 @@
     <ClInclude Include="MtFramework\Archive\sResource.h" />
     <ClInclude Include="MtFramework\Object\cUnit.h" />
     <ClInclude Include="MtFramework\Item\uItem.h" />
+    <ClInclude Include="MtFramework\Object\uSnatcherModel.h" />
     <ClInclude Include="MtFramework\System\MtThread.h" />
+    <ClInclude Include="MtFramework\Utils\MtPropertyList.h" />
     <ClInclude Include="MtFramework\Utils\Utilities.h" />
     <ClInclude Include="MtFramework\Utils\Zlib.h" />
   </ItemGroup>

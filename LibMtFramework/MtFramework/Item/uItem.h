@@ -2,7 +2,7 @@
 
 #pragma once
 #include "LibMtFramework.h"
-#include "MtFramework/MtObject.h"
+#include "MtFramework/Object/uSnatcherModel.h"
 
 // sizeof = 0x18
 struct ItemInfoEntry
@@ -81,7 +81,7 @@ struct ItemCollisionProperties
 };
 
 // sizeof = 0x3740
-struct uItem : public MtObject //: public uSnatcherModel
+struct uItem : public uSnatcherModel
 {
     /* 0x1390 */
 
@@ -90,10 +90,14 @@ struct uItem : public MtObject //: public uSnatcherModel
     /* 0x2E2C */ WORD           CurrentUseCount;        // Current ammo/use count
     /* 0x2E2E */ WORD           StartingUseCount;       // Initial use count for the item
 
+    /* 0x2F00 */ // Matrix4x4 0x1401DC066
+
+    /* 0x2F48 */ // DWORD some kind of physics flag, 0x8 = use different physics calculation
+
     /* 0x2F60 */ // float also has something to do with velocity, scale mb?
     /* 0x2F64 */ //float initial velocity? 0x1401DC072
 
-    /* 0x2F88 */ // void* set to uPlayer during profile fire 0x1401DC039
+    /* 0x2F88 */ // void* set to uPlayer during projectile fire 0x1401DC039
 
     /* 0x2FA0 */ void           **pItemProperties;
 

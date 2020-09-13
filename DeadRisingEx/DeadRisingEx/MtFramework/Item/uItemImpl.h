@@ -11,7 +11,7 @@ struct ObjectInfo
     const char *ArchivePath;
 };
 
-#define OBJECT_COUNT        133
+#define OBJECT_COUNT        132
 const ObjectInfo ObjectInfoTable[OBJECT_COUNT] =
 {
     { "uEm00", "arc\\rom\\em\\em00\\em00" },
@@ -144,7 +144,7 @@ const ObjectInfo ObjectInfoTable[OBJECT_COUNT] =
     { "uNpc9d", "arc\\rom\\npc\\npc9dg\\npc9dg" },
     { "uNpc9e", "arc\\rom\\npc\\npc9eg\\npc9eg" },
 
-    { "uVehicleOm02", "arc\\rom\\om\\om0002\\om0002" },
+    //{ "uVehicleOm02", "arc\\rom\\om\\om0002\\om0002" },   // Missing havok xml file
     { "uVehicleOm09", "arc\\rom\\om\\om0009\\om0009" },
     { "uVehicleOm98", "arc\\rom\\om\\om0098\\om0098" },
     { "uVehicleOm99", "arc\\rom\\om\\om0099\\om0099" },

@@ -7,7 +7,8 @@
 #include "Misc/AsmHelpers.h"
 
 
-struct Vector3
+// I think this needs to be aligned to 16 bytes
+struct Vector3 
 {
     float x, y, z;
 };

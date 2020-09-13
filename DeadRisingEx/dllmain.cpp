@@ -11,8 +11,10 @@
 #include "Misc/AsmHelpers.h"
 #include "MtFramework/Utils/Utilities.h"
 #include "DeadRisingEx/ModConfig.h"
+#include "DeadRisingEx/MtFramework/MtObjectImpl.h"
 #include "DeadRisingEx/MtFramework/Archive/ArchiveOverlay.h"
 #include "DeadRisingEx/MtFramework/Archive/sResourceImpl.h"
+#include "DeadRisingEx/MtFramework/Debug/sSnatcherToolImpl.h"
 #include "DeadRisingEx/MtFramework/Graphics/rModelImpl.h"
 #include "DeadRisingEx/MtFramework/Graphics/sRenderImpl.h"
 #include "DeadRisingEx/MtFramework/Graphics/sShaderImpl.h"
@@ -183,6 +185,8 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         RegisterTypeInfo(&Matrix4x4TypeInfo);
 
         // Register types and commands.
+        MtObjectImpl::RegisterTypeInfo();
+        sSnatcherToolImpl::RegisterTypeInfo();
         sResourceImpl::InitializeTypeInfo();
         rModelImpl::InitializeTypeInfo();
         sRenderImpl::RegisterTypeInfo();

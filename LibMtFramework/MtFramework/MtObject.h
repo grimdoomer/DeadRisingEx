@@ -5,11 +5,10 @@
 #pragma once
 #include <Windows.h>
 #include "Misc/AsmHelpers.h"
+#include "MtFramework/Utils/MtPropertyList.h"
 
 struct cResource;
 struct MtObject;
-
-typedef void MtPropertyList;
 
 // sizeof = 0x38
 struct MtDTI
