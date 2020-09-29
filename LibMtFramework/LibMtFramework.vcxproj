@@ -44,7 +44,9 @@
     <ClInclude Include="MtFramework\Archive\sResource.h" />
     <ClInclude Include="MtFramework\Object\cUnit.h" />
     <ClInclude Include="MtFramework\Item\uItem.h" />
+    <ClInclude Include="MtFramework\Object\sUnit.h" />
     <ClInclude Include="MtFramework\Object\uSnatcherModel.h" />
+    <ClInclude Include="MtFramework\Rendering\sPrim.h" />
     <ClInclude Include="MtFramework\System\MtThread.h" />
     <ClInclude Include="MtFramework\Utils\MtPropertyList.h" />
     <ClInclude Include="MtFramework\Utils\Utilities.h" />

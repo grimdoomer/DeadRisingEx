@@ -60,6 +60,9 @@
     <ClCompile Include="DeadRisingEx\MtFramework\Debug\sSnatcherToolImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DeadRisingEx\MtFramework\Object\sUnitImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DeadRisingEx.h">
@@ -111,6 +114,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DeadRisingEx\MtFramework\Debug\sSnatcherToolImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeadRisingEx\MtFramework\Object\sUnitImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -30,6 +30,7 @@
     <ClCompile Include="DeadRisingEx\MtFramework\Item\Items\uOmRecursiveGrenade.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Item\uItemImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\MtObjectImpl.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Object\sUnitImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Player\uPlayerImpl.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="DeadRisingEx\ModConfig.cpp" />
@@ -50,6 +51,7 @@
     <ClInclude Include="DeadRisingEx\MtFramework\Item\Items\uOmRecursiveGrenade.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Item\uItemImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\MtObjectImpl.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Object\sUnitImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Player\uPlayerImpl.h" />
     <ClInclude Include="DeadRisingEx\Utilities.h" />
     <ClInclude Include="DeadRisingEx\ModConfig.h" />

@@ -105,6 +105,12 @@
     <ClInclude Include="MtFramework\Debug\sToolBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MtFramework\Rendering\sPrim.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Object\sUnit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MtFramework\Utils\Utilities.cpp">

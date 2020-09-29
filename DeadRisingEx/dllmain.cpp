@@ -20,6 +20,7 @@
 #include "DeadRisingEx/MtFramework/Graphics/sShaderImpl.h"
 #include "DeadRisingEx/MtFramework/Item/uItemImpl.h"
 #include "DeadRisingEx/MtFramework/Item/Items/uOm08Impl.h"
+#include "DeadRisingEx/MtFramework/Object/sUnitImpl.h"
 #include "DeadRisingEx/MtFramework/Player/uPlayerImpl.h"
 
 void SetupConsole()
@@ -192,6 +193,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         sRenderImpl::RegisterTypeInfo();
         sShaderImpl::RegisterTypeInfo();
         uItemImpl::RegisterTypeInfo();
+        sUnitImpl::RegisterTypeInfo();
 
         if (ModConfig::Instance()->RecursiveGrenade == true)
             uOm08Impl::RegisterTypeInfo();

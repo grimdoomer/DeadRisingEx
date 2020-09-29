@@ -150,6 +150,7 @@ static const char *FormatName[122] =
     "FORCE_UINT"
 };
 
+// sizeof = 0x4b80
 struct cTrans
 {
     // sizeof = 0x18
