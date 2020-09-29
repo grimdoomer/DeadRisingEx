@@ -11,6 +11,7 @@ A example of this is how DeadRisingEx overrides the game's file manager to load 
 - Mod management system that lets you load multiple mods at the same time without touching the original game files
 - Customizable load order for mods
 - Some basic object introspection is available through a console window, though it is highly experimental at this point in time
+- Console commands for item spawning
 
 ### Future Features
 - Better object introspection and scripting functionality in the console window
@@ -38,6 +39,9 @@ The mod files are loaded in descending order, so which ever is at the top of the
 DeadRisingEx comes with a test mod that you can use to verify the update installation was successful by enabling the "deadrisingex_test.arc" mod in the settings window. With this test mod enabled if you start the game and look at the whiteboard in the security room you will see "DEAD RISING EX" text on it.
 
 ![](/Images/install_test.png)
+
+## Developer Console
+For instructions on how to enable and use the developer console, as well as a list of console commands, please see the [wiki](https://github.com/grimdoomer/DeadRisingEx/wiki).
 
 ## Source Code and SDK
 The code base is broken into 2 main areas:
