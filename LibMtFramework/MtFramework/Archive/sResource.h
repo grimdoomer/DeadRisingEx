@@ -29,22 +29,22 @@ struct sResource
     // sizeof = 0x44?
     struct DecompressStreamContext
     {
-        /* 0x00 */ MtFileStream            *pArchiveStream;
-        /* 0x08 */ CRITICAL_SECTION        AsyncDecodeLock;
-        /* 0x30 */ void                    *pScratchBuffer;
+        /* 0x00 */ MtFileStream         *pArchiveStream;
+        /* 0x08 */ CRITICAL_SECTION     AsyncDecodeLock;
+        /* 0x30 */ void                 *pScratchBuffer;
         /* 0x38 */ DWORD                ScratchBufferSize;
-        /* 0x3C */ DWORD                CurrentArchiveOffset;            // Current position in the archive for async decoding
-        /* 0x40 */ DWORD                AsyncBytesRead;                    // Number of bytes read from the archive during async decoding
+        /* 0x3C */ DWORD                CurrentArchiveOffset;   // Current position in the archive for async decoding
+        /* 0x40 */ DWORD                AsyncBytesRead;         // Number of bytes read from the archive during async decoding
     };
 
     // sizeof = 0x78
     struct DecompressStream : public MtStream
     {
-        /* 0x08 */ DecompressStreamContext    *pContext;
-        /* 0x10 */ DecodeFileRequest    *pDecodeRequest;
-        /* 0x18 */ z_stream_s            zStream;
-        /* 0x70 */ DWORD                CurrentPosition;    // Current position in the decompressed data
-        /* 0x74 */ DWORD                DecompressedSize;    // Basically the length of the stream (in a decompressed state)
+        /* 0x08 */ DecompressStreamContext  *pContext;
+        /* 0x10 */ DecodeFileRequest        *pDecodeRequest;
+        /* 0x18 */ z_stream_s               zStream;
+        /* 0x70 */ DWORD                    CurrentPosition;    // Current position in the decompressed data
+        /* 0x74 */ DWORD                    DecompressedSize;   // Basically the length of the stream (in a decompressed state)
 
         inline static DecompressStream * (__stdcall *_ctor)(DecompressStream *thisptr, DecompressStreamContext *context, DecodeFileRequest *pDecodeReq) =
             GetModuleAddress<DecompressStream*(__stdcall*)(DecompressStream*, DecompressStreamContext*, DecodeFileRequest*)>(0x14063AB60);

@@ -111,6 +111,18 @@
     <ClInclude Include="MtFramework\Object\sUnit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MtFramework\Area\rAreaHitLayout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\IO\MtBinaryXmlReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Graphics\sRender.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Game\sPad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MtFramework\Utils\Utilities.cpp">

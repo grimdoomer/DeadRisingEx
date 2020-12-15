@@ -23,13 +23,17 @@
     <ClInclude Include="Misc\AsmHelpers.h" />
     <ClInclude Include="MtFramework\Archive\cResource.h" />
     <ClInclude Include="MtFramework\Archive\rArchive.h" />
+    <ClInclude Include="MtFramework\Area\rAreaHitLayout.h" />
     <ClInclude Include="MtFramework\Area\sAreaHit.h" />
     <ClInclude Include="MtFramework\Debug\sToolBase.h" />
     <ClInclude Include="MtFramework\Game\cSystem.h" />
+    <ClInclude Include="MtFramework\Game\sPad.h" />
     <ClInclude Include="MtFramework\Game\sSnatcherMain.h" />
     <ClInclude Include="MtFramework\Graphics\rModel.h" />
     <ClInclude Include="MtFramework\Graphics\cTrans.h" />
+    <ClInclude Include="MtFramework\Graphics\sRender.h" />
     <ClInclude Include="MtFramework\Graphics\sShader.h" />
+    <ClInclude Include="MtFramework\IO\MtBinaryXmlReader.h" />
     <ClInclude Include="MtFramework\IO\MtDataReader.h" />
     <ClInclude Include="MtFramework\IO\MtFile.h" />
     <ClInclude Include="MtFramework\IO\MtFileStream.h" />

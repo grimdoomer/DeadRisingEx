@@ -4,12 +4,18 @@
 
 struct MtObject;
 
+// pointer 2?
 #define MT_PROP_TYPE_BOOL           3
 #define MT_PROP_TYPE_BYTE           4
 #define MT_PROP_TYPE_WORD           5
 #define MT_PROP_TYPE_DWORD          6
 #define MT_PROP_TYPE_QWORD          7
+#define MT_PROP_TYPE_SBYTE          8
+#define MT_PROP_TYPE_SWORD          9
+#define MT_PROP_TYPE_SINT           0xA
+#define MT_PROP_TYPE_LONGLONG       0xB
 #define MT_PROP_TYPE_FLOAT          0xC
+//
 #define MT_PROP_TYPE_MTSTRING       0xE
 #define MT_PROP_TYPE_VECTOR3        0x14
 // vector4 0x15?
@@ -64,6 +70,9 @@ struct MtPropertyList
     inline static MtPropertyListEntry * (__stdcall *_GetFirstNode)(MtPropertyList *thisptr) =
         GetModuleAddress<MtPropertyListEntry*(__stdcall*)(MtPropertyList*)>(0x140618950);
 
+    inline static MtPropertyListEntry * (__stdcall *_FindProperty)(MtPropertyList *thisptr, DWORD propertyType, const char *psPropertyName) =
+        GetModuleAddress<MtPropertyListEntry*(__stdcall*)(MtPropertyList*, DWORD, const char*)>(0x140618A40);
+
     MtPropertyList()
     {
         _ctor(this);
@@ -91,6 +100,20 @@ struct MtPropertyList
     MtPropertyListEntry * GetFirstNode()
     {
         return _GetFirstNode(this);
+    }
+
+    /*
+        Description: Finds a property with matching type and name in the property list.
+
+        Parameters:
+            propertyType: Property type, see MT_PROP_TYPE_* above
+            psPropertyName: Name of the property (string comparison is case sensitive)
+
+        Returns: A pointer to the MtPropertyListEntry for the property if it was found, nullptr otherwise
+    */
+    MtPropertyListEntry * FindProperty(DWORD propertyType, const char *psPropertyName)
+    {
+        return _FindProperty(this, propertyType, psPropertyName);
     }
 };
 static_assert(sizeof(MtPropertyList) == 0x10, "MtPropertyList incorrect struct size");

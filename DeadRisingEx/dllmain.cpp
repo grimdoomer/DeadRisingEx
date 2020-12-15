@@ -101,6 +101,52 @@ DWORD __stdcall ProcessConsoleWorker(LPVOID)
     return 0;
 }
 
+// sizeof = 0x8
+struct rSprAnmHeader
+{
+    /* 0x00 */ DWORD	Magic;
+    /* 0x04 */ WORD		SpriteCount;
+    /* 0x06 */ // WORD
+};
+
+// sizeof = ?
+struct cAnmSprData
+{
+    /* 0x00 */ void		**vtable;
+    /* 0x08 */ void		*pSpriteAnm;
+    void *Unk1;
+    /* 0x18 */ rSprAnmHeader	    *pSpriteAnmHeader;
+    /* 0x20 */ void *Unk2; // void* pointer to second sprite data block
+    /* 0x28 */ void		*pSpriteAnmSpriteData;
+    /* 0x30 */ void *Unk3; // void*
+    /* 0x38 */ void		**ppSpriteEntryBuffers;		// 
+    /* 0x40 */ DWORD	*pSpriteEntryCounts;		// Number of sprite entries in each pSpriteEntryBuffers element
+    /* 0x48 */ // void*
+    /* 0x50 */ // WORD second count in sprite anm header
+
+    /* 0x54 */ // DWORD/BOOL
+    /* 0x58 */ // DWORD/BOOL
+};
+
+BOOL(__stdcall *LoadSpriteData)(cAnmSprData *pSpriteData) = GetModuleAddress<BOOL(__stdcall*)(cAnmSprData*)>(0x140025D40);
+
+BOOL __stdcall Hook_LoadSpriteData(cAnmSprData *pSpriteData)
+{
+    // Call the trampoline.
+    BOOL result = LoadSpriteData(pSpriteData);
+
+    if (result != FALSE)
+    {
+        // Fudge the sprite data addresses so we can break on access.
+        for (int i = 0; i < pSpriteData->pSpriteAnmHeader->SpriteCount; i++)
+        {
+            pSpriteData->ppSpriteEntryBuffers[i] = (void*)1;
+        }
+    }
+
+    return result;
+}
+
 __declspec(dllexport) void DummyExport()
 {
     // Required for detours.
@@ -201,6 +247,8 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         // Begin the detour transaction.
         DetourTransactionBegin();
         DetourUpdateThread(GetCurrentThread());
+
+        //DetourAttach((void**)&LoadSpriteData, Hook_LoadSpriteData);
 
         // Hook functions.
         Utilities::InstallHooks();

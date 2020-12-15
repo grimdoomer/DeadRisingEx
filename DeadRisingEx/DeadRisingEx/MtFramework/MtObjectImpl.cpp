@@ -20,11 +20,45 @@ void MtObjectImpl::RegisterTypeInfo()
     RegisterCommands(g_MtObjectCommands, g_MtObjectCommandsLength);
 }
 
-void PrintPropertyListReversed(MtPropertyListEntry *pEntry)
+std::string FixFieldName(const char *psFieldName)
+{
+    std::string sNewName;
+    bool bNewWord = true;
+
+    // Get the length of the string.
+    int length = strlen(psFieldName);
+
+    // Loop and process the field name.
+    for (int i = 0; i < length; i++)
+    {
+        // Check if this is a space or underscore.
+        if (psFieldName[i] == ' ' || psFieldName[i] == '_')
+        {
+            // Flag that this is a new word and continue.
+            bNewWord = true;
+            continue;
+        }
+        else
+        {
+            // Check if this is a new word or not.
+            if (bNewWord == true)
+            {
+                bNewWord = false;
+                sNewName += psFieldName[i];
+            }
+            else if (psFieldName[i] != '-')
+                sNewName += tolower(psFieldName[i]);
+        }
+    }
+
+    return sNewName;
+}
+
+void PrintPropertyListReversed(MtPropertyListEntry *pEntry, void *pBaseAddress)
 {
     // Traverse the entire list before printing the info for the current property.
     if (pEntry->pFLink != nullptr)
-        PrintPropertyListReversed(pEntry->pFLink);
+        PrintPropertyListReversed(pEntry->pFLink, pBaseAddress);
 
     // Special case for section headers.
     //if ((pEntry->Flags & MT_PROP_FLAG_SECTION) != 0)
@@ -39,11 +73,15 @@ void PrintPropertyListReversed(MtPropertyListEntry *pEntry)
     //}
 
     // Check if we know the property type or not.
+    std::string sFieldName = FixFieldName(pEntry->pPropertyName);
+    DWORD address = (BYTE*)pEntry->pGetter - (BYTE*)pBaseAddress;
     if (pEntry->PropertyType < PROPERTY_TYPE_COUNT && MtPropertyTypeNames[pEntry->PropertyType] != nullptr)
-        wprintf(L"   %S %S 0x%04x ", MtPropertyTypeNames[pEntry->PropertyType], pEntry->pPropertyName, pEntry->Flags);
+        //wprintf(L"   %S %S 0x%04x ", MtPropertyTypeNames[pEntry->PropertyType], pEntry->pPropertyName, pEntry->Flags);
+        wprintf(L"/* 0x%02X */ %S \t%S;", address, MtPropertyTypeNames[pEntry->PropertyType], sFieldName.c_str());
     else
         wprintf(L"   0x%04x %S 0x%04x ", pEntry->PropertyType, pEntry->pPropertyName, pEntry->Flags);
 
+    /*
     // Print function addresses.
     if (pEntry->pGetter)
         wprintf(L"Get: %p ", pEntry->pGetter);
@@ -55,6 +93,7 @@ void PrintPropertyListReversed(MtPropertyListEntry *pEntry)
         wprintf(L"Func2: %p ", pEntry->pUnkFunc2);
     if (pEntry->pUnkFunc3)
         wprintf(L"Func3: %p ", pEntry->pUnkFunc3);
+        */
 
     wprintf(L"\n");
 }
@@ -107,7 +146,7 @@ __int64 PrintDebugOptions(WCHAR **argv, int argc)
 
     // Loop and print all of the debug options in reverse.
     if (pPropertyList->pHead != nullptr)
-        PrintPropertyListReversed(pPropertyList->pHead);
+        PrintPropertyListReversed(pPropertyList->pHead, pObjectInstance);
 
     // Cleanup objects.
     delete pPropertyList;

@@ -15,7 +15,7 @@ struct cResource : public MtObject
             0x30 const char * GetFileExtension();
             0x38 bool
             0x40 bool LoadResource(MtStream *pStream);
-            0x48 bool
+            0x48 bool SaveResource(MtStream *pStream); ?
             0x50 bool
             0x58 void CleanupResources()
     */
