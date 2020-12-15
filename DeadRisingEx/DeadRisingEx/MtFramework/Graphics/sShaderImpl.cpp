@@ -1,7 +1,7 @@
 
 
 #include "sShaderImpl.h"
-#include <MtFramework/Graphics/sShader.h>
+#include <MtFramework/Rendering/sShader.h>
 #include <stdio.h>
 #include <string>
 

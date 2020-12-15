@@ -30,9 +30,9 @@
     <ClInclude Include="MtFramework\Game\sPad.h" />
     <ClInclude Include="MtFramework\Game\sSnatcherMain.h" />
     <ClInclude Include="MtFramework\Graphics\rModel.h" />
-    <ClInclude Include="MtFramework\Graphics\cTrans.h" />
-    <ClInclude Include="MtFramework\Graphics\sRender.h" />
-    <ClInclude Include="MtFramework\Graphics\sShader.h" />
+    <ClInclude Include="MtFramework\Rendering\cTrans.h" />
+    <ClInclude Include="MtFramework\Rendering\sRender.h" />
+    <ClInclude Include="MtFramework\Rendering\sShader.h" />
     <ClInclude Include="MtFramework\IO\MtBinaryXmlReader.h" />
     <ClInclude Include="MtFramework\IO\MtDataReader.h" />
     <ClInclude Include="MtFramework\IO\MtFile.h" />

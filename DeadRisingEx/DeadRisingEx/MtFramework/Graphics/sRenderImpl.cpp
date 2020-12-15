@@ -3,7 +3,7 @@
 */
 
 #include "sRenderImpl.h"
-#include <MtFramework/Graphics/cTrans.h>
+#include <MtFramework/Rendering/cTrans.h>
 #include <stdio.h>
 #include <string>
 

@@ -21,9 +21,6 @@
     <ClInclude Include="MtFramework\Graphics\rModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MtFramework\Graphics\sShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MtFramework\Utils\Utilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -64,9 +61,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LibMtFramework.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MtFramework\Graphics\cTrans.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MtFramework\Item\sItemCtrl.h">
@@ -117,10 +111,16 @@
     <ClInclude Include="MtFramework\IO\MtBinaryXmlReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MtFramework\Graphics\sRender.h">
+    <ClInclude Include="MtFramework\Game\sPad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MtFramework\Game\sPad.h">
+    <ClInclude Include="MtFramework\Rendering\sShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Rendering\sRender.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Rendering\cTrans.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
