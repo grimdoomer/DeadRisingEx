@@ -151,7 +151,7 @@ static const char *FormatName[122] =
 };
 
 // sizeof = 0x4B80
-struct cTrans
+struct cTrans : public MtObject
 {
     // sizeof = 0x18
     struct Element : public MtObject
@@ -203,4 +203,29 @@ struct cTrans
         /* 0x28 */ DWORD    Size;
     };
     static_assert(sizeof(IndexBuffer) == 0x30, "cTrans::IndexBuffer incorrect struct size");
+
+    /* 0x08 */
+    /* 0x10 */ // array length 3 size 0x1250, this might not be correct
+        /* 0x00 */ // array count=4 entry size=0x10
+        /* 0x40 */ // array count=4 entry size=0x10
+        /* 0x80 */ // array count=4 entry size=0x10
+        /* 0xC0 */ // array count=4 entry size=0x10
+        /* 0x100 */ // array count=4 entry size=0x10
+        /* 0x140 */ // array count=4 entry size=0x10
+        /* 0x180 */ // array count=6 entry size=0x10
+        /* 0x1E0 */
+
+        /* 0x200 */ // void*?
+        /* 0x208 */ // void*?
+
+    /* 0x3700 */
+
+    /* 0x4960 */ // buffer 0x190 bytes
+
+    /* 0x4B0C */ // DWORD
+    /* 0x4B10 */ // void* memory region
+    /* 0x4B18 */ DWORD      mTagNum;
+    /* 0x4B20 */ // void* end of region
+    /* 0x4B28 */ // void* memory region
+    /* 0x4B30 */ // void* end of region
 };

@@ -66,9 +66,6 @@
     <ClInclude Include="MtFramework\Item\sItemCtrl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MtFramework\Game\cSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MtFramework\Object\cUnit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -121,6 +118,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MtFramework\Rendering\cTrans.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Config\MtRegistry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\System\cSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Game\sMain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

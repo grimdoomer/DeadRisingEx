@@ -1,7 +1,7 @@
 
 #pragma once
 #include "LibMtFramework.h"
-#include "MtFramework/Game/cSystem.h"
+#include "MtFramework/System/cSystem.h"
 #include <dinput.h>
 
 // sizeof = 0x1BCD8
@@ -39,6 +39,32 @@ struct sPad : public cSystem
     // sizeof = 0x678
     struct Pad : public MtObject
     {
+        // Button values for input:
+        #define PAD_BTN_BACK            1           // Gamepad back button
+        #define PAD_BTN_LEFT_THUMB      2           // Gamepad left thumbstick
+        #define PAD_BTN_RIGHT_THUMB     4           // Gamepad right thumbstick
+        #define PAD_BTN_START           8           // Gamepad start button
+        #define PAD_BTN_DPAD_UP         0x10        // Gamepad Dpad up
+        #define PAD_BTN_DPAD_RIGHT      0x20        // Gmaepad Dpad right
+        #define PAD_BTN_DPAD_DOWN       0x40        // Gamepad Dpad down
+        #define PAD_BTN_DPAD_LEFT       0x80        // Gmaepad Dpad left
+        #define PAD_BTN_LEFT_BUMPER     0x100       // Gamepad left bumper
+        #define PAD_BTN_RIGHT_BUMPER    0x200       // Gamepad right bumper
+        #define PAD_BTN_LEFT_TRIGGER    0x400       // Gamepad left trigger
+        #define PAD_BTN_RIGHT_TRIGGER   0x800       // Gamepad right trigger
+        #define PAD_BTN_Y               0x1000      // Gamepad Y button
+        #define PAD_BTN_B               0x2000      // Gamepad B button
+        #define PAD_BTN_A               0x4000      // Gamepad A button
+        #define PAD_BTN_X               0x8000      // Gamepad X button
+        #define PAD_LEFT_THUMB_UP       0x10000     // Gamepad left thumbstick up
+        #define PAD_LEFT_THUMB_LEFT     0x20000     // Gamepad left thumbstick left
+        #define PAD_LEFT_THUMB_DOWN     0x40000     // Gamepad left thumbstick down
+        #define PAD_LEFT_THUMB_RIGHT    0x80000     // Gamepad left thumbstick right
+        #define PAD_RIGHT_THUMB_UP      0x100000    // Gamepad right thumbstick up
+        #define PAD_RIGHT_THUMB_LEFT    0x200000    // Gamepad right thumbstick left
+        #define PAD_RIGHT_THUMB_DOWN    0x400000    // Gamepad right thumbstick down
+        #define PAD_RIGHT_THUMB_RIGHT   0x800000    // Gamepad right thumbstick right
+
         /* 0x08 */ BYTE     Be_flag;        // Big endian flag?
         /* 0x09 */ // BYTE (0x1406555E0)
         /* 0x0A */ BYTE     Rno;
@@ -51,22 +77,26 @@ struct sPad : public cSystem
         /* 0x18 */ DWORD    Socket_no;
 
         /* 0x2B8 */ INT8    Press_free;
-        /* 0x2B9 */ INT16   Trigger_free;
+        /* 0x2B9 */ INT16   Trigger_free;       // Threshold for trigger presses (dead zone)
         /* 0x2BA */ INT16   Analog_free;
         /* 0x2BC */ INT16   Analog_cross_free;
         /* 0x2C0 */ // DWORD (0x140655605)
         /* 0x2C4 */ // DWORD (0x140655605)
 
-        /* 0x2D0 */ // buffer 0x60 bytes
+        /* 0x2D0 */ // float [24] might be time in ms buttons were pressed
         /* 0x330 */ // buffer 0xCC bytes
-        /* 0x3FC */ DWORD   On;
+        /* 0x3FC */ DWORD   On;                 // Buttons from wButtons in XINPUT_GAMEPAD active this update
+        /* 0x400 */ DWORD   PreviousButtons;    // Pad->On from the previous update
+        /* 0x404 */ DWORD   ButtonsPressed;     // Buttons active this update but not the previous update
+        /* 0x408 */ DWORD   ButtonsReleased;    // Buttons active the previous update but not this update
+        /* 0x40C */ DWORD   ButtonsChanged;     // Buttons that changed state between the previous update and this update (on or off)
 
         /* 0x414 */ INT32   Rx;
         /* 0x418 */ INT32   Ry;
-        /* 0x41C */ INT32   Lx;
+        /* 0x41C */ INT32   Lx;             // Set to sThumbLX of XINPUT_GAMEPAD
         /* 0x420 */ INT32   Ly;
-        /* 0x424 */ INT32   Rz_RT;
-        /* 0x428 */ INT32   Lz_LT;
+        /* 0x424 */ INT32   Rz_RT;          // Set to bRightTrigger of XINPUT_GAMEPAD
+        /* 0x428 */ INT32   Lz_LT;          // Set to bLeftTrigger of XINPUT_GAMEPAD
         /* 0x42C */ //DWORD Initialized? (0x1406553F4)
         /* 0x430 */ BYTE    mTriggerVibLow;
         /* 0x431 */ BYTE    mTriggerVibHigh;
@@ -74,15 +104,19 @@ struct sPad : public cSystem
         /* 0x434 */ WORD    mVibEndValue;
         /* 0x436 */ WORD    mVibTime;
         /* 0x438 */ sPad::Map   JoyPadMapping;
-        /* 0x678 */
 
         IMPLEMENT_MYDTI(Pad, 0x141CF3198, 0x1400AF010, 0x140656BB0);
     };
 
     /* 0x38 */
-    /* 0x40 */ // DWORD (0x1406523AA)
+    /* 0x3C */ DWORD        UpdatedPadSocket;   // Socket_no of the last gamepad with input
+
+    /* 0x40 */ DWORD        NewInputAvailable;  // 1 if a gamepad had active input (0x1406523AA)
     /* 0x44 */ // DWORD (0x1406523AA)
     /* 0x48 */ // DWORD (0x1406523AA)
+
+    /* 0x50 */ ULONGLONG    LastUpdateTime;     // Time of the last input update in ms (pulled from sMain->mTimer)
+    /* 0x58 */ DWORD        ElapsedTime;        // Elapsed time since the last update in ms
 
     /* 0x60 */ Pad          mPad[64];
     /* 0x19E60 */ // some kind of buffer 0x1010 in size

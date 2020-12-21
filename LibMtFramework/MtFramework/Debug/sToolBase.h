@@ -1,7 +1,7 @@
 
 #pragma once
 #include "LibMtFramework.h"
-#include "MtFramework/Game/cSystem.h"
+#include "MtFramework/System/cSystem.h"
 #include "MtFramework/Utils/MtPropertyList.h"
 
 // sizeof = 0x2270

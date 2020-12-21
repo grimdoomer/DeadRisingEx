@@ -2,7 +2,7 @@
 
 #pragma once
 #include "LibMtFramework.h"
-#include "MtFramework/Game/cSystem.h"
+#include "MtFramework/System/cSystem.h"
 #include "MtFramework/Item/uItem.h"
 
 // sizeof = 0x1470

@@ -1,7 +1,7 @@
 
 #pragma once
 #include "LibMtFramework.h"
-#include "MtFramework/Game/cSystem.h"
+#include "MtFramework/System/cSystem.h"
 #include "MtFramework/Object/cUnit.h"
 
 // sizeof = 0x538

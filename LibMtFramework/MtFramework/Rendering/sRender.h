@@ -1,7 +1,7 @@
 
 #pragma once
 #include "LibMtFramework.h"
-#include "MtFramework/Game/cSystem.h"
+#include "MtFramework/System/cSystem.h"
 #include "cTrans.h"
 #include <d3d11.h>
 
@@ -56,21 +56,23 @@ struct sRender : public cSystem
     };
     static_assert(sizeof(Buffer) == 0x30, "sRender::Buffer incorrect struct size");
 
-    /* 0x38 */
+    /* 0x38 */ // array? elem size = 0x2040 (0x1406629B9)
+
+    /* 0x8138 */ // DWORD index into array at 0x38?
 
     /* 0x83D0 */ RECT       WindowRect;
 
     /* 0x8586 */ BOOL       mDisableRendering;
     /* 0x8587 */ BOOL       mParallelTrans;
-    /* 0x8588 */ BOOL       mParallelRendering;
-
+    /* 0x8588 */ BOOL       mParallelRendering;     // True if rendering should be done on a seperate thread
+    /* 0x8589 */ BOOL       RenderAsync;            // Same as above but set in the render loop based on mParallelRendering
     /* 0x858A */ // Store Frame
     /* 0x858C */ float      mPersRate;
     /* 0x8590 */ ID3D11Device   *pD3dDevice;
     /* 0x8598 */ // mPresentRect (0x12 = RECT?)
     /* 0x85A8 */ ID3D11DeviceContext    *pDeviceContext;
 
-    /* 0x8610 */ // DWORD index into 0x2F4C0
+    /* 0x8610 */ DWORD      ActiveBufferIndex;  // Index into vertex/index buffers
     /* 0x8618 */ IDXGISwapChain *pSwapChain;
     /* 0x8620 */ // SIZE window size?
 
@@ -85,10 +87,11 @@ struct sRender : public cSystem
     /* 0x868D */ BOOL       mDynamicTrans;
 
     /* 0x8690 */ cTrans     mTrans[6];
-    /* 0x24B90 */ // 
-    /* 0x24B98 */ //
-
-    /* 0x24BC0 */ //DWORD
+    /* 0x24B90 */ // index into 0x24BA8/B8 arrays below
+    /* 0x24B98 */ // void *[2], alloc size = DWORD at 0x24BC0
+    /* 0x24BA8 */ // void *[2], alloc size = 1MB
+    /* 0x24BB8 */ // DWORD[2]
+    /* 0x24BC0 */ //DWORD size of some memory allocation, 14MB
     /* 0x24BC8 */ Pass      mPassProfile[12];
     /* 0x25288 */ TempTexture TempTextures[256];
     /* 0x27288 */ DWORD     TempTextureCount;
@@ -102,6 +105,8 @@ struct sRender : public cSystem
     /* 0x272C8 */ DWORD     Interval;
     /* 0x272CC */ DWORD     Threshold;
 
+    /* 0x27408 */ ULONGLONG StartFrameTime;     // Time at the start of the frame
+    /* 0x27410 */ ULONGLONG DeltaFrameTime;     // How long it took to do frame operations
     /* 0x27418 */ DWORD     mQualityControl;
     /* 0x2741C */ DWORD     mQuality;
     /* 0x27420 */ ULONGLONG mRenderTimeOld;
@@ -114,9 +119,13 @@ struct sRender : public cSystem
     /* 0x2F460 */ // Elements count?
     /* 0x2F468 */ CRITICAL_SECTION  ElementsListLock;
     /* 0x2F490 */ // CRITICAL_SECTION
-    /* 0x2F4C0 */ // Buffer buffer object[4]
+    /* 0x2F4C0 */ Buffer *pVertexBuffers[2];
+    /* 0x2F4D0 */ Buffer *pIndexBuffers[2];
 
     IMPLEMENT_MYDTI(sRender, 0x141CF32D0, 0x1400AF010, 0x140663EC0);
 
     IMPLEMENT_SINGLETON(sRender, 0x141CF3268);
+
+    static inline sRender* (__cdecl *_ctor)(sRender *thisptr, DWORD interval, DWORD dwUnused1, DWORD dwGraphicsMemSize, DWORD dwUnunsed2) =
+        GetModuleAddress<sRender*(__cdecl*)(sRender*, DWORD, DWORD, DWORD, DWORD)>(0x14065A140);
 };
