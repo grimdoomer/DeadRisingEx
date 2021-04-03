@@ -2,7 +2,7 @@
 
 #pragma once
 #include "LibMtFramework.h"
-#include "MtFramework/Game/cSystem.h"
+#include "MtFramework/System/cSystem.h"
 
 enum eAreaHitEntryType : int
 {

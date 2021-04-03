@@ -84,9 +84,6 @@
     <ClInclude Include="MtFramework\Item\Items\uOm23.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MtFramework\Object\uSnatcherModel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MtFramework\Utils\MtPropertyList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -127,6 +124,30 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MtFramework\Game\sMain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Graphics\rTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Utils\MtArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Object\Model\uSnatcherModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Object\Model\sSMManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Memory\MtDefaultAllocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Game\Task\cGametaskMain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Area\sAreaManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Rendering\sGpuParticle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

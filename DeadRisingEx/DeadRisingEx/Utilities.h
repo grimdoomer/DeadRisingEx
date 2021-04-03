@@ -50,6 +50,33 @@ static bool ReplaceVTablePointer(void **pVtableAddress, void *pFunctionPtr)
     return true;
 }
 
+template<typename T> static bool PatchBytes(T *pAddress, T newValue)
+{
+    DWORD dwOldProtect = 0;
+
+    // Make the page writable.
+    if (VirtualProtect(pAddress, sizeof(T), PAGE_READWRITE, &dwOldProtect) == FALSE)
+    {
+        // Failed to change page permissions.
+        wprintf(L"Failed to change page permissions on address %p!\n", pAddress);
+        return false;
+    }
+
+    // Poke the new value.
+    *pAddress = newValue;
+
+    // Change the page permissions back.
+    if (VirtualProtect(pAddress, sizeof(T), dwOldProtect, &dwOldProtect) == FALSE)
+    {
+        // Failed to restore page permissions.
+        wprintf(L"Failed to restore page permissions for address %p!\n", pAddress);
+        return false;
+    }
+
+    // Bytes replaced successfully.
+    return true;
+}
+
 static bool WriteDword(DWORD *pAddress, DWORD newValue)
 {
     DWORD dwOldProtect = 0;

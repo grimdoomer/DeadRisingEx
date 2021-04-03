@@ -4,6 +4,7 @@
 #include "MtFramework/System/cSystem.h"
 #include "cTrans.h"
 #include <d3d11.h>
+#include <map>
 
 // sizeof = 0x2F500
 struct sRender : public cSystem
@@ -53,8 +54,38 @@ struct sRender : public cSystem
         /* 0x18 */ DWORD                PreviousPosition;
         /* 0x20 */ ID3D11DeviceContext  *pDeviceContext;    // Device context used to create the buffer
         /* 0x28 */ DWORD                BufferType;         // Type of buffer see BUFFER_TYPE_* above
+
+        inline static Buffer * (__stdcall *_ctor)(Buffer *thisptr, ID3D11DeviceContext *pDeviceContext, DWORD dwBufferSize, DWORD dwBufferType) =
+            GetModuleAddress<Buffer*(__stdcall*)(Buffer*, ID3D11DeviceContext*, DWORD, DWORD)>(0x14065A030);
+
+        inline static void * (__stdcall *_MapForWrite)(Buffer *thisptr, DWORD dwSize) =
+            GetModuleAddress<void*(__stdcall*)(Buffer*, DWORD)>(0x14065DEC0);
+
+        /*
+            Description: Maps the buffer for writing. If the current position in the buffer is 0 the contents are discarded on mapping,
+                otherwise the contents are preseved. If the current position in the buffer + the requested size exceeds the capacity of
+                the buffer an assert is triggered and the game will crash.
+
+            Parameters:
+                - dwSize: Requested size for writing, if the current position + dwSize exceeds the capacity of the buffer an assert is
+                    triggered and the game will crash
+
+            Returns: Pointer within the buffer available for writing
+        */
+        template<typename T> T* MapForWrite(DWORD dwSize)
+        {
+            return (T*)_MapForWrite(this, dwSize);
+        }
     };
     static_assert(sizeof(Buffer) == 0x30, "sRender::Buffer incorrect struct size");
+
+    // sizeof = 0x10
+    struct DeferredContext
+    {
+        /* 0x00 */ ID3D11DeviceContext  *pDeviceContext;
+        /* 0x08 */ DWORD                InUse;              // Indicates if the device context is currently being used by another thread
+    };
+    static_assert(sizeof(DeferredContext) == 0x10, "sRender::DeferredContext incorect struct size");
 
     /* 0x38 */ // array? elem size = 0x2040 (0x1406629B9)
 
@@ -71,8 +102,10 @@ struct sRender : public cSystem
     /* 0x8590 */ ID3D11Device   *pD3dDevice;
     /* 0x8598 */ // mPresentRect (0x12 = RECT?)
     /* 0x85A8 */ ID3D11DeviceContext    *pDeviceContext;
-
-    /* 0x8610 */ DWORD      ActiveBufferIndex;  // Index into vertex/index buffers
+    /* 0x85B0 */ DeferredContext        DeferredContexts[3];
+    /* 0x85E0 */ ID3D11DeviceContext    *MainThreadDeferredContexts[2];     // Deferred contexts for the main thread, swapped at the end of each frame
+    /* 0x85F0 */ // DeferredContext[2]
+    /* 0x8610 */ DWORD      ActiveBufferIndex;  // Index into pVertexBuffers/pIndexBuffers buffers
     /* 0x8618 */ IDXGISwapChain *pSwapChain;
     /* 0x8620 */ // SIZE window size?
 
@@ -86,15 +119,15 @@ struct sRender : public cSystem
 
     /* 0x868D */ BOOL       mDynamicTrans;
 
-    /* 0x8690 */ cTrans     mTrans[6];
-    /* 0x24B90 */ // index into 0x24BA8/B8 arrays below
-    /* 0x24B98 */ // void *[2], alloc size = DWORD at 0x24BC0
-    /* 0x24BA8 */ // void *[2], alloc size = 1MB
-    /* 0x24BB8 */ // DWORD[2]
-    /* 0x24BC0 */ //DWORD size of some memory allocation, 14MB
-    /* 0x24BC8 */ Pass      mPassProfile[12];
-    /* 0x25288 */ TempTexture TempTextures[256];
-    /* 0x27288 */ DWORD     TempTextureCount;
+    /* 0x8690 */ cTrans                         mTrans[6];
+    /* 0x24B90 */ DWORD                         RenderBufferIndex;          // Index into pRenderCommandBuffer/pRenderCommands/RenderCommandCount arrays below
+    /* 0x24B98 */ void                          *pRenderCommandBuffer[2];   // Buffer backing all cTrans->pCommandBuffer's
+    /* 0x24BA8 */ cTrans::RenderCommandInfo     *pRenderCommands[2];        // Sorted render commands from all mTrans command buffers alloc size = 1MB
+    /* 0x24BB8 */ DWORD                         RenderCommandCount;         // Number of render commands in the pRenderCommands buffer
+    /* 0x24BC0 */ DWORD                         RenderDataMemorySize;       // Size of memory allocated for render command data (pRenderCommandBuffer), 14MB
+    /* 0x24BC8 */ Pass          mPassProfile[12];
+    /* 0x25288 */ TempTexture   TempTextures[256];
+    /* 0x27288 */ DWORD         TempTextureCount;
 
     /* 0x272A0 */ //cTrans::Texture mpScreenTexture
 
@@ -105,6 +138,10 @@ struct sRender : public cSystem
     /* 0x272C8 */ DWORD     Interval;
     /* 0x272CC */ DWORD     Threshold;
 
+    /* 0x27348 */ std::map<DWORD, ID3D11InputLayout>    mInputLayouts;
+
+    /* 0x27398 */ // ID3D11Buffer * array of vertex buffers for something
+
     /* 0x27408 */ ULONGLONG StartFrameTime;     // Time at the start of the frame
     /* 0x27410 */ ULONGLONG DeltaFrameTime;     // How long it took to do frame operations
     /* 0x27418 */ DWORD     mQualityControl;
@@ -114,11 +151,11 @@ struct sRender : public cSystem
 
     /* 0x27450 */ DWORD     mPSGPRCount;
 
-    /* 0x27460 */ // Elements
+    /* 0x27460 */ cTrans::Element   *ElementList[4096];
     
-    /* 0x2F460 */ // Elements count?
-    /* 0x2F468 */ CRITICAL_SECTION  ElementsListLock;
-    /* 0x2F490 */ // CRITICAL_SECTION
+    /* 0x2F460 */ DWORD             ElementCount;
+    /* 0x2F468 */ CRITICAL_SECTION  ElementListLock;
+    /* 0x2F490 */ CRITICAL_SECTION  DeferredContextListLock;
     /* 0x2F4C0 */ Buffer *pVertexBuffers[2];
     /* 0x2F4D0 */ Buffer *pIndexBuffers[2];
 
@@ -126,6 +163,9 @@ struct sRender : public cSystem
 
     IMPLEMENT_SINGLETON(sRender, 0x141CF3268);
 
-    static inline sRender* (__cdecl *_ctor)(sRender *thisptr, DWORD interval, DWORD dwUnused1, DWORD dwGraphicsMemSize, DWORD dwUnunsed2) =
-        GetModuleAddress<sRender*(__cdecl*)(sRender*, DWORD, DWORD, DWORD, DWORD)>(0x14065A140);
+    static inline sRender* (__stdcall *_ctor)(sRender *thisptr, DWORD interval, DWORD dwUnused1, DWORD dwGraphicsMemSize, DWORD dwUnused2) =
+        GetModuleAddress<sRender*(__stdcall*)(sRender*, DWORD, DWORD, DWORD, DWORD)>(0x14065A140);
+
+    static inline void(__stdcall *_DrawFrame)(sRender *thisptr) =
+        GetModuleAddress<void(__stdcall*)(sRender*)>(0x140662200);
 };

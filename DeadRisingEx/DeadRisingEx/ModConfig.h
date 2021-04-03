@@ -25,6 +25,9 @@ public:
 
     bool RecursiveGrenade;          // Enables the recursive grenade mod
 
+    // Graphics options:
+    bool DynamicGraphicsMemory;     // Determines if graphics memory should be dynamically allocated/resized as needed
+
     char GameDirectory[MAX_PATH];                    // Game directory folder path
 
     std::vector<std::string> OverlayArchives;        // List of archives to overlay the game files

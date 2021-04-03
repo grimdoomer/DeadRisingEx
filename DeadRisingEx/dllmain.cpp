@@ -11,17 +11,26 @@
 #include "Misc/AsmHelpers.h"
 #include "MtFramework/Utils/Utilities.h"
 #include "DeadRisingEx/ModConfig.h"
+
+#include <MtFramework/Game/sMain.h>
+
 #include "DeadRisingEx/MtFramework/MtObjectImpl.h"
 #include "DeadRisingEx/MtFramework/Archive/ArchiveOverlay.h"
 #include "DeadRisingEx/MtFramework/Archive/sResourceImpl.h"
 #include "DeadRisingEx/MtFramework/Debug/sSnatcherToolImpl.h"
+#include "DeadRisingEx/MtFramework/Game/sMainImpl.h"
+#include "DeadRisingEx/MtFramework/Game/sSnatcherMainImpl.h"
 #include "DeadRisingEx/MtFramework/Graphics/rModelImpl.h"
-#include "DeadRisingEx/MtFramework/Graphics/sRenderImpl.h"
-#include "DeadRisingEx/MtFramework/Graphics/sShaderImpl.h"
+#include "DeadRisingEx/MtFramework/Rendering/sRenderImpl.h"
+#include "DeadRisingEx/MtFramework/Rendering/sShaderImpl.h"
 #include "DeadRisingEx/MtFramework/Item/uItemImpl.h"
 #include "DeadRisingEx/MtFramework/Item/Items/uOm08Impl.h"
 #include "DeadRisingEx/MtFramework/Object/sUnitImpl.h"
+#include "DeadRisingEx/MtFramework/Object/Model/sSMManagerImpl.h"
 #include "DeadRisingEx/MtFramework/Player/uPlayerImpl.h"
+
+// Version string for update 1 of the game exe.
+const char *g_SupportedGameVersionString = "Master Oct  6 2016 23:23:44";
 
 void SetupConsole()
 {
@@ -215,11 +224,32 @@ BOOL APIENTRY DllMain( HMODULE hModule,
             return TRUE;
         }
 
+        // Check the game version string to make sure we are loading with the correct game version.
+        if (strncmp(sMain::mBuildVersion, g_SupportedGameVersionString, strlen(g_SupportedGameVersionString)) != 0)
+        {
+            // Game version not supported, display an error and kill the process.
+            MessageBoxW(NULL, L"This version of Dead Rising is not supported by DeadRisingEx! Please update the game to the Oct 6th 2016 version in order to use DeadRisingEx.",
+                L"Game version not supported", MB_OK | MB_ICONERROR | MB_APPLMODAL);
+            TerminateProcess(GetCurrentProcess(), 0xBAD0C0DE);
+        }
+
         // Load the mod config file.
         if (ModConfig::Instance()->LoadConfigFile("DeadRisingEx.ini") == false)
         {
             // Failed to load the mod config.
             DbgPrint("Failed to load mod config file, using default settings!\n");
+        }
+
+        // Check if we should enable the console window or not.
+        if (ModConfig::Instance()->EnableConsole == true)
+        {
+            // Setup the console window.
+            OutputDebugString("DRDebugger DllMain\n");
+            SetupConsole();
+
+            // Create a worker thread to process console commands.
+            HANDLE hThread = CreateThread(NULL, NULL, ProcessConsoleWorker, NULL, NULL, NULL);
+            CloseHandle(hThread);
         }
 
         // Register all commands.
@@ -240,6 +270,8 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         sShaderImpl::RegisterTypeInfo();
         uItemImpl::RegisterTypeInfo();
         sUnitImpl::RegisterTypeInfo();
+        sMainImpl::RegisterTypeInfo();
+        sSnatcherMainImpl::RegisterTypeInfo();
 
         if (ModConfig::Instance()->RecursiveGrenade == true)
             uOm08Impl::RegisterTypeInfo();
@@ -252,6 +284,10 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 
         // Hook functions.
         Utilities::InstallHooks();
+        sRenderImpl::InstallHooks();
+        sMainImpl::InstallHooks();
+        sSnatcherMainImpl::InstallHooks();
+        sSMManagerImpl::InstallHooks();
 
         uPlayerImpl::RegisterTypeInfo();
 
@@ -268,18 +304,6 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         {
             // Failed to hook into the process, terminate.
             TerminateProcess(GetCurrentProcess(), 0xBAD0C0DE);
-        }
-
-        // Check if we should enable the console window or not.
-        if (ModConfig::Instance()->EnableConsole == true)
-        {
-            // Setup the console window.
-            OutputDebugString("DRDebugger DllMain\n");
-            SetupConsole();
-
-            // Create a worker thread to process console commands.
-            HANDLE hThread = CreateThread(NULL, NULL, ProcessConsoleWorker, NULL, NULL, NULL);
-            CloseHandle(hThread);
         }
         break;
     }

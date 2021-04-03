@@ -107,7 +107,7 @@ bool ArchiveOverlay::LoadArcFile(std::string sFilePath)
         DWORD arcFileId = (DWORD)(((this->vArcFiles.size() - 1) << 16) & 0xFFFF0000) | (i & 0xFFFF);
         this->mFileOverlayMap.emplace(resourceId, arcFileId);
 
-        DbgPrint("\tOverlay: 0x%llu -> %s\n", resourceId, pFileEntries[i].FileName);
+        DbgPrint("\tOverlay: 0x%llx -> %s.%s (0x%08x)\n", resourceId, pFileEntries[i].FileName, pDTI->pObjectName, arcFileId);
     }
 
     // Successfully read the arc file.
@@ -239,7 +239,7 @@ void __stdcall Hook_sResource_ResourceDecoderProc(int threadIndex)
 
                     // Create the fake decompression context struct.
                     context.pArchiveStream = pFileStream;
-                    context.ScratchBufferSize = overlayReq.DecompressedSize;
+                    context.ScratchBufferSize = overlayReq.CompressedSize;
                     context.pScratchBuffer = (*g_pTempHeapAllocator)->Alloc(context.ScratchBufferSize, 0x10);
                     context.CurrentArchiveOffset = ArchiveOverlay::Instance()->vArcFiles[archiveIndex].pFileEntries[fileIndex].DataOffset;
                     context.AsyncBytesRead = ArchiveOverlay::Instance()->vArcFiles[archiveIndex].pFileEntries[fileIndex].CompressedSize;
@@ -255,10 +255,10 @@ void __stdcall Hook_sResource_ResourceDecoderProc(int threadIndex)
                     pFileStream->Seek(ArchiveOverlay::Instance()->vArcFiles[archiveIndex].pFileEntries[fileIndex].DataOffset, FILE_BEGIN);
 
                     // Read the compressed data into the scratch buffer.
-                    pFileStream->ReadData(context.pScratchBuffer, context.ScratchBufferSize);
+                    pFileStream->ReadData(context.pScratchBuffer, overlayReq.CompressedSize);
 
                     // Load from the overlay archive.
-                    DbgPrint("Loading from overlay archive: %s\n", overlayReq.pResource->mPath);
+                    DbgPrint("Loading from overlay archive: %s (0x%08x)\n", overlayReq.pResource->mPath, arcFileId);
                     pStream = new sResource::DecompressStream(&context, &overlayReq);
                 }
                 else

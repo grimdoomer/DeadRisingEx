@@ -2,7 +2,7 @@
 
 #pragma once
 #include "LibMtFramework.h"
-#include "MtFramework/Object/uSnatcherModel.h"
+#include "MtFramework/Object/Model/uSnatcherModel.h"
 
 // sizeof = 0x18
 struct ItemInfoEntry

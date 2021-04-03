@@ -15,15 +15,26 @@
 __int64 PrintLoadedResources(WCHAR **argv, int argc);
 __int64 GetResourceByIndex(WCHAR **argv, int argc);
 //__int64 CalculateResourceIdTest(WCHAR **argv, int argc);
+__int64 LoadArchive(WCHAR **argv, int argc);
 
 // Table of commands for sResource objects.
-const int g_sResourceCommandsLength = 2;
+const int g_sResourceCommandsLength = 3;
 const CommandEntry g_sResourceCommands[g_sResourceCommandsLength] =
 {
     { L"list_resources", L"Lists all loaded resources", PrintLoadedResources },
     { L"GetResourceByIndex", L"Gets the resource at the specified index", GetResourceByIndex },
     //{ L"CalculateResourceId", L"", CalculateResourceIdTest }
+    { L"load_archive", L"Loads the specified archive by file path", LoadArchive }
 };
+
+void sResourceImpl::InitializeTypeInfo()
+{
+    // Register types:
+    RegisterTypeInfo(&cResourceTypeInfo);
+
+    // Register commands:
+    RegisterCommands(g_sResourceCommands, g_sResourceCommandsLength);
+}
 
 __int64 PrintLoadedResources(WCHAR **argv, int argc)
 {
@@ -156,11 +167,32 @@ __int64 GetResourceByIndex(WCHAR **argv, int argc)
 //    return 0;
 //}
 
-void sResourceImpl::InitializeTypeInfo()
+__int64 LoadArchive(WCHAR **argv, int argc)
 {
-    // Register types:
-    RegisterTypeInfo(&cResourceTypeInfo);
+    // Make sure there is at least 1 argument to parse.
+    if (argc != 1)
+    {
+        // Invalid command syntax.
+        wprintf(L"Invalid command syntax\n");
+        return 0;
+    }
 
-    // Register commands:
-    RegisterCommands(g_sResourceCommands, g_sResourceCommandsLength);
+    // Setup the unicode converter.
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> unicConvert;
+
+    // Convert the unicode file name to ascii.
+    std::string sFileName = unicConvert.to_bytes(argv[0]);
+
+    // Load the archive.
+    cResource *pResource = sResource::Instance()->LoadGameResource<cResource>(rArchive::DebugTypeInfo, sFileName.c_str(), RLF_SYNCHRONOUS | RLF_LOAD_AS_ARCHIVE);
+    if (pResource == nullptr)
+    {
+        // Failed to force load resource.
+        wprintf(L"Failed to load archive '%S'!\n", sFileName.c_str());
+        return 0;
+    }
+
+    // BUGBUG: This creates a memory leak by leaving the archive in memory, we should add something to unload resources to prevent this.
+
+    return 0;
 }
