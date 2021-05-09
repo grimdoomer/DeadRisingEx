@@ -16,6 +16,15 @@ struct MtHeapAllocator : public MtAllocator
 
     inline static MtHeapAllocator * (__stdcall *_ctor)(MtHeapAllocator *thisptr, const char *psName, DWORD type, DWORD size) =
         GetModuleAddress<MtHeapAllocator*(__stdcall*)(MtHeapAllocator*, const char*, DWORD, DWORD)>(0x140623B80);
+
+    inline static void * (__stdcall *_Alloc)(MtHeapAllocator *thisptr, DWORD size, DWORD alignment) =
+        GetModuleAddress<void*(__stdcall*)(MtHeapAllocator*, DWORD, DWORD)>(0x140624790);
+
+    inline static void(__stdcall *_Free)(MtHeapAllocator *thisptr, void *pAddress) =
+        GetModuleAddress<void(__stdcall*)(MtHeapAllocator*, void*)>(0x140624A70);
+
+    inline static DWORD(__stdcall *_GetAllocationInfo)(MtHeapAllocator *thisptr, void *pAddress) =
+        GetModuleAddress<DWORD(__stdcall*)(MtHeapAllocator*, void*)>(0x140624C50);
 };
 static_assert(sizeof(MtHeapAllocator) == 0x78, "MtHeapAllocator incorrect struct size");
 

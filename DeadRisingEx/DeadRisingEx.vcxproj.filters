@@ -72,6 +72,18 @@
     <ClCompile Include="DeadRisingEx\MtFramework\Game\sSnatcherMainImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DeadRisingEx\MtFramework\Memory\MtHeapAllocatorImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeadRisingEx\MtFramework\Game\Task\cGametaskTitleImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeadRisingEx\MtFramework\Object\Npc\uNpcMarkerImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeadRisingEx\MtFramework\Object\uPhotoImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DeadRisingEx.h">
@@ -143,6 +155,18 @@
     <ClInclude Include="DeadRisingEx\MtFramework\Game\sSnatcherMainImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DeadRisingEx\MtFramework\Memory\MtHeapAllocatorImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeadRisingEx\MtFramework\Game\Task\cGametaskTitleImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeadRisingEx\MtFramework\Object\Npc\uNpcMarkerImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeadRisingEx\MtFramework\Object\uPhotoImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DeadRisingEx.def">
@@ -151,6 +175,9 @@
   </ItemGroup>
   <ItemGroup>
     <MASM Include="DeadRisingEx\MtFramework\Rendering\sRenderHooks.asm">
+      <Filter>Source Files</Filter>
+    </MASM>
+    <MASM Include="DeadRisingEx\MtFramework\Game\Task\cGametaskTitleHooks.asm">
       <Filter>Source Files</Filter>
     </MASM>
   </ItemGroup>

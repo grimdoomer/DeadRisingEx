@@ -25,4 +25,7 @@ struct rTexture : public cResource
     /* 0x114 */ float UVScaleHeight;    // 1.0f / Height
 
     IMPLEMENT_MYDTI(rTexture, 0x141CF2AE0, 0x1400AF010, 0x1406462E0);
+
+    inline static bool(__stdcall *_LoadResource)(rTexture *thisptr, MtStream *pStream) =
+        GetModuleAddress<bool(__stdcall*)(rTexture*, MtStream*)>(0x140646000);
 };

@@ -29,10 +29,14 @@
     <ClInclude Include="MtFramework\Config\MtRegistry.h" />
     <ClInclude Include="MtFramework\Debug\sToolBase.h" />
     <ClInclude Include="MtFramework\Game\sMain.h" />
+    <ClInclude Include="MtFramework\Game\Task\cGametask.h" />
     <ClInclude Include="MtFramework\Game\Task\cGametaskMain.h" />
+    <ClInclude Include="MtFramework\Game\Task\cGametaskTitle.h" />
+    <ClInclude Include="MtFramework\Game\uSchedulerEdit.h" />
     <ClInclude Include="MtFramework\Graphics\rTexture.h" />
     <ClInclude Include="MtFramework\Memory\MtDefaultAllocator.h" />
     <ClInclude Include="MtFramework\Object\Model\sSMManager.h" />
+    <ClInclude Include="MtFramework\Object\Npc\uNpcMarker.h" />
     <ClInclude Include="MtFramework\Rendering\sGpuParticle.h" />
     <ClInclude Include="MtFramework\System\cSystem.h" />
     <ClInclude Include="MtFramework\Game\sPad.h" />

@@ -25,8 +25,12 @@
     <ClCompile Include="DeadRisingEx\MtFramework\Debug\sSnatcherToolImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Game\sMainImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Game\sSnatcherMainImpl.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Game\Task\cGametaskTitleImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Graphics\rModelImpl.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Memory\MtHeapAllocatorImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Object\Model\sSMManagerImpl.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Object\Npc\uNpcMarkerImpl.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Object\uPhotoImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Rendering\sRenderImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Rendering\sShaderImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Item\Items\uOm08Impl.cpp" />
@@ -49,8 +53,12 @@
     <ClInclude Include="DeadRisingEx\MtFramework\Debug\sSnatcherToolImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Game\sMainImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Game\sSnatcherMainImpl.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Game\Task\cGametaskTitleImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Graphics\rModelImpl.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Memory\MtHeapAllocatorImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Object\Model\sSMManagerImpl.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Object\Npc\uNpcMarkerImpl.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Object\uPhotoImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Rendering\renderdoc_app.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Rendering\sRenderImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Rendering\sShaderImpl.h" />
@@ -66,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="DeadRisingEx.def" />
+    <MASM Include="DeadRisingEx\MtFramework\Game\Task\cGametaskTitleHooks.asm" />
     <MASM Include="DeadRisingEx\MtFramework\Rendering\sRenderHooks.asm">
       <FileType>Document</FileType>
     </MASM>

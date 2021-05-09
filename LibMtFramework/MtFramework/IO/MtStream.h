@@ -13,7 +13,7 @@ struct MtStream : public MtObject
             0x28 bool CanRead();
             0x30 bool CanWrite();
             0x38 bool
-            0x40 bool
+            0x40 bool IsAsync();
             0x48 DWORD GetCurrentPosition();
             0x50 void Close();
             0x58 
@@ -52,7 +52,13 @@ struct MtStream : public MtObject
 
     //
 
-    //
+    /*
+        Returns: True if the underlying stream operations are performed asynchronously.
+    */
+    bool IsAsync()
+    {
+        return ThisPtrCallNoFixup<bool>(this->vtable[8], this);
+    }
 
     /*
         Gets the current position in the stream.

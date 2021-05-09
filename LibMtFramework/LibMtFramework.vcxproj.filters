@@ -150,6 +150,18 @@
     <ClInclude Include="MtFramework\Rendering\sGpuParticle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MtFramework\Game\Task\cGametaskTitle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Game\Task\cGametask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Game\uSchedulerEdit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Object\Npc\uNpcMarker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MtFramework\Utils\Utilities.cpp">

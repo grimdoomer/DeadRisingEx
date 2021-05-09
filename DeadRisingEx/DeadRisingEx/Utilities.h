@@ -77,6 +77,33 @@ template<typename T> static bool PatchBytes(T *pAddress, T newValue)
     return true;
 }
 
+static bool PatchBytes(void *pAddress, void *pBytes, DWORD length)
+{
+    DWORD dwOldProtect = 0;
+
+    // Make the page writable.
+    if (VirtualProtect(pAddress, length, PAGE_READWRITE, &dwOldProtect) == FALSE)
+    {
+        // Failed to change page permissions.
+        wprintf(L"Failed to change page permissions on address %p!\n", pAddress);
+        return false;
+    }
+
+    // Poke the new value.
+    memcpy(pAddress, pBytes, length);
+
+    // Change the page permissions back.
+    if (VirtualProtect(pAddress, length, dwOldProtect, &dwOldProtect) == FALSE)
+    {
+        // Failed to restore page permissions.
+        wprintf(L"Failed to restore page permissions for address %p!\n", pAddress);
+        return false;
+    }
+
+    // Bytes replaced successfully.
+    return true;
+}
+
 static bool WriteDword(DWORD *pAddress, DWORD newValue)
 {
     DWORD dwOldProtect = 0;

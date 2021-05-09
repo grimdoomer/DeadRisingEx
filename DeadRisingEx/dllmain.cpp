@@ -13,6 +13,8 @@
 #include "DeadRisingEx/ModConfig.h"
 
 #include <MtFramework/Game/sMain.h>
+#include <MtFramework/IO/MtDataReader.h>
+#include <MtFramework/Graphics/rTexture.h>
 
 #include "DeadRisingEx/MtFramework/MtObjectImpl.h"
 #include "DeadRisingEx/MtFramework/Archive/ArchiveOverlay.h"
@@ -20,17 +22,28 @@
 #include "DeadRisingEx/MtFramework/Debug/sSnatcherToolImpl.h"
 #include "DeadRisingEx/MtFramework/Game/sMainImpl.h"
 #include "DeadRisingEx/MtFramework/Game/sSnatcherMainImpl.h"
+#include "DeadRisingEx/MtFramework/Game/Task/cGametaskTitleImpl.h"
 #include "DeadRisingEx/MtFramework/Graphics/rModelImpl.h"
+#include "DeadRisingEx/MtFramework/Memory/MtHeapAllocatorImpl.h"
 #include "DeadRisingEx/MtFramework/Rendering/sRenderImpl.h"
 #include "DeadRisingEx/MtFramework/Rendering/sShaderImpl.h"
 #include "DeadRisingEx/MtFramework/Item/uItemImpl.h"
 #include "DeadRisingEx/MtFramework/Item/Items/uOm08Impl.h"
 #include "DeadRisingEx/MtFramework/Object/sUnitImpl.h"
+#include "DeadRisingEx/MtFramework/Object/uPhotoImpl.h"
 #include "DeadRisingEx/MtFramework/Object/Model/sSMManagerImpl.h"
+#include "DeadRisingEx/MtFramework/Object/Npc/uNpcMarkerImpl.h"
 #include "DeadRisingEx/MtFramework/Player/uPlayerImpl.h"
 
 // Version string for update 1 of the game exe.
 const char *g_SupportedGameVersionString = "Master Oct  6 2016 23:23:44";
+
+void ForceSymbolsHelper()
+{
+    MtDataReader *pDataReader = nullptr;
+    MtFile *pFile = nullptr;
+    MtFileStream *pFileStream = nullptr;
+}
 
 void SetupConsole()
 {
@@ -272,6 +285,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         sUnitImpl::RegisterTypeInfo();
         sMainImpl::RegisterTypeInfo();
         sSnatcherMainImpl::RegisterTypeInfo();
+        MtHeapAllocatorImpl::RegisterTypeInfo();
 
         if (ModConfig::Instance()->RecursiveGrenade == true)
             uOm08Impl::RegisterTypeInfo();
@@ -288,6 +302,10 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         sMainImpl::InstallHooks();
         sSnatcherMainImpl::InstallHooks();
         sSMManagerImpl::InstallHooks();
+        MtHeapAllocatorImpl::InstallHooks();
+        cGametaskTitleImpl::InstallHooks();
+        uNpcMarkerImpl::InstallHooks();
+        uPhotoImpl::InstallHooks();
 
         uPlayerImpl::RegisterTypeInfo();
 
@@ -305,6 +323,9 @@ BOOL APIENTRY DllMain( HMODULE hModule,
             // Failed to hook into the process, terminate.
             TerminateProcess(GetCurrentProcess(), 0xBAD0C0DE);
         }
+
+        // Dummy function to force non-used symbols to be emitted in the pdb file.
+        ForceSymbolsHelper();
         break;
     }
     case DLL_THREAD_ATTACH:

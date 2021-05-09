@@ -24,6 +24,6 @@ struct uSnatcherModel : public MtObject // public uHavokModel
     /* 0x12D8 */ DWORD      mSynchroTransFlag;
 
     /* 0x12E4 */ DWORD      mKindAttr;
-    /* 0x12E8 */ // mVitalMax
-    /* 0x12EC */ // mVitalNew
+    /* 0x12E8 */ DWORD      mVitalMax;
+    /* 0x12EC */ DWORD      mVitalNew;
 };
