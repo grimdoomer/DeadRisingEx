@@ -395,19 +395,20 @@ cResource * __stdcall Hook_sResource_LoadGameResourceSynchronous(sResource *this
     MtFileStream *pFileStream = nullptr;
     sResource::DecodeFileRequest overlayReq = { 0 };
     sResource::DecompressStreamContext context = { 0 };
-
-    // Call the trampoline and if it's successfull return the object pointers.
-    cResource *pResource = sResource::_LoadGameResourceSynchronous(thisptr, pObjectType, psFileName, resourceId, flags);
-    if (pResource != nullptr)
-    {
-        // Resource loaded successfully.
-        return pResource;
-    }
+    cResource *pResource = nullptr;
 
     // Check to see if we have an overlay file for this id.
     if (ArchiveOverlay::Instance()->mFileOverlayMap.find(resourceId) == ArchiveOverlay::Instance()->mFileOverlayMap.end())
     {
-        // No overlay file found, this could be an error.
+        // Call the trampoline and if it's successfull return the object pointers.
+        pResource = sResource::_LoadGameResourceSynchronous(thisptr, pObjectType, psFileName, resourceId, flags);
+        if (pResource != nullptr)
+        {
+            // Resource loaded successfully.
+            return pResource;
+        }
+
+        // No overlay file found and trampoline failed, this could be an error.
         DbgPrint("### WARNING: Possible missing file: %s\n", psFileName);
         return nullptr;
     }
