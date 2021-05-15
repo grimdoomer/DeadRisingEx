@@ -47,7 +47,7 @@ namespace DeadRisingLauncher
                         {
                             // Read the change log and return that there is an update.
                             changeLog = reader.ReadToEnd();
-                            downloadUrl = string.Format("https://icode4.coffee/files/DeadRisingArcTool/DeadRisingEx_{0}_{1}.zip", version, Properties.Settings.Default.UpdateFlavor);
+                            downloadUrl = string.Format("https://icode4.coffee/files/DeadRisingEx/DeadRisingEx_{0}_{1}.zip", version, Properties.Settings.Default.UpdateFlavor);
                             return true;
                         }
                     }

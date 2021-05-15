@@ -18,7 +18,7 @@
 
         build++;
 
-        if( this.Host.ResolveParameterValue("-","-","BuildConfiguration") == "Release" )
+        if( this.Host.ResolveParameterValue("-","-","BuildConfiguration").StartsWith("Release") == true )
             revision++;
     }
 #>

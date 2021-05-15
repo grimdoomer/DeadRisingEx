@@ -134,7 +134,7 @@ namespace Updater
             {
                 // Update the file currently being copied.
                 this.lblFileName.Text = (string)e.UserState;
-                this.progressBar1.Value++;
+                this.progressBar1.Value = e.ProgressPercentage;
             }
         }
 
@@ -144,7 +144,7 @@ namespace Updater
             if (e.Result != null && (bool)e.Result == true)
             {
                 // Start the updated arctool process.
-                Process.Start("DeadRisingArcTool.exe");
+                Process.Start(Application.StartupPath + "\\DeadRisingLauncher.exe");
             }
 
             // Quit the updated application.
