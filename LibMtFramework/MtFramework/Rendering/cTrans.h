@@ -259,6 +259,20 @@ struct cTrans : public MtObject
     };
     static_assert(sizeof(RenderCommandBase) == 4, "cTrans::RenderCommandBase incorrect struct size");
 
+    // sizeof = 0x14?
+    struct RenderCommand_SetScissorRect : public RenderCommandBase  // 0x140662FAF
+    {
+        /* 0x04 */ D3D11_RECT   ScissorRect;
+    };
+    static_assert(sizeof(RenderCommand_SetScissorRect) == 0x14, "cTrans::RenderCommand_SetScissorRect incorrect struct size");
+
+    // sizeof = 0xC?
+    struct RenderCommand_2 : public RenderCommandBase   // 0x140662F93
+    {
+        /* 0x04 */ DWORD    SubCommand;
+        /* 0x08 */ DWORD    Value;
+    };
+
     // sizeof = 0x50
     struct RenderCommand_13 : public RenderCommandBase
     {

@@ -274,8 +274,13 @@ __int64 SpawnObject(WCHAR **argv, int argc)
     // Set the item position.
     *(Vector4*)(((BYTE*)pObject) + 0x40) = position;
 
+    // Determine what move line to add the object to.
+    DWORD moveLine = 9;
+    if (sObjectClassName.find("uNpc") == 0)
+        moveLine = 4;
+
     // Spawn the object.
-    if (sUnit_AddObject(*g_sUnitInstance, 9, pObject) == false)
+    if (sUnit_AddObject(*g_sUnitInstance, moveLine, pObject) == false)
     {
         // Failed to add object to sUnit.
         wprintf(L"sUnit_AddObject failed\n");

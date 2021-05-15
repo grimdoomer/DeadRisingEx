@@ -18,6 +18,7 @@ namespace DeadRisingLauncher
         private const string ModLoadOrderSection = "ModLoadOrder";
 
         private const string EnableConsoleKey = "EnableConsole";
+        private const string DebugLogKey = "DebugLog";
         private const string RecursiveGrenadeKey = "RecursiveGrenade";
 
         // Graphics settings:
@@ -32,6 +33,10 @@ namespace DeadRisingLauncher
         /// Determines if the console window will be displayed or not
         /// </summary>
         public bool EnableConsoleWindow { get; set; } = false;
+        /// <summary>
+        /// Determines if debug logging is enabled or not.
+        /// </summary>
+        public bool DebugLog { get; set; } = false;
         /// <summary>
         /// Determines if the recursive grenade mod will be enabled or not
         /// </summary>
@@ -82,6 +87,7 @@ namespace DeadRisingLauncher
 
             // Read all the values from the ini file.
             this.EnableConsoleWindow = GetConfigBool(configData, GameSettingsSection, EnableConsoleKey);
+            this.DebugLog = GetConfigBool(configData, GameSettingsSection, DebugLogKey);
             this.RecursiveGrenade = GetConfigBool(configData, GameSettingsSection, RecursiveGrenadeKey);
 
             this.DynamicGraphicsMemory = GetConfigBool(configData, GraphicsSettingsSection, DynamicGraphicsMemoryKey);
@@ -105,6 +111,7 @@ namespace DeadRisingLauncher
             // Game Settings:
             configData.Sections.AddSection(GameSettingsSection);
             configData[GameSettingsSection].AddKey(EnableConsoleKey, this.EnableConsoleWindow.ToString());
+            configData[GameSettingsSection].AddKey(DebugLogKey, this.DebugLog.ToString());
             configData[GameSettingsSection].AddKey(RecursiveGrenadeKey, this.RecursiveGrenade.ToString());
 
             // Graphics Settings:

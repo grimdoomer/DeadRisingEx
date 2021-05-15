@@ -14,7 +14,7 @@ void uOmRecursiveGrenade::SpawnGrenades()
 
     // Pick a random number of grenades to spawn.
     int grenadeCount = (int)(GetRandomFloat(pThing) * 15.0f) % 5;
-    wprintf(L"Spawning %d grenades\n", grenadeCount);
+    //wprintf(L"Spawning %d grenades\n", grenadeCount);
 
     // Loop and spawn grenades.
     for (int i = 0; i < grenadeCount; i++)
@@ -27,7 +27,7 @@ void uOmRecursiveGrenade::SpawnGrenades()
         position.x += GetRandomFloat(pThing) * 350.0f * (round(GetRandomFloat(pThing)) == 1 ? 1.0f : -1.0f);
         position.y += 50.0f;
         position.z += GetRandomFloat(pThing) * 350.0f * (round(GetRandomFloat(pThing)) == 1 ? 1.0f : -1.0f);
-        wprintf(L"Grenade #%d: %f %f %f\n", i, position.x, position.y, position.z);
+        //wprintf(L"Grenade #%d: %f %f %f\n", i, position.x, position.y, position.z);
 
         // Create a new grenade object.
         uOmRecursiveGrenade *pGrenade = uOmRecursiveGrenade::CreateInstance();

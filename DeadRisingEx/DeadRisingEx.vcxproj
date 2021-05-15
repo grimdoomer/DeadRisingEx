@@ -39,6 +39,7 @@
     <ClCompile Include="DeadRisingEx\MtFramework\MtObjectImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Object\sUnitImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Player\uPlayerImpl.cpp" />
+    <ClCompile Include="DeadRisingEx\Utilities\DebugLog.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="DeadRisingEx\ModConfig.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Archive\ArchiveOverlay.cpp" />
@@ -70,6 +71,7 @@
     <ClInclude Include="DeadRisingEx\MtFramework\Player\uPlayerImpl.h" />
     <ClInclude Include="DeadRisingEx\Utilities.h" />
     <ClInclude Include="DeadRisingEx\ModConfig.h" />
+    <ClInclude Include="DeadRisingEx\Utilities\DebugLog.h" />
     <ClInclude Include="DeadRisingEx\Utilities\GuardedBuffer.h" />
   </ItemGroup>
   <ItemGroup>

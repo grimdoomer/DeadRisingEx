@@ -46,7 +46,7 @@ struct sMain : public cSystem
     /* 0x88 */ DWORD        WorkItemsQueued;
     /* 0x8C */ DWORD        WorkItemsProcessed;
     /* 0x90 */ // DWORD type of work to do, 0 = process queued work items
-    /* 0x94 */ DWORD        mJobThreadNum;
+    /* 0x94 */ DWORD        mJobThreadNum;      // Default value = 4
     /* 0x98 */ WorkItem     WorkItems[0x1555];
     /* 0x20090 */
     /* 0x20098 */ WorkerThreadInfo  WorkerThreads[6];

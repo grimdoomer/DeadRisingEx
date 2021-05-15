@@ -4,6 +4,7 @@
 
 #include "sRenderImpl.h"
 #include <MtFramework/Rendering/sRender.h>
+#include <MtFramework/Rendering/sPrim.h>
 #include <stdio.h>
 #include <string>
 #include <detours.h>
@@ -24,7 +25,8 @@ RENDERDOC_API_1_4_1 *rdoc_api = NULL;
 __int64 PrintVertexDeclarations(WCHAR **argv, int argc);
 __int64 CaptureFrame(WCHAR **argv, int argc);
 
-sRender * __cdecl Hook_sRender_ctor(sRender *thisptr, DWORD interval, DWORD dwUnused1, DWORD dwGraphicsMemSize, DWORD dwUnused2);
+sRender * __stdcall Hook_sRender_ctor(sRender *thisptr, DWORD interval, DWORD dwUnused1, DWORD dwGraphicsMemSize, DWORD dwUnused2);
+sPrim * __stdcall Hook_sPrim_ctor(sPrim *thisptr, DWORD entryCount);
 //void __cdecl Hook_sRender_DrawFrame(sRender *thisptr);
 sRender::Buffer * __stdcall Hook_sRender__Buffer_ctor(sRender::Buffer *thisptr, ID3D11DeviceContext *pDeviceContext, DWORD dwBufferSize, DWORD dwBufferType);
 void * __stdcall Hook_sRender__Buffer_MapForWrite(sRender::Buffer *thisptr, DWORD dwSize);
@@ -45,12 +47,11 @@ void sRenderImpl::RegisterTypeInfo()
 
 bool sRenderImpl::InstallHooks()
 {
-    DetourAttach((void**)&sRender::_ctor, Hook_sRender_ctor);
-    //DetourAttach((void**)&sRender::_DrawFrame, Hook_sRender_DrawFrame);
-
     // Check if dynamic graphics memory is enabled and hook needed functions if so.
     if (ModConfig::Instance()->DynamicGraphicsMemory == true)
     {
+        DetourAttach((void**)&sRender::_ctor, Hook_sRender_ctor);
+        DetourAttach((void**)&sPrim::_ctor, Hook_sPrim_ctor);
         DetourAttach((void**)&sRender::Buffer::_ctor, Hook_sRender__Buffer_ctor);
         DetourAttach((void**)&sRender::Buffer::_MapForWrite, Hook_sRender__Buffer_MapForWrite);
     }
@@ -146,6 +147,12 @@ sRender * __stdcall Hook_sRender_ctor(sRender *thisptr, DWORD interval, DWORD dw
     return sRender::_ctor(thisptr, interval, dwUnused1, 60 * 1024 * 1024, dwUnused2);
 }
 
+sPrim * __stdcall Hook_sPrim_ctor(sPrim *thisptr, DWORD entryCount)
+{
+    // Increase the number of command entries to avoid crashes.
+    return sPrim::_ctor(thisptr, entryCount * 10);
+}
+
 //void __stdcall Hook_sRender_DrawFrame(sRender *thisptr)
 //{
 //    bool doFrameCapture = false;
@@ -187,6 +194,12 @@ sRender * __stdcall Hook_sRender_ctor(sRender *thisptr, DWORD interval, DWORD dw
 
 sRender::Buffer * __stdcall Hook_sRender__Buffer_ctor(sRender::Buffer *thisptr, ID3D11DeviceContext *pDeviceContext, DWORD dwBufferSize, DWORD dwBufferType)
 {
+    // Check the buffer type and increase the size to avoid crashes.
+    if (dwBufferType == BUFFER_TYPE_VERTEX)
+        dwBufferSize = 15 * 1024 * 1024;    // 15MB for vertex buffers
+    else
+        dwBufferSize = 5 * 1024 * 1024;     // 5MB for index buffers
+
     // Initialize fields.
     thisptr->pBuffer = nullptr;
     thisptr->pDeviceContext = pDeviceContext;

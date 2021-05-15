@@ -197,7 +197,7 @@ void __stdcall Hook_sResource_ResourceDecoderProc(int threadIndex)
 
             // If we didn't find a request to process break the processing loop and sleep.
             if (pDecodeReq == nullptr)
-                break;
+                goto WorkCompleted;
 
             // Check if the resource has been loaded yet.
             if ((pDecodeReq->pResource->mState & RESS_RESOURCE_LOADED) == 0)
@@ -311,8 +311,11 @@ void __stdcall Hook_sResource_ResourceDecoderProc(int threadIndex)
             EnterCriticalSection(&thisptr->AsyncDecodeLock);
         }
 
-        // No work to do yet.
+        // Release the list lock.
         LeaveCriticalSection(&thisptr->AsyncDecodeLock);
+
+    WorkCompleted:
+        // No work to do yet.
         SetEventHelper(&thisptr->DecoderWorkCompletedEvent[threadIndex]);
         continue;
     }

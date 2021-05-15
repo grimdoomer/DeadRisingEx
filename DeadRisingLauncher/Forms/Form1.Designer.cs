@@ -31,6 +31,9 @@
             this.btnPlay = new System.Windows.Forms.Panel();
             this.btnSettings = new System.Windows.Forms.Panel();
             this.btnExit = new System.Windows.Forms.Panel();
+            this.pnlWhiteboard = new System.Windows.Forms.Panel();
+            this.lblVersion = new System.Windows.Forms.Label();
+            this.lblStatus = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnPlay
@@ -69,21 +72,58 @@
             this.btnExit.MouseEnter += new System.EventHandler(this.PanelMouseEnterEvent);
             this.btnExit.MouseLeave += new System.EventHandler(this.PanelMouseLeaveEvent);
             // 
+            // pnlWhiteboard
+            // 
+            this.pnlWhiteboard.BackColor = System.Drawing.Color.Transparent;
+            this.pnlWhiteboard.Location = new System.Drawing.Point(382, 101);
+            this.pnlWhiteboard.Name = "pnlWhiteboard";
+            this.pnlWhiteboard.Size = new System.Drawing.Size(563, 253);
+            this.pnlWhiteboard.TabIndex = 3;
+            // 
+            // lblVersion
+            // 
+            this.lblVersion.AutoSize = true;
+            this.lblVersion.BackColor = System.Drawing.Color.Transparent;
+            this.lblVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblVersion.ForeColor = System.Drawing.Color.Red;
+            this.lblVersion.Location = new System.Drawing.Point(35, 475);
+            this.lblVersion.Name = "lblVersion";
+            this.lblVersion.Size = new System.Drawing.Size(67, 20);
+            this.lblVersion.TabIndex = 4;
+            this.lblVersion.Text = "Version:";
+            // 
+            // lblStatus
+            // 
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.BackColor = System.Drawing.Color.Transparent;
+            this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatus.ForeColor = System.Drawing.Color.Red;
+            this.lblStatus.Location = new System.Drawing.Point(35, 498);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(172, 20);
+            this.lblStatus.TabIndex = 5;
+            this.lblStatus.Text = "Checking for updates...";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::DeadRisingLauncher.Properties.Resources.DeadRisingExBackground;
             this.ClientSize = new System.Drawing.Size(1006, 527);
-            this.Controls.Add(this.btnExit);
+            this.Controls.Add(this.lblStatus);
+            this.Controls.Add(this.lblVersion);
             this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.btnPlay);
+            this.Controls.Add(this.btnExit);
+            this.Controls.Add(this.pnlWhiteboard);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -92,6 +132,9 @@
         private System.Windows.Forms.Panel btnPlay;
         private System.Windows.Forms.Panel btnSettings;
         private System.Windows.Forms.Panel btnExit;
+        private System.Windows.Forms.Panel pnlWhiteboard;
+        private System.Windows.Forms.Label lblVersion;
+        private System.Windows.Forms.Label lblStatus;
     }
 }
 

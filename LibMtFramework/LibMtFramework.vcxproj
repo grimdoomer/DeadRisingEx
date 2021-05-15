@@ -34,6 +34,7 @@
     <ClInclude Include="MtFramework\Game\Task\cGametaskTitle.h" />
     <ClInclude Include="MtFramework\Game\uSchedulerEdit.h" />
     <ClInclude Include="MtFramework\Graphics\rTexture.h" />
+    <ClInclude Include="MtFramework\Graphics\Sprites\cSprAnm.h" />
     <ClInclude Include="MtFramework\Memory\MtDefaultAllocator.h" />
     <ClInclude Include="MtFramework\Object\Model\sSMManager.h" />
     <ClInclude Include="MtFramework\Object\Npc\uNpcMarker.h" />

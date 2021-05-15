@@ -34,6 +34,7 @@
 #include "DeadRisingEx/MtFramework/Object/Model/sSMManagerImpl.h"
 #include "DeadRisingEx/MtFramework/Object/Npc/uNpcMarkerImpl.h"
 #include "DeadRisingEx/MtFramework/Player/uPlayerImpl.h"
+#include "DeadRisingEx/Utilities/DebugLog.h"
 
 // Version string for update 1 of the game exe.
 const char *g_SupportedGameVersionString = "Master Oct  6 2016 23:23:44";
@@ -123,50 +124,34 @@ DWORD __stdcall ProcessConsoleWorker(LPVOID)
     return 0;
 }
 
-// sizeof = 0x8
-struct rSprAnmHeader
+//BOOL(__stdcall *LoadSpriteData)(cAnmSprData *pSpriteData) = GetModuleAddress<BOOL(__stdcall*)(cAnmSprData*)>(0x140025D40);
+//
+//BOOL __stdcall Hook_LoadSpriteData(cAnmSprData *pSpriteData)
+//{
+//    // Call the trampoline.
+//    BOOL result = LoadSpriteData(pSpriteData);
+//
+//    if (result != FALSE)
+//    {
+//        // Fudge the sprite data addresses so we can break on access.
+//        for (int i = 0; i < pSpriteData->pSpriteAnmHeader->SpriteCount; i++)
+//        {
+//            pSpriteData->ppSpriteEntryBuffers[i] = (void*)1;
+//        }
+//    }
+//
+//    return result;
+//}
+
+void ForcePatchInfinityMode()
 {
-    /* 0x00 */ DWORD	Magic;
-    /* 0x04 */ WORD		SpriteCount;
-    /* 0x06 */ // WORD
-};
+    void *pPatchAddr1 = GetModuleAddress<void*>(0x14021155F);
+    void *pPatchAddr2 = GetModuleAddress<void*>(0x1402115EF);
 
-// sizeof = ?
-struct cAnmSprData
-{
-    /* 0x00 */ void		**vtable;
-    /* 0x08 */ void		*pSpriteAnm;
-    void *Unk1;
-    /* 0x18 */ rSprAnmHeader	    *pSpriteAnmHeader;
-    /* 0x20 */ void *Unk2; // void* pointer to second sprite data block
-    /* 0x28 */ void		*pSpriteAnmSpriteData;
-    /* 0x30 */ void *Unk3; // void*
-    /* 0x38 */ void		**ppSpriteEntryBuffers;		// 
-    /* 0x40 */ DWORD	*pSpriteEntryCounts;		// Number of sprite entries in each pSpriteEntryBuffers element
-    /* 0x48 */ // void*
-    /* 0x50 */ // WORD second count in sprite anm header
+    BYTE NopBytes[2] = { 0x90, 0x90 };
 
-    /* 0x54 */ // DWORD/BOOL
-    /* 0x58 */ // DWORD/BOOL
-};
-
-BOOL(__stdcall *LoadSpriteData)(cAnmSprData *pSpriteData) = GetModuleAddress<BOOL(__stdcall*)(cAnmSprData*)>(0x140025D40);
-
-BOOL __stdcall Hook_LoadSpriteData(cAnmSprData *pSpriteData)
-{
-    // Call the trampoline.
-    BOOL result = LoadSpriteData(pSpriteData);
-
-    if (result != FALSE)
-    {
-        // Fudge the sprite data addresses so we can break on access.
-        for (int i = 0; i < pSpriteData->pSpriteAnmHeader->SpriteCount; i++)
-        {
-            pSpriteData->ppSpriteEntryBuffers[i] = (void*)1;
-        }
-    }
-
-    return result;
+    PatchBytes(pPatchAddr1, NopBytes, sizeof(NopBytes));
+    PatchBytes(pPatchAddr2, NopBytes, sizeof(NopBytes));
 }
 
 __declspec(dllexport) void DummyExport()
@@ -293,6 +278,12 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         // Begin the detour transaction.
         DetourTransactionBegin();
         DetourUpdateThread(GetCurrentThread());
+
+        // If the debug log is enabled hook debug output to file.
+        if (ModConfig::Instance()->DebugLog == true)
+            DebugLog::InstallHooks();
+
+        ForcePatchInfinityMode();
 
         //DetourAttach((void**)&LoadSpriteData, Hook_LoadSpriteData);
 
