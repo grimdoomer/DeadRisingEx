@@ -1,14 +1,10 @@
-/*
-
-*/
 
 #pragma once
 #include "DeadRisingEx.h"
 
-class sRenderImpl
+class MtHeapAllocatorImpl
 {
-protected:
-
 public:
     static void RegisterTypeInfo();
+    static bool InstallHooks();
 };

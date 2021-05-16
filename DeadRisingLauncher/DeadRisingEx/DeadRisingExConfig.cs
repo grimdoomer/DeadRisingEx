@@ -14,10 +14,15 @@ namespace DeadRisingLauncher
     public class DeadRisingExConfig
     {
         private const string GameSettingsSection = "GameSettings";
+        private const string GraphicsSettingsSection = "GraphicsSettings";
         private const string ModLoadOrderSection = "ModLoadOrder";
 
         private const string EnableConsoleKey = "EnableConsole";
+        private const string DebugLogKey = "DebugLog";
         private const string RecursiveGrenadeKey = "RecursiveGrenade";
+
+        // Graphics settings:
+        private const string DynamicGraphicsMemoryKey = "DynamicGraphicsMemory";
 
         /// <summary>
         /// Full file path to the game's config file path
@@ -29,9 +34,18 @@ namespace DeadRisingLauncher
         /// </summary>
         public bool EnableConsoleWindow { get; set; } = false;
         /// <summary>
-        /// Determins if the recursive grenade mod will be enabled or not
+        /// Determines if debug logging is enabled or not.
+        /// </summary>
+        public bool DebugLog { get; set; } = false;
+        /// <summary>
+        /// Determines if the recursive grenade mod will be enabled or not
         /// </summary>
         public bool RecursiveGrenade { get; set; } = false;
+
+        /// <summary>
+        /// Determines if graphics memory should be allocated/resized dynamically as needed
+        /// </summary>
+        public bool DynamicGraphicsMemory { get; set; } = true;
 
         /// <summary>
         /// Mod file load order
@@ -73,7 +87,10 @@ namespace DeadRisingLauncher
 
             // Read all the values from the ini file.
             this.EnableConsoleWindow = GetConfigBool(configData, GameSettingsSection, EnableConsoleKey);
+            this.DebugLog = GetConfigBool(configData, GameSettingsSection, DebugLogKey);
             this.RecursiveGrenade = GetConfigBool(configData, GameSettingsSection, RecursiveGrenadeKey);
+
+            this.DynamicGraphicsMemory = GetConfigBool(configData, GraphicsSettingsSection, DynamicGraphicsMemoryKey);
 
             // Parse the mod load order.
             if (configData.Sections.ContainsSection(ModLoadOrderSection) == true)
@@ -94,7 +111,11 @@ namespace DeadRisingLauncher
             // Game Settings:
             configData.Sections.AddSection(GameSettingsSection);
             configData[GameSettingsSection].AddKey(EnableConsoleKey, this.EnableConsoleWindow.ToString());
+            configData[GameSettingsSection].AddKey(DebugLogKey, this.DebugLog.ToString());
             configData[GameSettingsSection].AddKey(RecursiveGrenadeKey, this.RecursiveGrenade.ToString());
+
+            // Graphics Settings:
+            configData[GraphicsSettingsSection].AddKey(DynamicGraphicsMemoryKey, this.DynamicGraphicsMemory.ToString());
 
             // Mod Load Order:
             configData.Sections.AddSection(ModLoadOrderSection);

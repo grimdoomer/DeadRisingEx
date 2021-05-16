@@ -49,5 +49,10 @@ struct sSnatcherMain : public sMain
     /* 0x20398 */ void  *mpModelLayout;
     /* 0x203A0 */ void  *mpEffectVFR;
 
+    /* 0x20DC0 */ void  *pGametaskMain;
+
     IMPLEMENT_SINGLETON(sSnatcherMain, 0x141944DD8);
+
+    inline static void(__stdcall *_InitializeAllocators)(sSnatcherMain *thisptr) =
+        GetModuleAddress<void(__stdcall*)(sSnatcherMain*)>(0x1400AB750);
 };

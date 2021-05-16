@@ -10,7 +10,7 @@ struct MtAllocator : public MtObject
 {
     /*
         VTable:
-            0x28 void * Alloc(ULONGLONG Size, DWORD Flags);
+            0x28 void * Alloc(ULONGLONG Size, DWORD Alignment);
             0x30 void Free(void *pAddress);
             0x38 DWORD gets some info about an allocation (void *pAddress);
     */
@@ -54,13 +54,13 @@ struct MtAllocator : public MtObject
 
         Parameters:
             - size: Size of the allocation in bytes
-            - flags: Allocation flags
+            - alignment: Byte boundary to align the allocation to
 
         Returns: Address of the allocated memory, for nullptr if the allocation failed.
     */
-    void * Alloc(ULONGLONG size, DWORD flags)
+    void * Alloc(ULONGLONG size, DWORD alignment)
     {
-        return ThisPtrCallNoFixup<void*, ULONGLONG, DWORD>(this->vtable[5], this, size, flags);
+        return ThisPtrCallNoFixup<void*, ULONGLONG, DWORD>(this->vtable[5], this, size, alignment);
     }
 
     /*
@@ -68,13 +68,13 @@ struct MtAllocator : public MtObject
 
         Parameters:
             - size: Size of the allocation in bytes
-            - flags: Allocation flags
+            - alignment: Byte boundary to align the allocation to
 
         Returns: Address of the allocated memory, for nullptr if the allocation failed.
     */
-    template<typename T> T* Alloc(ULONGLONG size, DWORD flags)
+    template<typename T> T* Alloc(ULONGLONG size, DWORD alignment)
     {
-        return (T*)Alloc(size, flags);
+        return (T*)Alloc(size, alignment);
     }
 
     /*

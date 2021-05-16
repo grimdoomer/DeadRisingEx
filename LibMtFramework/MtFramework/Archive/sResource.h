@@ -110,7 +110,7 @@ struct sResource
         /* 0x14388 */ MtFileStream        *pArchiveStream;
         /* 0x14390 */ CRITICAL_SECTION    AsyncDecodeLock;
         /* 0x143B8 */ void                *pScratchBuffer;
-        /* 0x143C0 */ DWORD                ScratchBufferSize;
+        /* 0x143C0 */ DWORD                ScratchBufferSize;           // Set to 0x200000 during sResource initialization
         /* 0x143C4 */ DWORD                CurrentArchiveOffset;        // Current position in the archive for async decoding
         /* 0x143C8 */ DWORD                AsyncBytesRead;              // Number of bytes read from the archive during async decoding
     /* 0x143CC */ DWORD             AsyncDecodeCount;                   // Number decode requests submitted for this archive

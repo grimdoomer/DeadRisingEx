@@ -23,7 +23,12 @@ public:
 
     bool EnableConsole;             // Determines if the debug console window should be opened or not
 
+    bool DebugLog;                  // Determines if debug output should be written to a log file or not
+
     bool RecursiveGrenade;          // Enables the recursive grenade mod
+
+    // Graphics options:
+    bool DynamicGraphicsMemory;     // Determines if graphics memory should be dynamically allocated/resized as needed
 
     char GameDirectory[MAX_PATH];                    // Game directory folder path
 

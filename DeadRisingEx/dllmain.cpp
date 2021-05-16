@@ -11,17 +11,40 @@
 #include "Misc/AsmHelpers.h"
 #include "MtFramework/Utils/Utilities.h"
 #include "DeadRisingEx/ModConfig.h"
+
+#include <MtFramework/Game/sMain.h>
+#include <MtFramework/IO/MtDataReader.h>
+#include <MtFramework/Graphics/rTexture.h>
+
 #include "DeadRisingEx/MtFramework/MtObjectImpl.h"
 #include "DeadRisingEx/MtFramework/Archive/ArchiveOverlay.h"
 #include "DeadRisingEx/MtFramework/Archive/sResourceImpl.h"
 #include "DeadRisingEx/MtFramework/Debug/sSnatcherToolImpl.h"
+#include "DeadRisingEx/MtFramework/Game/sMainImpl.h"
+#include "DeadRisingEx/MtFramework/Game/sSnatcherMainImpl.h"
+#include "DeadRisingEx/MtFramework/Game/Task/cGametaskTitleImpl.h"
 #include "DeadRisingEx/MtFramework/Graphics/rModelImpl.h"
-#include "DeadRisingEx/MtFramework/Graphics/sRenderImpl.h"
-#include "DeadRisingEx/MtFramework/Graphics/sShaderImpl.h"
+#include "DeadRisingEx/MtFramework/Memory/MtHeapAllocatorImpl.h"
+#include "DeadRisingEx/MtFramework/Rendering/sRenderImpl.h"
+#include "DeadRisingEx/MtFramework/Rendering/sShaderImpl.h"
 #include "DeadRisingEx/MtFramework/Item/uItemImpl.h"
 #include "DeadRisingEx/MtFramework/Item/Items/uOm08Impl.h"
 #include "DeadRisingEx/MtFramework/Object/sUnitImpl.h"
+#include "DeadRisingEx/MtFramework/Object/uPhotoImpl.h"
+#include "DeadRisingEx/MtFramework/Object/Model/sSMManagerImpl.h"
+#include "DeadRisingEx/MtFramework/Object/Npc/uNpcMarkerImpl.h"
 #include "DeadRisingEx/MtFramework/Player/uPlayerImpl.h"
+#include "DeadRisingEx/Utilities/DebugLog.h"
+
+// Version string for update 1 of the game exe.
+const char *g_SupportedGameVersionString = "Master Oct  6 2016 23:23:44";
+
+void ForceSymbolsHelper()
+{
+    MtDataReader *pDataReader = nullptr;
+    MtFile *pFile = nullptr;
+    MtFileStream *pFileStream = nullptr;
+}
 
 void SetupConsole()
 {
@@ -101,50 +124,34 @@ DWORD __stdcall ProcessConsoleWorker(LPVOID)
     return 0;
 }
 
-// sizeof = 0x8
-struct rSprAnmHeader
+//BOOL(__stdcall *LoadSpriteData)(cAnmSprData *pSpriteData) = GetModuleAddress<BOOL(__stdcall*)(cAnmSprData*)>(0x140025D40);
+//
+//BOOL __stdcall Hook_LoadSpriteData(cAnmSprData *pSpriteData)
+//{
+//    // Call the trampoline.
+//    BOOL result = LoadSpriteData(pSpriteData);
+//
+//    if (result != FALSE)
+//    {
+//        // Fudge the sprite data addresses so we can break on access.
+//        for (int i = 0; i < pSpriteData->pSpriteAnmHeader->SpriteCount; i++)
+//        {
+//            pSpriteData->ppSpriteEntryBuffers[i] = (void*)1;
+//        }
+//    }
+//
+//    return result;
+//}
+
+void ForcePatchInfinityMode()
 {
-    /* 0x00 */ DWORD	Magic;
-    /* 0x04 */ WORD		SpriteCount;
-    /* 0x06 */ // WORD
-};
+    void *pPatchAddr1 = GetModuleAddress<void*>(0x14021155F);
+    void *pPatchAddr2 = GetModuleAddress<void*>(0x1402115EF);
 
-// sizeof = ?
-struct cAnmSprData
-{
-    /* 0x00 */ void		**vtable;
-    /* 0x08 */ void		*pSpriteAnm;
-    void *Unk1;
-    /* 0x18 */ rSprAnmHeader	    *pSpriteAnmHeader;
-    /* 0x20 */ void *Unk2; // void* pointer to second sprite data block
-    /* 0x28 */ void		*pSpriteAnmSpriteData;
-    /* 0x30 */ void *Unk3; // void*
-    /* 0x38 */ void		**ppSpriteEntryBuffers;		// 
-    /* 0x40 */ DWORD	*pSpriteEntryCounts;		// Number of sprite entries in each pSpriteEntryBuffers element
-    /* 0x48 */ // void*
-    /* 0x50 */ // WORD second count in sprite anm header
+    BYTE NopBytes[2] = { 0x90, 0x90 };
 
-    /* 0x54 */ // DWORD/BOOL
-    /* 0x58 */ // DWORD/BOOL
-};
-
-BOOL(__stdcall *LoadSpriteData)(cAnmSprData *pSpriteData) = GetModuleAddress<BOOL(__stdcall*)(cAnmSprData*)>(0x140025D40);
-
-BOOL __stdcall Hook_LoadSpriteData(cAnmSprData *pSpriteData)
-{
-    // Call the trampoline.
-    BOOL result = LoadSpriteData(pSpriteData);
-
-    if (result != FALSE)
-    {
-        // Fudge the sprite data addresses so we can break on access.
-        for (int i = 0; i < pSpriteData->pSpriteAnmHeader->SpriteCount; i++)
-        {
-            pSpriteData->ppSpriteEntryBuffers[i] = (void*)1;
-        }
-    }
-
-    return result;
+    PatchBytes(pPatchAddr1, NopBytes, sizeof(NopBytes));
+    PatchBytes(pPatchAddr2, NopBytes, sizeof(NopBytes));
 }
 
 __declspec(dllexport) void DummyExport()
@@ -215,11 +222,32 @@ BOOL APIENTRY DllMain( HMODULE hModule,
             return TRUE;
         }
 
+        // Check the game version string to make sure we are loading with the correct game version.
+        if (strncmp(sMain::mBuildVersion, g_SupportedGameVersionString, strlen(g_SupportedGameVersionString)) != 0)
+        {
+            // Game version not supported, display an error and kill the process.
+            MessageBoxW(NULL, L"This version of Dead Rising is not supported by DeadRisingEx! Please update the game to the Oct 6th 2016 version in order to use DeadRisingEx.",
+                L"Game version not supported", MB_OK | MB_ICONERROR | MB_APPLMODAL);
+            TerminateProcess(GetCurrentProcess(), 0xBAD0C0DE);
+        }
+
         // Load the mod config file.
         if (ModConfig::Instance()->LoadConfigFile("DeadRisingEx.ini") == false)
         {
             // Failed to load the mod config.
             DbgPrint("Failed to load mod config file, using default settings!\n");
+        }
+
+        // Check if we should enable the console window or not.
+        if (ModConfig::Instance()->EnableConsole == true)
+        {
+            // Setup the console window.
+            OutputDebugString("DRDebugger DllMain\n");
+            SetupConsole();
+
+            // Create a worker thread to process console commands.
+            HANDLE hThread = CreateThread(NULL, NULL, ProcessConsoleWorker, NULL, NULL, NULL);
+            CloseHandle(hThread);
         }
 
         // Register all commands.
@@ -240,6 +268,9 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         sShaderImpl::RegisterTypeInfo();
         uItemImpl::RegisterTypeInfo();
         sUnitImpl::RegisterTypeInfo();
+        sMainImpl::RegisterTypeInfo();
+        sSnatcherMainImpl::RegisterTypeInfo();
+        MtHeapAllocatorImpl::RegisterTypeInfo();
 
         if (ModConfig::Instance()->RecursiveGrenade == true)
             uOm08Impl::RegisterTypeInfo();
@@ -248,10 +279,24 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         DetourTransactionBegin();
         DetourUpdateThread(GetCurrentThread());
 
+        // If the debug log is enabled hook debug output to file.
+        if (ModConfig::Instance()->DebugLog == true)
+            DebugLog::InstallHooks();
+
+        //ForcePatchInfinityMode();
+
         //DetourAttach((void**)&LoadSpriteData, Hook_LoadSpriteData);
 
         // Hook functions.
         Utilities::InstallHooks();
+        sRenderImpl::InstallHooks();
+        sMainImpl::InstallHooks();
+        sSnatcherMainImpl::InstallHooks();
+        sSMManagerImpl::InstallHooks();
+        //MtHeapAllocatorImpl::InstallHooks();
+        cGametaskTitleImpl::InstallHooks();
+        uNpcMarkerImpl::InstallHooks();
+        uPhotoImpl::InstallHooks();
 
         uPlayerImpl::RegisterTypeInfo();
 
@@ -270,17 +315,8 @@ BOOL APIENTRY DllMain( HMODULE hModule,
             TerminateProcess(GetCurrentProcess(), 0xBAD0C0DE);
         }
 
-        // Check if we should enable the console window or not.
-        if (ModConfig::Instance()->EnableConsole == true)
-        {
-            // Setup the console window.
-            OutputDebugString("DRDebugger DllMain\n");
-            SetupConsole();
-
-            // Create a worker thread to process console commands.
-            HANDLE hThread = CreateThread(NULL, NULL, ProcessConsoleWorker, NULL, NULL, NULL);
-            CloseHandle(hThread);
-        }
+        // Dummy function to force non-used symbols to be emitted in the pdb file.
+        ForceSymbolsHelper();
         break;
     }
     case DLL_THREAD_ATTACH:

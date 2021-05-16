@@ -35,13 +35,17 @@
             this.btnLoadOrderUp = new System.Windows.Forms.Button();
             this.lstModArchives = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.chkDynamicGraphicsMemory = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.chkRecursiveGrenade = new System.Windows.Forms.CheckBox();
             this.chkEnableDebugger = new System.Windows.Forms.CheckBox();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.chkRecursiveGrenade = new System.Windows.Forms.CheckBox();
+            this.chkDebugLog = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,6 +55,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -128,9 +133,30 @@
             this.columnHeader1.Text = "File name";
             this.columnHeader1.Width = 395;
             // 
+            // tabPage3
+            // 
+            this.tabPage3.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage3.Controls.Add(this.chkDynamicGraphicsMemory);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(399, 351);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Graphics";
+            // 
+            // chkDynamicGraphicsMemory
+            // 
+            this.chkDynamicGraphicsMemory.AutoSize = true;
+            this.chkDynamicGraphicsMemory.Location = new System.Drawing.Point(8, 6);
+            this.chkDynamicGraphicsMemory.Name = "chkDynamicGraphicsMemory";
+            this.chkDynamicGraphicsMemory.Size = new System.Drawing.Size(152, 17);
+            this.chkDynamicGraphicsMemory.TabIndex = 0;
+            this.chkDynamicGraphicsMemory.Text = "Dynamic Graphics Memory";
+            this.chkDynamicGraphicsMemory.UseVisualStyleBackColor = true;
+            // 
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage2.Controls.Add(this.chkDebugLog);
             this.tabPage2.Controls.Add(this.chkRecursiveGrenade);
             this.tabPage2.Controls.Add(this.chkEnableDebugger);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
@@ -139,6 +165,16 @@
             this.tabPage2.Size = new System.Drawing.Size(399, 351);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Settings";
+            // 
+            // chkRecursiveGrenade
+            // 
+            this.chkRecursiveGrenade.AutoSize = true;
+            this.chkRecursiveGrenade.Location = new System.Drawing.Point(8, 52);
+            this.chkRecursiveGrenade.Name = "chkRecursiveGrenade";
+            this.chkRecursiveGrenade.Size = new System.Drawing.Size(118, 17);
+            this.chkRecursiveGrenade.TabIndex = 1;
+            this.chkRecursiveGrenade.Text = "Recursive Grenade";
+            this.chkRecursiveGrenade.UseVisualStyleBackColor = true;
             // 
             // chkEnableDebugger
             // 
@@ -173,15 +209,15 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // chkRecursiveGrenade
+            // chkDebugLog
             // 
-            this.chkRecursiveGrenade.AutoSize = true;
-            this.chkRecursiveGrenade.Location = new System.Drawing.Point(8, 29);
-            this.chkRecursiveGrenade.Name = "chkRecursiveGrenade";
-            this.chkRecursiveGrenade.Size = new System.Drawing.Size(118, 17);
-            this.chkRecursiveGrenade.TabIndex = 1;
-            this.chkRecursiveGrenade.Text = "Recursive Grenade";
-            this.chkRecursiveGrenade.UseVisualStyleBackColor = true;
+            this.chkDebugLog.AutoSize = true;
+            this.chkDebugLog.Location = new System.Drawing.Point(8, 29);
+            this.chkDebugLog.Name = "chkDebugLog";
+            this.chkDebugLog.Size = new System.Drawing.Size(75, 17);
+            this.chkDebugLog.TabIndex = 2;
+            this.chkDebugLog.Text = "Debug log";
+            this.chkDebugLog.UseVisualStyleBackColor = true;
             // 
             // SettingsDialog
             // 
@@ -199,6 +235,8 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
@@ -219,5 +257,8 @@
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.CheckBox chkRecursiveGrenade;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.CheckBox chkDynamicGraphicsMemory;
+        private System.Windows.Forms.CheckBox chkDebugLog;
     }
 }

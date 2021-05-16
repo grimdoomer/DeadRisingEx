@@ -23,7 +23,7 @@ struct MtFile : public MtObject
             0x70 DWORD SetFileFile(DWORD dwLength);
             0x78 bool CanRead();
             0x80 bool CanWrite();
-            0x88 bool
+            0x88 bool IsAsync();
 
     */
 
@@ -81,12 +81,16 @@ struct MtFile : public MtObject
     inline static bool(__stdcall *_CanWrite)(MtFile *thisptr) =
         GetModuleAddress<bool(__stdcall*)(MtFile*)>(0x140619850);
 
+    inline static bool(__stdcall *_IsAsync)(MtFile *thisptr) =
+        GetModuleAddress<bool(__stdcall*)(MtFile*)>(0x140619810);
+
     IMPLEMENT_MYDTI(MtFile, 0x141CE5E28, 0x1400AF010, 0x1406198D0);
 
     // Flags for opening files:
     #define FOF_READ_ONLY       1   // Opens existing file for reading
     #define FOF_WRITE_ONLY      2   // Creates a new file with write access
     #define FOF_READ_WRITE      FOF_READ_ONLY | FOF_WRITE_ONLY   // Creates a new file with read and write access
+    #define FOF_ASYNC           4   // File operations are performed asynchronously
     
     /*
         Description: Constructs a new MtFile object and opens the file.
@@ -212,6 +216,14 @@ struct MtFile : public MtObject
     bool CanWrite()
     {
         return ThisPtrCallNoFixup<bool>(this->vtable[16], this);
+    }
+
+    /*
+        Returns: True if file operations are performed asynchronously.
+    */
+    bool IsAsync()
+    {
+        return ThisPtrCallNoFixup<bool>(this->vtable[17], this);
     }
 };
 static_assert(sizeof(MtFile) == 0x148, "MtFile incorrect struct size");

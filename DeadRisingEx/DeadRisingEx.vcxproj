@@ -23,15 +23,23 @@
     <ClCompile Include="DeadRisingEx\Debugger\TypeInfo.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Archive\sResourceImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Debug\sSnatcherToolImpl.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Game\sMainImpl.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Game\sSnatcherMainImpl.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Game\Task\cGametaskTitleImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Graphics\rModelImpl.cpp" />
-    <ClCompile Include="DeadRisingEx\MtFramework\Graphics\sRenderImpl.cpp" />
-    <ClCompile Include="DeadRisingEx\MtFramework\Graphics\sShaderImpl.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Memory\MtHeapAllocatorImpl.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Object\Model\sSMManagerImpl.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Object\Npc\uNpcMarkerImpl.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Object\uPhotoImpl.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Rendering\sRenderImpl.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Rendering\sShaderImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Item\Items\uOm08Impl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Item\Items\uOmRecursiveGrenade.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Item\uItemImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\MtObjectImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Object\sUnitImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Player\uPlayerImpl.cpp" />
+    <ClCompile Include="DeadRisingEx\Utilities\DebugLog.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="DeadRisingEx\ModConfig.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Archive\ArchiveOverlay.cpp" />
@@ -44,9 +52,17 @@
     <ClInclude Include="DeadRisingEx\MtFramework\Archive\cResourceImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Archive\sResourceImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Debug\sSnatcherToolImpl.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Game\sMainImpl.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Game\sSnatcherMainImpl.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Game\Task\cGametaskTitleImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Graphics\rModelImpl.h" />
-    <ClInclude Include="DeadRisingEx\MtFramework\Graphics\sRenderImpl.h" />
-    <ClInclude Include="DeadRisingEx\MtFramework\Graphics\sShaderImpl.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Memory\MtHeapAllocatorImpl.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Object\Model\sSMManagerImpl.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Object\Npc\uNpcMarkerImpl.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Object\uPhotoImpl.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Rendering\renderdoc_app.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Rendering\sRenderImpl.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Rendering\sShaderImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Item\Items\uOm08Impl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Item\Items\uOmRecursiveGrenade.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Item\uItemImpl.h" />
@@ -55,9 +71,15 @@
     <ClInclude Include="DeadRisingEx\MtFramework\Player\uPlayerImpl.h" />
     <ClInclude Include="DeadRisingEx\Utilities.h" />
     <ClInclude Include="DeadRisingEx\ModConfig.h" />
+    <ClInclude Include="DeadRisingEx\Utilities\DebugLog.h" />
+    <ClInclude Include="DeadRisingEx\Utilities\GuardedBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DeadRisingEx.def" />
+    <MASM Include="DeadRisingEx\MtFramework\Game\Task\cGametaskTitleHooks.asm" />
+    <MASM Include="DeadRisingEx\MtFramework\Rendering\sRenderHooks.asm">
+      <FileType>Document</FileType>
+    </MASM>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -95,6 +117,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -201,5 +224,6 @@
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
   </ImportGroup>
 </Project>

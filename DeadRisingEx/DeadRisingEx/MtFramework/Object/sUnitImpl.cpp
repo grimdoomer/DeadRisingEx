@@ -7,12 +7,16 @@
 
 // Forward declarations for command functions.
 __int64 PrintMoveLines(WCHAR **argv, int argc);
+__int64 PauseMoveLine(WCHAR **argv, int argc);
+__int64 ResumeMoveLine(WCHAR **argv, int argc);
 
 // Table of commands.
-const int g_sUnitCommandsLength = 1;
+const int g_sUnitCommandsLength = 3;
 const CommandEntry g_sUnitCommands[g_sUnitCommandsLength] =
 {
     { L"print_move_lines", L"Prints all objects in the sUnit move line lists", PrintMoveLines },
+    { L"pause_move_line", L"Pauses the specified move line", PauseMoveLine },
+    { L"resume_move_line", L"Resumes the specified move line", ResumeMoveLine }
 };
 
 void sUnitImpl::RegisterTypeInfo()
@@ -66,4 +70,64 @@ __int64 PrintMoveLines(WCHAR **argv, int argc)
     }
 
     return 0;
+}
+
+__int64 PauseMoveLine(WCHAR **argv, int argc)
+{
+    // Get the sUnit singleton instance.
+    sUnit *p_sUnit = sUnit::Instance();
+
+    // Make sure the move line index was provided.
+    if (argc != 1)
+    {
+        // Print command use.
+        wprintf(L"Invalid parameters: pause_move_line <index>\n");
+        return 0;
+    }
+
+    // Setup the unicode converter.
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> unicConvert;
+
+    // Convert the index parameter to an integer.
+    std::string sIndex = unicConvert.to_bytes(argv[0]);
+    int index = atoi(sIndex.c_str());
+    if (index < 0 || index >= ARRAYSIZE(sUnit::MoveLines))
+    {
+        // Index is invalid.
+        wprintf(L"Index must be [0, 31]\n");
+        return 0;
+    }
+
+    // Pause the move line.
+    p_sUnit->MoveLines[index].Flags |= MOVE_LINE_FLAGS_PAUSE;
+}
+
+__int64 ResumeMoveLine(WCHAR **argv, int argc)
+{
+    // Get the sUnit singleton instance.
+    sUnit *p_sUnit = sUnit::Instance();
+
+    // Make sure the move line index was provided.
+    if (argc != 1)
+    {
+        // Print command use.
+        wprintf(L"Invalid parameters: resume_move_line <index>\n");
+        return 0;
+    }
+
+    // Setup the unicode converter.
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> unicConvert;
+
+    // Convert the index parameter to an integer.
+    std::string sIndex = unicConvert.to_bytes(argv[0]);
+    int index = atoi(sIndex.c_str());
+    if (index < 0 || index >= ARRAYSIZE(sUnit::MoveLines))
+    {
+        // Index is invalid.
+        wprintf(L"Index must be [0, 31]\n");
+        return 0;
+    }
+
+    // Resume the move line.
+    p_sUnit->MoveLines[index].Flags &= ~MOVE_LINE_FLAGS_PAUSE;
 }

@@ -5,6 +5,9 @@
 #pragma once
 #include "LibMtFramework.h"
 #include "MtFramework/MtObject.h"
+#include <d3d11.h>
+
+struct sPrim;
 
 static const char *SemanticNames[14] =
 {
@@ -156,6 +159,9 @@ struct cTrans : public MtObject
     // sizeof = 0x18
     struct Element : public MtObject
     {
+        // Flag values:
+        #define ELEMENT_FLAGS_WRITABLE      0x40    // this might not be the correct meaning
+
         // It seems there are 2 "IsBeingAccessed" values, for what appears to
         // be 2 render calls back to back. Perhaps this is something like
         // double buffering?
@@ -164,6 +170,40 @@ struct cTrans : public MtObject
         /* 0x14 */ DWORD    Flags;
     };
     static_assert(sizeof(Element) == 0x18, "cTrans::Element incorrect struct size");
+
+    // sizeof = 0x70
+    struct TextureBase : public Element
+    {
+        // Flag values:
+        #define TEXTURE_BASE_FLAGS_USE_TEXTURE_SCALE    0x800   // The texture is scaled for the render target view
+
+        /* 0x18 */ ID3D11Resource   *pTexture;      // Interface pointer for ID3D11Texture1D/ID3D11Texture2D/ID3D11Texture3D
+        /* 0x20 */ // void* some resource heap allocation
+        /* 0x28 */ DWORD    mWidth;
+        /* 0x2C */ DWORD    mHeight;
+        /* 0x30 */ //DWORD gets set to width on init
+        /* 0x34 */ //DWORD gets set to height on init
+        /* 0x38 */ DWORD    mDepth;
+        /* 0x3C */ DWORD    mLevelCount;
+        /* 0x40 */ DWORD    mFormat;
+        /* 0x48 */ float    WidthScale;     // Used to scale the texture if it is a render target
+        /* 0x4C */ float    HeightScale;    // Used to scale the texture if it is a render target
+        /* 0x50 */ DWORD    Usage;          // See D3D11_USAGE
+        /* 0x54 */ DWORD    CPUAccess;      // See D3D11_CPU_ACCESS_FLAG
+        /* 0x58 */ DWORD    BindFlags;      // See D3D11_BIND_FLAG
+        /* 0x5C */ DWORD    SampleCount;    // Number of multisamples per pixel
+        /* 0x60 */ ID3D11ShaderResourceView *pShaderResourceView;
+        /* 0x68 */ ID3D11DepthStencilView   *pDepthStencilView;
+    };
+
+    // sizeof = 0x108 */
+    struct Texture : public TextureBase
+    {
+        /* 0x70 */
+
+        /* 0x78 */ ID3D11RenderTargetView   *pRenderTargetViews[16];    // Render target views, 1 for each mip map
+        /* 0xF8 */
+    };
 
     // sizeof = 0x8
     struct VertexDeclElement
@@ -189,20 +229,60 @@ struct cTrans : public MtObject
     // sizeof = 0x30
     struct VertexBuffer : public Element
     {
-        /* 0x18 */ void     *pVertexBuffer;        // ID3D11Buffer
-        /* 0x20 */ void     *pRawBuffer;
-        /* 0x28 */ DWORD    Size;
+        /* 0x18 */ ID3D11Buffer     *pVertexBuffer;
+        /* 0x20 */ void             *pRawBuffer;
+        /* 0x28 */ DWORD            Size;
     };
     static_assert(sizeof(VertexBuffer) == 0x30, "cTrans::VertexBuffer incorrect struct size");
 
     // sizeof = 0x30
     struct IndexBuffer : public Element
     {
-        /* 0x18 */ void     *pIndexBuffer;        // ID3D11Buffer
-        /* 0x20 */ void     *pRawBuffer;
-        /* 0x28 */ DWORD    Size;
+        /* 0x18 */ ID3D11Buffer     *pIndexBuffer;
+        /* 0x20 */ void             *pRawBuffer;
+        /* 0x28 */ DWORD            Size;
     };
     static_assert(sizeof(IndexBuffer) == 0x30, "cTrans::IndexBuffer incorrect struct size");
+
+    // sizeof = 0x10
+    struct RenderCommandInfo
+    {
+        /* 0x00 */ void     *pCmdBuffer;    // Pointer to the command buffer
+        /* 0x08 */ DWORD    Tag;            // Tag value used to sort the commands before processing
+    };
+    static_assert(sizeof(RenderCommandInfo) == 0x10, "cTrans::RenderCommandInfo incorrect struct size");
+
+    // sizeof = ?
+    struct RenderCommandBase
+    {
+        /* 0x00 */ DWORD    Command;        // Command type
+    };
+    static_assert(sizeof(RenderCommandBase) == 4, "cTrans::RenderCommandBase incorrect struct size");
+
+    // sizeof = 0x14?
+    struct RenderCommand_SetScissorRect : public RenderCommandBase  // 0x140662FAF
+    {
+        /* 0x04 */ D3D11_RECT   ScissorRect;
+    };
+    static_assert(sizeof(RenderCommand_SetScissorRect) == 0x14, "cTrans::RenderCommand_SetScissorRect incorrect struct size");
+
+    // sizeof = 0xC?
+    struct RenderCommand_2 : public RenderCommandBase   // 0x140662F93
+    {
+        /* 0x04 */ DWORD    SubCommand;
+        /* 0x08 */ DWORD    Value;
+    };
+
+    // sizeof = 0x50
+    struct RenderCommand_13 : public RenderCommandBase
+    {
+        /* 0x04 */ // padding
+        /* 0x08 */ // void* some kind of shader object
+
+        /* 0x38 */ sPrim    *pPrimOwner;
+        /* 0x40 */ // void* rendering function
+        /* 0x48 */ // void* some other data buffer
+    };
 
     /* 0x08 */
     /* 0x10 */ // array length 3 size 0x1250, this might not be correct
@@ -222,10 +302,18 @@ struct cTrans : public MtObject
 
     /* 0x4960 */ // buffer 0x190 bytes
 
-    /* 0x4B0C */ // DWORD
-    /* 0x4B10 */ // void* memory region
-    /* 0x4B18 */ DWORD      mTagNum;
-    /* 0x4B20 */ // void* end of region
+    /* 0x4AF8 */ // void* some kind of shader object from sShader (0x14068FD33)
+
+    /* 0x4B08 */ // DWORD shader technique index for sShader
+    /* 0x4B0C */ // DWORD some kind of flag value for shaders
+    /* 0x4B10 */ RenderCommandInfo      *pCommandBuffer;    // Holds render commands to be sorted before processing (buffer is allocated in sRender and reset every frame)
+    /* 0x4B18 */ DWORD                  mTagNum;            // Number of RenderCommandInfo entries in the command buffer
+    /* 0x4B20 */ void                   *pCommandBufferEnd; // Used to allocate memory backwards for command buffer data (buffer is allocated in sRender and reset every frame)
     /* 0x4B28 */ // void* memory region
     /* 0x4B30 */ // void* end of region
+
+    IMPLEMENT_MYDTI(cTrans, 0x141CF38B0, 0x1400AF010, 0x14068B4C0);
+
+    inline static cTrans * (__stdcall *_ctor)(cTrans *thisptr) =
+        GetModuleAddress<cTrans*(__stdcall*)(cTrans*)>(0x140688FD0);
 };
