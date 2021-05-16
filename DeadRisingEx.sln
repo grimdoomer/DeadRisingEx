@@ -11,6 +11,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeadRisingEx", "DeadRisingE
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeadRisingLauncher", "DeadRisingLauncher\DeadRisingLauncher.csproj", "{C25022C9-36A1-47DA-9213-D81E919D9A1C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4372BE1E-F5FB-4C7E-A03A-958D1886422C} = {4372BE1E-F5FB-4C7E-A03A-958D1886422C}
+		{30C860E8-04C2-48B3-96AA-FB83BFC4E19A} = {30C860E8-04C2-48B3-96AA-FB83BFC4E19A}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.csproj", "{30C860E8-04C2-48B3-96AA-FB83BFC4E19A}"
 EndProject

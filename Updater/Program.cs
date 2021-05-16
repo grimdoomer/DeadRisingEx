@@ -35,7 +35,14 @@ namespace Updater
 
                 // Get the command line args for packaging the update.
                 string buildFolder = args[0];
-                string buildFlavor = args[1];
+                string drexDll = args[1];
+
+                // Determine the build flavor.
+#if DEBUG
+                string buildFlavor = "Beta";
+#else
+                string buildFlavor = "Release";
+#endif
 
                 // Get the build version from the application exe.
                 string buildVersion = FileVersionInfo.GetVersionInfo(buildFolder + "DeadRisingLauncher.exe").FileVersion;
@@ -49,7 +56,8 @@ namespace Updater
                 }
 
                 // Get a recursive list of all files inside the build directory.
-                string[] filesToZip = Directory.GetFiles(buildFolder);
+                List<string> filesToZip = new List<string>(Directory.GetFiles(buildFolder));
+                filesToZip.Add(drexDll);
 
                 // Create a file stream for the zip file.
                 string updateZipFile = string.Format("{0}DeadRisingEx_{1}_{2}.zip", buildFolder, buildVersion, buildFlavor);
@@ -58,10 +66,10 @@ namespace Updater
                     using (ZipArchive zipFile = new ZipArchive(zipStream, ZipArchiveMode.Create, false))
                     {
                         // Add all of the file entries from the build directory to the zip archive.
-                        for (int i = 0; i < filesToZip.Length; i++)
+                        for (int i = 0; i < filesToZip.Count; i++)
                         {
                             // Add the current file to the zip archive.
-                            zipFile.CreateEntryFromFile(filesToZip[i], filesToZip[i].Substring(buildFolder.Length));
+                            zipFile.CreateEntryFromFile(filesToZip[i], Path.GetFileName(filesToZip[i]));
                         }
 
                         // Add the updater application to the zip file.

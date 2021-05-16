@@ -45,5 +45,7 @@ struct uOmRecursiveGrenade : public uOm23
 
         // Set the recursion counter to 4.
         pObject->RecursionCounter = 4;
+
+        return pObject;
     }
 };

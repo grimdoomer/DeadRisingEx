@@ -51,8 +51,15 @@ namespace DeadRisingLauncher
             // Run bugfix routine and fix the unicode encoding on the settings file.
             //BugFix_ConvertSettingsToAscii();
 
+            // Determine the build flavor.
+#if DEBUG
+            string buildFlavor = "Beta";
+#else
+            string buildFlavor = "Release";
+#endif
+
             // Set the version string.
-            this.lblVersion.Text = "Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            this.lblVersion.Text = "Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString() + " " + buildFlavor;
 
             // Setup the update worker.
             this.updateWorker = new BackgroundWorker();
@@ -65,7 +72,7 @@ namespace DeadRisingLauncher
             this.updateWorker.RunWorkerAsync();
         }
 
-        #region UpdateWorker
+#region UpdateWorker
 
         private void UpdateWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
@@ -174,7 +181,7 @@ namespace DeadRisingLauncher
             }
         }
 
-        #endregion
+#endregion
 
         private void BugFix_ConvertSettingsToAscii()
         {

@@ -210,6 +210,6 @@
     <PreBuildEvent>"$(DevEnvDir)TextTransform.exe" -a !!BuildConfiguration!$(ConfigurationName) -out "$(ProjectDir)Properties\AssemblyInfo.cs" "$(ProjectDir)Properties\AssemblyInfo.tt"</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>if "$(DefineConstants.Contains('BUILD_UPDATE'))" == "True" "$(SolutionDir)Updater\bin\$(ConfigurationName)\Updater.exe" "$(TargetDir)\" Beta</PostBuildEvent>
+    <PostBuildEvent>if "$(DefineConstants.Contains('BUILD_UPDATE'))" == "True" "$(SolutionDir)Updater\bin\$(ConfigurationName)\Updater.exe" "$(TargetDir)\" "$(SolutionDir)x64\$(ConfigurationName.Replace('_Update', ''))\DeadRisingEx.dll"</PostBuildEvent>
   </PropertyGroup>
 </Project>

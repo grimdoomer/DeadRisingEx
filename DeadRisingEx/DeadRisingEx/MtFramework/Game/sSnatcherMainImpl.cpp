@@ -107,8 +107,8 @@ void Hook_sSnatcherMain_InitializeAllocators(sSnatcherMain *thisptr)
     *g_pResourceHeapAllocator = DefaultMemoryAlloc<MtHeapAllocator>();
     if (*g_pResourceHeapAllocator != nullptr)
     {
-        // 400MB for resources
-        MtHeapAllocator::_ctor(*g_pResourceHeapAllocator, "Resource", 0, 400 * 1024 * 1024);
+        // 400MB for resources -> increased to 800mb
+        MtHeapAllocator::_ctor(*g_pResourceHeapAllocator, "Resource", 0, 800 * 1024 * 1024);
     }
     *g_pResourceHeapAllocator2 = *g_pResourceHeapAllocator;
     *g_pResourceHeapAllocator3 = *g_pResourceHeapAllocator;
@@ -125,8 +125,8 @@ void Hook_sSnatcherMain_InitializeAllocators(sSnatcherMain *thisptr)
     *g_pSystemHeapAllocator = DefaultMemoryAlloc<MtHeapAllocator>();
     if (*g_pSystemHeapAllocator != nullptr)
     {
-        // 100MB for system
-        MtHeapAllocator::_ctor(*g_pSystemHeapAllocator, "System", 3, 100 * 1024 * 1024);
+        // 100MB for system -> increased to 200mb
+        MtHeapAllocator::_ctor(*g_pSystemHeapAllocator, "System", 3, 200 * 1024 * 1024);
     }
 
     // Unit allocators:

@@ -283,7 +283,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         if (ModConfig::Instance()->DebugLog == true)
             DebugLog::InstallHooks();
 
-        ForcePatchInfinityMode();
+        //ForcePatchInfinityMode();
 
         //DetourAttach((void**)&LoadSpriteData, Hook_LoadSpriteData);
 
@@ -293,7 +293,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         sMainImpl::InstallHooks();
         sSnatcherMainImpl::InstallHooks();
         sSMManagerImpl::InstallHooks();
-        MtHeapAllocatorImpl::InstallHooks();
+        //MtHeapAllocatorImpl::InstallHooks();
         cGametaskTitleImpl::InstallHooks();
         uNpcMarkerImpl::InstallHooks();
         uPhotoImpl::InstallHooks();
