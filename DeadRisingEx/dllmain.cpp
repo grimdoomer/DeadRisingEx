@@ -283,7 +283,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         if (ModConfig::Instance()->DebugLog == true)
             DebugLog::InstallHooks();
 
-        //ForcePatchInfinityMode();
+        ForcePatchInfinityMode();
 
         //DetourAttach((void**)&LoadSpriteData, Hook_LoadSpriteData);
 

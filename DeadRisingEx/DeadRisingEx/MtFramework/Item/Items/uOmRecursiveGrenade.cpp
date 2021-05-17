@@ -8,6 +8,11 @@ void **g_sMainInstance = GetModuleAddress<void**>(0x141CF2AA0);
 
 float(__stdcall *GetRandomFloat)(void *pThing) = GetModuleAddress<float(__stdcall*)(void*)>(0x14000ADA0);
 
+void(__stdcall *CalculateMatrix)(void *pMatrix, void *pVector) = GetModuleAddress<void(__stdcall*)(void*, void*)>(0x14061B880);
+
+float velocity = 3.0f;
+Vector3 UnkVec = { 0.0f, 0.0f, 0.0f };
+
 void uOmRecursiveGrenade::SpawnGrenades()
 {
     void *pThing = (BYTE*)*g_sMainInstance + 0x203F4;
@@ -48,8 +53,19 @@ void uOmRecursiveGrenade::SpawnGrenades()
         // Set some flag value on the item.
         *(DWORD*)(((BYTE*)pGrenade) + 0x2F48) |= 0x1000;
 
+        // Set some flag to do physics simulation.
+        *(DWORD*)(((BYTE*)pGrenade) + 0x2F4C) |= 2;
+
         // Set initial velocity.
-        //*(float*)(((BYTE*)pGrenade) + 0x2F60) = 10.0f;
+        //*(float*)(((BYTE*)pGrenade) + 0x1540) = 10.0f;
+        *(float*)(((BYTE*)pGrenade) + 0x2F64) = velocity; // 1.0f;
+
+        // Calculate some matrix?
+        Vector3 vector = { 0.0f, 0.0f, 0.0f };
+        CalculateMatrix(((BYTE*)pGrenade) + 0x2F00, &UnkVec);
+
+        *(Vector4*)(((BYTE*)pGrenade) + 0x2F30) = position;
+        *(Matrix4x4*)(((BYTE*)pGrenade) + 0xB0) = *(Matrix4x4*)(((BYTE*)pGrenade) + 0x2F00);
 
         // Set the recursion counter.
         pGrenade->RecursionCounter = this->RecursionCounter - 1;
