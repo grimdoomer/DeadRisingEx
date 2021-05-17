@@ -5,6 +5,14 @@
 #include "MtFramework/Object/Model/uSnatcherModel.h"
 
 // sizeof = 0x18
+struct NpcBonusBoxItems
+{
+    /* 0x00 */ const char   *psNpcDTIName;      // Npc DTI object name
+    /* 0x08 */ WORD         ItemIds[5];         // Item IDs for items dropped when bonus box is opened
+};
+static_assert(sizeof(NpcBonusBoxItems) == 0x18, "NpcBonusBoxItems incorrect struct size");
+
+// sizeof = 0x18
 struct ItemInfoEntry
 {
     /* 0x00 */ DWORD        Id;
@@ -97,12 +105,19 @@ struct uItem : public uSnatcherModel
     /* 0x2F60 */ // float also has something to do with velocity, scale mb?
     /* 0x2F64 */ //float initial velocity? 0x1401DC072
 
-    /* 0x2F88 */ // void* set to uPlayer during projectile fire 0x1401DC039
+    /* 0x2F88 */ uSnatcherModel *pCreator;              // set to uPlayer (or npc for bonus boxes) during projectile fire 0x1401DC039
 
     /* 0x2FA0 */ void           **pItemProperties;
 
     /* 0x2FB0 */ // void* damage properties from 0x1411EF2D0
     /* 0x2FB8 */ const char     *psModelFilePath;       // File path of the model for this item
+
+    /* 0x2FE8 */ NpcBonusBoxItems   *pBonusBoxInfo;     // Bonus box info for items to be dropped
+
+    /* 0x3024 */ float          ItemSpawnFrameDelay;    // Number of frames to wait before spawning an item
+    /* 0x3028 */ float          SoundPlayFrameDelay;    // Number of frames to wait before playing a sound
+
+    /* 0x31FE */ WORD           ItemDropCounter;        // Counter used when dropping items for a bonus box
 
     /* 0x36FC */ WORD           ItemId;
 
@@ -117,7 +132,9 @@ struct uItem : public uSnatcherModel
     /*
         Vtable:
 
-            0x250 
+            0x250 bool OnItemDestroyed(void *unk)
+
+            0x298 void UpdateState()    // called during model update routine
     */
 
     inline static bool(__stdcall *_HasLowHealth)(uItem *thisptr) =
@@ -140,6 +157,9 @@ struct uItem : public uSnatcherModel
 
     inline static ItemCollisionProperties **ItemCollisionProperties =
         GetModuleAddress<ItemCollisionProperties**>(0x141217360);
+
+    inline static NpcBonusBoxItems *NpcBonusBoxItemsTable =
+        GetModuleAddress<NpcBonusBoxItems*>(0x1411BF4C0);
 
     /*
         Description: Called when the item is destroyed
