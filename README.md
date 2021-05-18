@@ -23,7 +23,7 @@ A example of this is how DeadRisingEx overrides the game's file manager to load 
 - Lua scripting system
 
 ## Installation
-Download the latest update [here](https://github.com/grimdoomer/DeadRisingEx/releases/tag/v1.0). Installing the DeadRisingEx game update is as simple as copying the DeadRisingEx files into the root of your Dead Rising install folder. You will be asked if you want to merge files for the nativeWin64 folder, just click yes here. And that's it! The game update is now installed. Any time there is an update for DeadRisingEx the launcher will notify you and allow you to install it automatically.
+Download the latest update [here](https://github.com/grimdoomer/DeadRisingEx/releases). Installing the DeadRisingEx game update is as simple as copying the DeadRisingEx files into the root of your Dead Rising install folder. You will be asked if you want to merge files for the nativeWin64 folder, just click yes here. And that's it! The game update is now installed. Any time there is an update for DeadRisingEx the launcher will notify you and allow you to install it automatically.
 
 ![](/Images/install_files.gif)
 
