@@ -47,7 +47,10 @@ DeadRisingEx comes with a test mod that you can use to verify the update install
 ![](/Images/install_test.png)
 
 ## Bug fixes and stability patches
-DeadRisingEx fixes a number of game crashing bugs in the vanilla version of the game. You may have encountered a "directx assert" error while playing the vanilla version of the game, probably when trying to blow up too much stuff at once. This is due to a bug in the rendering system that attempts to use more VRAM than the game has access to. DeadRisingEx fixes these issues by removing the VRAM limitations on the game and increasing the amount of RAM available to it for rendering. Now you can play the game and blow up as much stuff as you want without the game crashing. To enable the rendering fixes see the [dynamic graphics memory](https://github.com/grimdoomer/DeadRisingEx/wiki/Settings#dynamic-graphics-memory) option in the settings menu.
+DeadRisingEx fixes a number of game crashing bugs in the vanilla version of the game. You may have encountered a "directx assert" error while playing the vanilla version of the game, probably when trying to blow up too much stuff at once. This is due to a bug in the rendering system that attempts to use more VRAM than the game has access to. 
+
+DeadRisingEx fixes these issues by removing the VRAM limitations on the game and increasing the amount of RAM available to it for rendering. Now you can play the game and blow up as much stuff as you want without the game crashing. To enable the rendering fixes see the [dynamic graphics memory](https://github.com/grimdoomer/DeadRisingEx/wiki/Settings#dynamic-graphics-memory) option in the settings menu.
+
 ![](/Images/directx_assert.png)
 
 There are a number of other stability bug fixes implemented as well which are always on by default such as:
