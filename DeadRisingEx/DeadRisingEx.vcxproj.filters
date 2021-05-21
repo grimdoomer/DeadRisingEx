@@ -87,6 +87,24 @@
     <ClCompile Include="DeadRisingEx\Utilities\DebugLog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\imgui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\imgui_demo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\imgui_draw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\imgui_tables.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\imgui_widgets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\ImGuiRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DeadRisingEx.h">
@@ -173,6 +191,27 @@
     <ClInclude Include="DeadRisingEx\Utilities\DebugLog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\imconfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\imgui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\imgui_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\imstb_rectpack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\imstb_textedit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\imstb_truetype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\ImGuiRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DeadRisingEx.def">
@@ -186,5 +225,8 @@
     <MASM Include="DeadRisingEx\MtFramework\Game\Task\cGametaskTitleHooks.asm">
       <Filter>Source Files</Filter>
     </MASM>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="DeadRisingEx\MtFramework\Rendering\ImGui\LICENSE.txt" />
   </ItemGroup>
 </Project>

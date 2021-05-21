@@ -68,6 +68,7 @@
     <ClInclude Include="MtFramework\Utils\MtArray.h" />
     <ClInclude Include="MtFramework\Utils\MtPropertyList.h" />
     <ClInclude Include="MtFramework\Utils\Utilities.h" />
+    <ClInclude Include="MtFramework\Utils\VTable.h" />
     <ClInclude Include="MtFramework\Utils\Zlib.h" />
   </ItemGroup>
   <ItemGroup>
