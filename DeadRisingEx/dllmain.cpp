@@ -21,10 +21,12 @@
 #include "DeadRisingEx/MtFramework/Archive/sResourceImpl.h"
 #include "DeadRisingEx/MtFramework/Debug/sSnatcherToolImpl.h"
 #include "DeadRisingEx/MtFramework/Game/sMainImpl.h"
+#include "DeadRisingEx/MtFramework/Game/sSnatcherPadImpl.h"
 #include "DeadRisingEx/MtFramework/Game/sSnatcherMainImpl.h"
 #include "DeadRisingEx/MtFramework/Game/Task/cGametaskTitleImpl.h"
 #include "DeadRisingEx/MtFramework/Graphics/rModelImpl.h"
 #include "DeadRisingEx/MtFramework/Memory/MtHeapAllocatorImpl.h"
+#include "DeadRisingEx/MtFramework/Rendering/ImGui/ImGuiRenderer.h"
 #include "DeadRisingEx/MtFramework/Rendering/sRenderImpl.h"
 #include "DeadRisingEx/MtFramework/Rendering/sShaderImpl.h"
 #include "DeadRisingEx/MtFramework/Item/uItemImpl.h"
@@ -271,6 +273,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         sMainImpl::RegisterTypeInfo();
         sSnatcherMainImpl::RegisterTypeInfo();
         MtHeapAllocatorImpl::RegisterTypeInfo();
+        ImGuiRenderer::RegisterTypeInfo();
 
         if (ModConfig::Instance()->RecursiveGrenade == true)
             uOm08Impl::RegisterTypeInfo();
@@ -290,6 +293,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         // Hook functions.
         Utilities::InstallHooks();
         sRenderImpl::InstallHooks();
+        sSnatcherPadImpl::InstallHooks();
         sMainImpl::InstallHooks();
         sSnatcherMainImpl::InstallHooks();
         sSMManagerImpl::InstallHooks();

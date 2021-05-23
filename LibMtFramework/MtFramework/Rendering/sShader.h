@@ -47,4 +47,6 @@ struct sShader : public cSystem
     static_assert(sizeof(TechniqueDesc) == 0x18, "sShader::TechniqueDesc incorrect struct size");
 
     /* 0x38 */
+
+    IMPLEMENT_SINGLETON(sShader, 0x141D179A0);
 };

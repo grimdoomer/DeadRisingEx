@@ -105,6 +105,9 @@
     <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\ImGuiRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DeadRisingEx\MtFramework\Game\sSnatcherPadImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DeadRisingEx.h">
@@ -210,6 +213,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\ImGuiRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeadRisingEx\MtFramework\Game\sSnatcherPadImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

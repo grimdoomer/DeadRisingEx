@@ -93,10 +93,21 @@ struct sRender : public cSystem
 
     /* 0x83D0 */ RECT       WindowRect;
 
-    /* 0x8586 */ BOOL       mDisableRendering;
-    /* 0x8587 */ BOOL       mParallelTrans;
-    /* 0x8588 */ BOOL       mParallelRendering;     // True if rendering should be done on a seperate thread
-    /* 0x8589 */ BOOL       RenderAsync;            // Same as above but set in the render loop based on mParallelRendering
+    /* 0x83F8 */ DWORD      RefreshRateNumerator;
+    /* 0x83FC */ DWORD      RefreshRateDenominator;
+
+    /* 0x8404 */ BOOL       VSync;
+    /* 0x8408 */ DWORD      AntiAliasing;
+    /* 0x840C */ DWORD      ShadowQuality;
+    /* 0x8410 */ DWORD      TextureFiltering;
+    /* 0x8414 */ DWORD      FullScreen;
+    /* 0x8418 */ BOOL       MotionBlur;
+
+    /* 0x8585 */ bool       ShouldPostQuitMessage;  // True if a quit message should be posted to the main game thread
+    /* 0x8586 */ bool       mDisableRendering;
+    /* 0x8587 */ bool       mParallelTrans;
+    /* 0x8588 */ bool       mParallelRendering;     // True if rendering should be done on a seperate thread
+    /* 0x8589 */ bool       RenderAsync;            // Same as above but set in the render loop based on mParallelRendering
     /* 0x858A */ // Store Frame
     /* 0x858C */ float      mPersRate;
     /* 0x8590 */ ID3D11Device   *pD3dDevice;
@@ -105,9 +116,9 @@ struct sRender : public cSystem
     /* 0x85B0 */ DeferredContext        DeferredContexts[3];
     /* 0x85E0 */ ID3D11DeviceContext    *MainThreadDeferredContexts[2];     // Deferred contexts for the main thread, swapped at the end of each frame
     /* 0x85F0 */ // DeferredContext[2]
-    /* 0x8610 */ DWORD      ActiveBufferIndex;  // Index into pVertexBuffers/pIndexBuffers buffers
-    /* 0x8618 */ IDXGISwapChain *pSwapChain;
-    /* 0x8620 */ // SIZE window size?
+    /* 0x8610 */ DWORD                  ActiveBufferIndex;                  // Index into pVertexBuffers/pIndexBuffers buffers
+    /* 0x8618 */ IDXGISwapChain         *pSwapChain;
+    /* 0x8620 */ SIZE                   WindowSize;
 
     /* 0x8648 */ HANDLE     hRenderThread;
 
@@ -116,8 +127,9 @@ struct sRender : public cSystem
 
     /* 0x8680 */ float      mGammaMin;
     /* 0x8684 */ float      mGammaMax;
+    /* 0x8688 */ float      Gamma;
 
-    /* 0x868D */ BOOL       mDynamicTrans;
+    /* 0x868D */ bool       mDynamicTrans;
 
     /* 0x8690 */ cTrans                         mTrans[6];
     /* 0x24B90 */ DWORD                         RenderBufferIndex;          // Index into pRenderCommandBuffer/pRenderCommands/RenderCommandCount arrays below
@@ -137,6 +149,8 @@ struct sRender : public cSystem
 
     /* 0x272C8 */ DWORD     Interval;
     /* 0x272CC */ DWORD     Threshold;
+    /* 0x272D0 */ ID3D11RenderTargetView        *pRenderTargetView;
+    /* 0x272D8 */ ID3D11DepthStencilView        *pDepthStencilView;
 
     /* 0x27348 */ std::map<DWORD, ID3D11InputLayout>    mInputLayouts;
 
@@ -166,6 +180,33 @@ struct sRender : public cSystem
     static inline sRender* (__stdcall *_ctor)(sRender *thisptr, DWORD interval, DWORD dwUnused1, DWORD dwGraphicsMemSize, DWORD dwUnused2) =
         GetModuleAddress<sRender*(__stdcall*)(sRender*, DWORD, DWORD, DWORD, DWORD)>(0x14065A140);
 
+    static inline void(__stdcall *_SystemUpdate)(sRender *thisptr) =
+        GetModuleAddress<void(__stdcall*)(sRender*)>(0x1406638E0);
+
+    static inline void(__stdcall *_SystemCleanup)(sRender *thisptr) =
+        GetModuleAddress<void(__stdcall*)(sRender*)>(0x1406642B0);
+
+    static inline void(__stdcall *_RenderFrame)(sRender *thisptr) =
+        GetModuleAddress<void(__stdcall*)(sRender*)>(0x140666860);
+
+    static inline void(__stdcall *_BeginFrame)(sRender *thisptr) =
+        GetModuleAddress<void(__stdcall*)(sRender*)>(0x14065ED90);
+
     static inline void(__stdcall *_DrawFrame)(sRender *thisptr) =
         GetModuleAddress<void(__stdcall*)(sRender*)>(0x140662200);
+
+    static inline void(__stdcall *_EndFrame)(sRender *thisptr) =
+        GetModuleAddress<void(__stdcall*)(sRender*)>(0x140661D30);
+
+    static inline void(__stdcall *_Present)(sRender *thisptr) =
+        GetModuleAddress<void(__stdcall*)(sRender*)>(0x140661AD0);
+
+    /*
+        Description: If asynchronous rendering is disabled draws the next frame, otherwise waits for the rendering thread
+            to draw the next frame (BeginFrame, DrawFrame, EndFrame).
+    */
+    void RenderFrame()
+    {
+        _RenderFrame(this);
+    }
 };

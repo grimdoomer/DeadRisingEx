@@ -8,6 +8,9 @@ struct ImGuiRenderer : public cSystem
 {
 protected:
 
+    // Indicates initialization has run and imgui has a valid context.
+    bool initialized = false;
+
     // Indicates if the UI layer is visible or not.
     bool isVisible = false;
 
@@ -38,6 +41,8 @@ protected:
 
 public:
 
+    static void RegisterTypeInfo();
+
     static ImGuiRenderer * Instance();
 
     ImGuiRenderer();
@@ -51,12 +56,17 @@ public:
     void SystemCleanup();
     void BuildSystemMenu(MtPropertyList *pPropertyList);
 
+    bool IsInitialized()
+    {
+        return this->initialized;
+    }
+
     bool IsVisible()
     {
         return this->isVisible;
     }
 
-    bool SetVisible(bool isVisible)
+    void SetVisible(bool isVisible)
     {
         this->isVisible = isVisible;
     }

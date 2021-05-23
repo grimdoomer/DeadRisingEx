@@ -5,7 +5,9 @@
 #include <DirectXMath.h>
 #include <d3dcompiler.h>
 #include <MtFramework/Utils/VTable.h>
+#include <MtFramework/Game/sMain.h>
 #include <MtFramework/Rendering/sRender.h>
+#include <WinUser.h>
 
 #pragma comment(lib, "d3dcompiler")
 
@@ -59,11 +61,23 @@ struct VERTEX_CONSTANT_BUFFER
 };
 
 
+__int64 ShowImGuiDemo(WCHAR **argv, int argc);
+
+// Table of commands for ImGuiRenderer.
+const int g_ImGuiRendererCommandsLength = 1;
+const CommandEntry g_ImGuiRendererCommands[g_ImGuiRendererCommandsLength] =
+{
+    { L"show_imgui_demo", L"Displays the ImGui demo window", ShowImGuiDemo }
+};
+
+
 
 // Singleton instance:
 ImGuiRenderer *g_pImGuiRendererInstance = nullptr;
 
 void *ImGuiRenderer_vtable[4] = { nullptr };
+
+bool g_ShowImGuiDemo = true;
 
 // Fake destructor function to bypass not being able to take the address of a destructor:
 void ImGuiRenderer_dtor(ImGuiRenderer *thisptr)
@@ -71,8 +85,20 @@ void ImGuiRenderer_dtor(ImGuiRenderer *thisptr)
     thisptr->~ImGuiRenderer();
 }
 
+void ImGuiRenderer::RegisterTypeInfo()
+{
+    RegisterCommands(g_ImGuiRendererCommands, g_ImGuiRendererCommandsLength);
+}
+
 ImGuiRenderer * ImGuiRenderer::Instance()
 {
+    // If the singleton instance is null initialize it now.
+    if (g_pImGuiRendererInstance == nullptr)
+    {
+        // Create the imgui renderer instance.
+        g_pImGuiRendererInstance = new ImGuiRenderer();
+    }
+
     // Return the singleton instance.
     return g_pImGuiRendererInstance;
 }
@@ -118,15 +144,37 @@ bool ImGuiRenderer::Initialize()
     io.BackendRendererName = "imgui_dr_dx11";
     io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;
 
-    // TODO: Setup keyboard key map
+    // Setup keyboard key map
+    io.KeyMap[ImGuiKey_Tab] = VK_TAB;
+    io.KeyMap[ImGuiKey_LeftArrow] = VK_LEFT;
+    io.KeyMap[ImGuiKey_RightArrow] = VK_RIGHT;
+    io.KeyMap[ImGuiKey_UpArrow] = VK_UP;
+    io.KeyMap[ImGuiKey_DownArrow] = VK_DOWN;
+    io.KeyMap[ImGuiKey_PageUp] = VK_PRIOR;
+    io.KeyMap[ImGuiKey_PageDown] = VK_NEXT;
+    io.KeyMap[ImGuiKey_Home] = VK_HOME;
+    io.KeyMap[ImGuiKey_End] = VK_END;
+    io.KeyMap[ImGuiKey_Insert] = VK_INSERT;
+    io.KeyMap[ImGuiKey_Delete] = VK_DELETE;
+    io.KeyMap[ImGuiKey_Backspace] = VK_BACK;
+    io.KeyMap[ImGuiKey_Space] = VK_SPACE;
+    io.KeyMap[ImGuiKey_Enter] = VK_RETURN;
+    io.KeyMap[ImGuiKey_Escape] = VK_ESCAPE;
+    //io.KeyMap[ImGuiKey_KeyPadEnter] = (int)Keys.Return;
+    io.KeyMap[ImGuiKey_A] = 'A';
+    io.KeyMap[ImGuiKey_C] = 'C';
+    io.KeyMap[ImGuiKey_V] = 'V';
+    io.KeyMap[ImGuiKey_X] = 'X';
+    io.KeyMap[ImGuiKey_Y] = 'Y';
+    io.KeyMap[ImGuiKey_Z] = 'Z';
 
     // Initialize fonts.
-    io.Fonts->AddFontDefault();
+    ImFont *pFont = io.Fonts->AddFontDefault();
     bool result = io.Fonts->Build();
-    assert(result == true);
+    assert(pFont != nullptr && result == true);
 
-    // Get the sRender instance.
-    sRender *psRender = sRender::Instance();
+    // Get the d3d device pointer from sRender instance.
+    ID3D11Device *pD3dDevice = *(ID3D11Device**)(((BYTE*)sRender::Instance()) + 0x8590);
 
     // Create the vertex and index buffers.
     if (this->ResizeVertexBuffers(5000, 10000) == false)
@@ -145,7 +193,7 @@ bool ImGuiRenderer::Initialize()
     }
 
     // Create the vertex shader.
-    if ((hr = psRender->pD3dDevice->CreateVertexShader(pShaderCode->GetBufferPointer(), pShaderCode->GetBufferSize(), nullptr, &this->pVertexShader)) != S_OK)
+    if ((hr = pD3dDevice->CreateVertexShader(pShaderCode->GetBufferPointer(), pShaderCode->GetBufferSize(), nullptr, &this->pVertexShader)) != S_OK)
     {
         // Failed to create the vertex shader.
         DbgPrint("ImGuiRenderer::Initialize(): failed to create vertex shader 0x%08x!\n", hr);
@@ -161,7 +209,7 @@ bool ImGuiRenderer::Initialize()
     };
 
     // Create the input layout.
-    if ((hr = psRender->pD3dDevice->CreateInputLayout(vertexLayout, 3, pShaderCode->GetBufferPointer(), pShaderCode->GetBufferSize(), &this->pInputLayout)) != S_OK)
+    if ((hr = pD3dDevice->CreateInputLayout(vertexLayout, 3, pShaderCode->GetBufferPointer(), pShaderCode->GetBufferSize(), &this->pInputLayout)) != S_OK)
     {
         // Failed to create the input layout.
         DbgPrint("ImGuiRenderer::Initialize(): failed to create input layout 0x%08x\n", hr);
@@ -180,7 +228,7 @@ bool ImGuiRenderer::Initialize()
     }
 
     // Create the pixel shader
-    if ((hr = psRender->pD3dDevice->CreatePixelShader(pShaderCode->GetBufferPointer(), pShaderCode->GetBufferSize(), nullptr, &this->pPixelShader)) != S_OK)
+    if ((hr = pD3dDevice->CreatePixelShader(pShaderCode->GetBufferPointer(), pShaderCode->GetBufferSize(), nullptr, &this->pPixelShader)) != S_OK)
     {
         // Failed to create the pixel shader.
         DbgPrint("ImGuiRenderer::Initialize(): failed to create pixel shader 0x%08x\n", hr);
@@ -197,7 +245,7 @@ bool ImGuiRenderer::Initialize()
     BufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     BufferDesc.MiscFlags = 0;
-    if ((hr = psRender->pD3dDevice->CreateBuffer(&BufferDesc, nullptr, &this->pShaderConstantBuffer)) != S_OK)
+    if ((hr = pD3dDevice->CreateBuffer(&BufferDesc, nullptr, &this->pShaderConstantBuffer)) != S_OK)
     {
         // Failed to create the shader constant buffer.
         DbgPrint("ImGuiRenderer::Initialize(): failed to create shader constant buffer 0x%08x\n", hr);
@@ -215,7 +263,7 @@ bool ImGuiRenderer::Initialize()
     BlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
     BlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
     BlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-    if ((hr = psRender->pD3dDevice->CreateBlendState(&BlendDesc, &this->pBlendState)) != S_OK)
+    if ((hr = pD3dDevice->CreateBlendState(&BlendDesc, &this->pBlendState)) != S_OK)
     {
         // Failed to create the blend state.
         DbgPrint("ImGuiRenderer::Initialize(): failed to create blend state 0x%08x\n", hr);
@@ -229,7 +277,7 @@ bool ImGuiRenderer::Initialize()
     RasterDesc.CullMode = D3D11_CULL_NONE;
     RasterDesc.ScissorEnable = true;
     RasterDesc.DepthClipEnable = true;
-    if ((hr = psRender->pD3dDevice->CreateRasterizerState(&RasterDesc, &this->pRasterState)) != S_OK)
+    if ((hr = pD3dDevice->CreateRasterizerState(&RasterDesc, &this->pRasterState)) != S_OK)
     {
         // Failed to create the rasterizer state.
         DbgPrint("ImGuiRenderer::Initialize(): failed to create rasterizer state 0x%08x\n", hr);
@@ -247,7 +295,7 @@ bool ImGuiRenderer::Initialize()
     DepthDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
     DepthDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
     DepthDesc.BackFace = DepthDesc.FrontFace;
-    if ((hr = psRender->pD3dDevice->CreateDepthStencilState(&DepthDesc, &this->pDepthStencilState)) != S_OK)
+    if ((hr = pD3dDevice->CreateDepthStencilState(&DepthDesc, &this->pDepthStencilState)) != S_OK)
     {
         // Failed to create depth stencil state.
         DbgPrint("ImGuiRenderer::Initialize(): failed to create depth stencil state 0x%08\n", hr);
@@ -276,7 +324,7 @@ bool ImGuiRenderer::Initialize()
     subResource.pSysMem = pFontPixelData;
     subResource.SysMemPitch = fontWidth * 4;
     subResource.SysMemSlicePitch = 0;
-    if ((hr = psRender->pD3dDevice->CreateTexture2D(&TextureDesc, &subResource, &pFontTexture)) != S_OK)
+    if ((hr = pD3dDevice->CreateTexture2D(&TextureDesc, &subResource, &pFontTexture)) != S_OK)
     {
         // Failed to create the font texture.
         DbgPrint("ImGuiRenderer::Initialize(): failed to create font texture 0x%08x\n", hr);
@@ -290,7 +338,7 @@ bool ImGuiRenderer::Initialize()
     ResourceDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
     ResourceDesc.Texture2D.MipLevels = 1;
     ResourceDesc.Texture2D.MostDetailedMip = 0;
-    if ((hr = psRender->pD3dDevice->CreateShaderResourceView(pFontTexture, &ResourceDesc, &this->pShaderResourceView)) != S_OK)
+    if ((hr = pD3dDevice->CreateShaderResourceView(pFontTexture, &ResourceDesc, &this->pShaderResourceView)) != S_OK)
     {
         // Failed to create the shader resource view.
         printf("ImGuiRenderer::Initialize(): failed to create shader resource view 0x%08x\n", hr);
@@ -314,7 +362,7 @@ bool ImGuiRenderer::Initialize()
     SamplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
     SamplerDesc.MinLOD = 0.0f;
     SamplerDesc.MaxLOD = 0.0f;
-    if ((hr = psRender->pD3dDevice->CreateSamplerState(&SamplerDesc, &this->pSamplerState)) != S_OK)
+    if ((hr = pD3dDevice->CreateSamplerState(&SamplerDesc, &this->pSamplerState)) != S_OK)
     {
         // Failed to create the sampler state.
         DbgPrint("ImGuiRenderer::Initialize(): failed to create sampler state 0x%08x\n", hr);
@@ -323,6 +371,7 @@ bool ImGuiRenderer::Initialize()
 
     // Successfully initialized directx resources.
     DbgPrint("### INFO: ImGui renderer initialized successfully\n");
+    this->initialized = true;
     return true;
 }
 
@@ -330,8 +379,8 @@ bool ImGuiRenderer::ResizeVertexBuffers(int vertexBufferSize, int indexBufferSiz
 {
     HRESULT hr = S_OK;
 
-    // Get the sRender instance.
-    sRender *psRender = sRender::Instance();
+    // Get the d3d device pointer from sRender instance.
+    ID3D11Device *pD3dDevice = *(ID3D11Device**)(((BYTE*)sRender::Instance()) + 0x8590);
 
     // Check if we need to resize the vertex buffer.
     if (this->vertexBufferSize < vertexBufferSize)
@@ -348,12 +397,12 @@ bool ImGuiRenderer::ResizeVertexBuffers(int vertexBufferSize, int indexBufferSiz
 
         // Setup the vertex buffer.
         D3D11_BUFFER_DESC BufferDesc = { 0 };
-        BufferDesc.Usage = D3D11_USAGE_DEFAULT;
+        BufferDesc.Usage = D3D11_USAGE_DYNAMIC;
         BufferDesc.ByteWidth = this->vertexBufferSize * sizeof(ImDrawVert);
         BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
         BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
         BufferDesc.MiscFlags = 0;
-        if ((hr = psRender->pD3dDevice->CreateBuffer(&BufferDesc, nullptr, &this->pVertexBuffer)) != S_OK)
+        if ((hr = pD3dDevice->CreateBuffer(&BufferDesc, nullptr, &this->pVertexBuffer)) != S_OK)
         {
             // Failed to create the vertex buffer.
             DbgPrint("ImGuiRenderer::ResizeVertexBuffers(): failed to create vertex buffer 0x%08x\n", hr);
@@ -376,12 +425,12 @@ bool ImGuiRenderer::ResizeVertexBuffers(int vertexBufferSize, int indexBufferSiz
 
         // Setup the index buffer.
         D3D11_BUFFER_DESC BufferDesc = { 0 };
-        BufferDesc.Usage = D3D11_USAGE_DEFAULT;
+        BufferDesc.Usage = D3D11_USAGE_DYNAMIC;
         BufferDesc.ByteWidth = this->indexBufferSize * sizeof(ImDrawIdx);
         BufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
         BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
         BufferDesc.MiscFlags = 0;
-        if ((hr = psRender->pD3dDevice->CreateBuffer(&BufferDesc, nullptr, &this->pIndexBuffer)) != S_OK)
+        if ((hr = pD3dDevice->CreateBuffer(&BufferDesc, nullptr, &this->pIndexBuffer)) != S_OK)
         {
             // Failed to create the index buffer.
             DbgPrint("ImGuiRenderer::ResizeVertexBuffers(): failed to create index buffer 0x%08x\n", hr);
@@ -398,22 +447,20 @@ void ImGuiRenderer::BeginFrame()
     // Get the IO structure.
     ImGuiIO& io = ImGui::GetIO();
 
+    // Get the window size from sRender.
+    SIZE windowSize = *(SIZE*)(((BYTE*)sRender::Instance()) + 0x8620);
+
     // Update display size and time delta.
-    io.DisplaySize = ImVec2(720.0f, 1080.0f); // TODO
+    io.DisplaySize = ImVec2((float)windowSize.cx, (float)windowSize.cy);
     io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
-    io.DeltaTime = 0.0f; // TODO
-
-    // if (focused)
-    {
-        // TODO: Update mouse position and buttons
-
-        // Update mouse wheel position
-
-        // Update keyboard special input keys
-    }
+    io.DeltaTime = sMain::Instance()->GameTime.DeltaTime1InSeconds;
 
     // Start a new imgui frame.
     ImGui::NewFrame();
+
+    // Check if we should draw the imgui demo window.
+    //if (g_ShowImGuiDemo == true)
+        ImGui::ShowDemoWindow(&g_ShowImGuiDemo);
 }
 
 void ImGuiRenderer::SystemUpdate()
@@ -427,8 +474,12 @@ void ImGuiRenderer::SystemUpdate()
     if (this->isVisible == false)
         return;
 
-    // Get the sRender instance.
-    sRender *psRender = sRender::Instance();
+    // Get the d3d device context from sRender instance.
+    ID3D11DeviceContext *pDeviceContext = *(ID3D11DeviceContext**)(((BYTE*)sRender::Instance()) + 0x85A8);
+
+    // Get the render target view and depth stencil.
+    ID3D11RenderTargetView *pRenderTargetView = *(ID3D11RenderTargetView**)(((BYTE*)sRender::Instance()) + 0x272D0);
+    ID3D11DepthStencilView *pDepthStencilView = *(ID3D11DepthStencilView**)(((BYTE*)sRender::Instance()) + 0x272D8);
 
     // Get the imgui draw data structure.
     ImDrawData *pDrawData = ImGui::GetDrawData();
@@ -461,14 +512,14 @@ void ImGuiRenderer::SystemUpdate()
 
     // Map the vertex and index buffers for cpu access.
     D3D11_MAPPED_SUBRESOURCE vertexResource, indexResource;
-    if ((hr = psRender->pDeviceContext->Map(this->pVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &vertexResource)) != S_OK)
+    if ((hr = pDeviceContext->Map(this->pVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &vertexResource)) != S_OK)
     {
         // Failed to map the vertex buffer for cpu access.
         DbgPrint("ImGuiRenderer::SystemUpdate(): failed to map vertex buffer for cpu access 0x%08x\n", hr);
         return;
     }
 
-    if ((hr = psRender->pDeviceContext->Map(this->pIndexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &indexResource)) != S_OK)
+    if ((hr = pDeviceContext->Map(this->pIndexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &indexResource)) != S_OK)
     {
         // Failed to map the index buffer for cpu access.
         DbgPrint("ImGuiRenderer::SystemUpdate(): failed to map index buffer for cpu access 0x%08x\n", hr);
@@ -491,12 +542,12 @@ void ImGuiRenderer::SystemUpdate()
     }
 
     // Unmap the buffers.
-    psRender->pDeviceContext->Unmap(this->pVertexBuffer, 0);
-    psRender->pDeviceContext->Unmap(this->pIndexBuffer, 0);
+    pDeviceContext->Unmap(this->pVertexBuffer, 0);
+    pDeviceContext->Unmap(this->pIndexBuffer, 0);
 
     // Map the shader constant buffer for cpu access.
     D3D11_MAPPED_SUBRESOURCE shaderConstantResource;
-    if ((hr = psRender->pDeviceContext->Map(this->pShaderConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &shaderConstantResource)) != S_OK)
+    if ((hr = pDeviceContext->Map(this->pShaderConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &shaderConstantResource)) != S_OK)
     {
         // Failed to map shader constant buffer for cpu access.
         DbgPrint("ImGuiRenderer::SystemUpdate(): failed to map shader constant buffer for cpu access 0x%08x\n", hr);
@@ -504,7 +555,7 @@ void ImGuiRenderer::SystemUpdate()
     }
 
     // Update the orthographic projection matrix.
-    DirectX::XMMATRIX projection = DirectX::XMMatrixOrthographicOffCenterRH(
+    DirectX::XMMATRIX projection = DirectX::XMMatrixOrthographicOffCenterLH(
         pDrawData->DisplayPos.x,
         pDrawData->DisplayPos.x + pDrawData->DisplaySize.x,
         pDrawData->DisplayPos.y + pDrawData->DisplaySize.y,
@@ -514,26 +565,28 @@ void ImGuiRenderer::SystemUpdate()
     memcpy(shaderConstantResource.pData, &projection, sizeof(DirectX::XMMATRIX));
 
     // Unmap the shader constant buffer.
-    psRender->pDeviceContext->Unmap(this->pShaderConstantBuffer, 0);
+    pDeviceContext->Unmap(this->pShaderConstantBuffer, 0);
 
     // Setup the directx rendering state.
-    psRender->pDeviceContext->IASetInputLayout(this->pInputLayout);
-    psRender->pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    pDeviceContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
 
-    UINT vrtxStrides = sizeof(ImDrawVert), idxStrides = sizeof(ImDrawIdx);
-    psRender->pDeviceContext->IASetVertexBuffers(0, 1, &this->pVertexBuffer, &vrtxStrides, &idxStrides);
-    psRender->pDeviceContext->IASetIndexBuffer(this->pIndexBuffer, sizeof(ImDrawIdx) == 2 ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT, 0);
+    pDeviceContext->IASetInputLayout(this->pInputLayout);
+    pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    psRender->pDeviceContext->VSSetShader(this->pVertexShader, nullptr, 0);
-    psRender->pDeviceContext->PSSetShader(this->pPixelShader, nullptr, 0);
+    UINT vrtxStrides = sizeof(ImDrawVert), vrtxOffsets = 0;
+    pDeviceContext->IASetVertexBuffers(0, 1, &this->pVertexBuffer, &vrtxStrides, &vrtxOffsets);
+    pDeviceContext->IASetIndexBuffer(this->pIndexBuffer, sizeof(ImDrawIdx) == 2 ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT, 0);
 
-    psRender->pDeviceContext->VSSetConstantBuffers(0, 1, &this->pShaderConstantBuffer);
-    psRender->pDeviceContext->PSGetConstantBuffers(0, 1, &this->pShaderConstantBuffer);
-    psRender->pDeviceContext->PSSetSamplers(0, 1, &this->pSamplerState);
+    pDeviceContext->VSSetShader(this->pVertexShader, nullptr, 0);
+    pDeviceContext->PSSetShader(this->pPixelShader, nullptr, 0);
+
+    pDeviceContext->VSSetConstantBuffers(0, 1, &this->pShaderConstantBuffer);
+    pDeviceContext->PSSetConstantBuffers(0, 1, &this->pShaderConstantBuffer);
+    pDeviceContext->PSSetSamplers(0, 1, &this->pSamplerState);
 
     const float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-    psRender->pDeviceContext->OMSetBlendState(this->pBlendState, blendFactor, 0xFFFFFFFF);
-    psRender->pDeviceContext->RSSetState(this->pRasterState);
+    pDeviceContext->OMSetBlendState(this->pBlendState, blendFactor, 0xFFFFFFFF);
+    pDeviceContext->RSSetState(this->pRasterState);
 
     // Set the clipping rectangle scale.
 
@@ -562,18 +615,18 @@ void ImGuiRenderer::SystemUpdate()
                     (int)(pCmdList->CmdBuffer[x].ClipRect.z - pDrawData->DisplayPos.x),
                     (int)(pCmdList->CmdBuffer[x].ClipRect.w - pDrawData->DisplayPos.y)
                 };
-                psRender->pDeviceContext->RSSetScissorRects(1, &scissorRect);
+                pDeviceContext->RSSetScissorRects(1, &scissorRect);
 
                 // Check if this mesh is being rendered with a texture or not.
                 if (pCmdList->CmdBuffer[x].TextureId != nullptr)
                 {
                     // Bind the texture.
                     ID3D11ShaderResourceView *pShaderResource = (ID3D11ShaderResourceView*)pCmdList->CmdBuffer[x].TextureId;
-                    psRender->pDeviceContext->PSSetShaderResources(0, 1, &pShaderResource);
+                    pDeviceContext->PSSetShaderResources(0, 1, &pShaderResource);
                 }
 
                 // Draw primitives.
-                psRender->pDeviceContext->DrawIndexed(pCmdList->CmdBuffer[x].ElemCount, pCmdList->CmdBuffer[x].IdxOffset + indexOffset, pCmdList->CmdBuffer[x].VtxOffset + vertexOffset);
+                pDeviceContext->DrawIndexed(pCmdList->CmdBuffer[x].ElemCount, pCmdList->CmdBuffer[x].IdxOffset + indexOffset, pCmdList->CmdBuffer[x].VtxOffset + vertexOffset);
             }
         }
 
@@ -591,4 +644,11 @@ void ImGuiRenderer::SystemCleanup()
 void ImGuiRenderer::BuildSystemMenu(MtPropertyList *pPropertyList)
 {
 
+}
+
+__int64 ShowImGuiDemo(WCHAR **argv, int argc)
+{
+    g_ShowImGuiDemo = true;
+
+    return 0;
 }

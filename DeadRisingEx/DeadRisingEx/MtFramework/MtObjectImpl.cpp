@@ -47,7 +47,7 @@ std::string FixFieldName(const char *psFieldName)
                 sNewName += psFieldName[i];
             }
             else if (psFieldName[i] != '-')
-                sNewName += tolower(psFieldName[i]);
+                sNewName += psFieldName[i];
         }
     }
 

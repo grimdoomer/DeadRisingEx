@@ -48,6 +48,8 @@ struct sSnatcherMain : public sMain
 
     /* 0x20398 */ void  *mpModelLayout;
     /* 0x203A0 */ void  *mpEffectVFR;
+    /* 0x203AC */ //DWORD camera/ui flags 0x8000000 = don't draw watch ui?
+    /* 0x203B0 */ // DWORD state flags
 
     /* 0x20DC0 */ void  *pGametaskMain;
 

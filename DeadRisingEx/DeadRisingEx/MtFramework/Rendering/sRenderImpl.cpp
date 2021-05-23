@@ -3,14 +3,18 @@
 */
 
 #include "sRenderImpl.h"
+#include <Misc/AsmHelpers.h>
+#include <MtFramework/Game/sMain.h>
 #include <MtFramework/Rendering/sRender.h>
 #include <MtFramework/Rendering/sPrim.h>
+#include <MtFramework/Rendering/sShader.h>
 #include <stdio.h>
 #include <string>
 #include <detours.h>
 #include "DeadRisingEx/Utilities/GuardedBuffer.h"
 #include "renderdoc_app.h"
 #include <assert.h>
+#include "DeadRisingEx/MtFramework/Rendering/ImGui/ImGuiRenderer.h"
 
 void *g_sRenderSingletonInst = (void*)0x141CF3268;
 
@@ -26,6 +30,9 @@ __int64 PrintVertexDeclarations(WCHAR **argv, int argc);
 __int64 CaptureFrame(WCHAR **argv, int argc);
 
 sRender * __stdcall Hook_sRender_ctor(sRender *thisptr, DWORD interval, DWORD dwUnused1, DWORD dwGraphicsMemSize, DWORD dwUnused2);
+void __stdcall Hook_sRender_Present(sRender *thisptr);
+void __stdcall Hook_sRender_SystemCleanup(sRender *thisptr);
+
 sPrim * __stdcall Hook_sPrim_ctor(sPrim *thisptr, DWORD entryCount);
 //void __cdecl Hook_sRender_DrawFrame(sRender *thisptr);
 sRender::Buffer * __stdcall Hook_sRender__Buffer_ctor(sRender::Buffer *thisptr, ID3D11DeviceContext *pDeviceContext, DWORD dwBufferSize, DWORD dwBufferType);
@@ -47,10 +54,14 @@ void sRenderImpl::RegisterTypeInfo()
 
 bool sRenderImpl::InstallHooks()
 {
+    // Hook sRender functions needed for the imgui renderer.
+    DetourAttach((void**)&sRender::_ctor, Hook_sRender_ctor);
+    DetourAttach((void**)&sRender::_Present, Hook_sRender_Present);
+    DetourAttach((void**)&sRender::_SystemCleanup, Hook_sRender_SystemCleanup);
+
     // Check if dynamic graphics memory is enabled and hook needed functions if so.
     if (ModConfig::Instance()->DynamicGraphicsMemory == true)
     {
-        DetourAttach((void**)&sRender::_ctor, Hook_sRender_ctor);
         DetourAttach((void**)&sPrim::_ctor, Hook_sPrim_ctor);
         DetourAttach((void**)&sRender::Buffer::_ctor, Hook_sRender__Buffer_ctor);
         DetourAttach((void**)&sRender::Buffer::_MapForWrite, Hook_sRender__Buffer_MapForWrite);
@@ -143,8 +154,72 @@ __int64 CaptureFrame(WCHAR **argv, int argc)
 
 sRender * __stdcall Hook_sRender_ctor(sRender *thisptr, DWORD interval, DWORD dwUnused1, DWORD dwGraphicsMemSize, DWORD dwUnused2)
 {
-    // Adjust the graphics memory size to avoid crashes.
-    return sRender::_ctor(thisptr, interval, dwUnused1, 60 * 1024 * 1024, dwUnused2);
+    // If we are running in dynamic graphics mode adjust the graphics memory size to avoid crashes.
+    sRender *psRender = nullptr;
+    if (ModConfig::Instance()->DynamicGraphicsMemory == true)
+        psRender = sRender::_ctor(thisptr, interval, dwUnused1, 60 * 1024 * 1024, dwUnused2);
+    else
+        psRender = sRender::_ctor(thisptr, interval, dwUnused1, dwGraphicsMemSize, dwUnused2);
+
+    // Initialize the imgui renderer.
+    if (ImGuiRenderer::Instance()->Initialize() == false)
+    {
+        // Failed to initialize the imgui renderer.
+        DbgPrint("### ERROR: Failed to initialize ImGuiRenderer!\n");
+        DebugBreak();
+    }
+
+    // Call the first begin frame here.
+    //ImGuiRenderer::Instance()->BeginFrame();
+
+    // Return the sRender instnace.
+    return psRender;
+}
+
+void __stdcall Hook_sRender_Present(sRender *thisptr)
+{
+    // Get all the variables we need for this function.
+    BOOL VSync = *(BOOL*)((BYTE*)sRender::Instance() + 0x8404);
+    IDXGISwapChain *pSwapChain = *(IDXGISwapChain**)((BYTE*)sRender::Instance() + 0x8618);
+    bool *ShouldPostQuitMessage = (bool*)((BYTE*)sRender::Instance() + 0x8585);
+    ID3D11DeviceContext **MainThreadDeferredContexts = (ID3D11DeviceContext**)((BYTE*)sRender::Instance() + 0x85E0);
+
+    // Wait for the next frame to render.
+    thisptr->RenderFrame();
+
+    // Render the imgui frame.
+    ImGuiRenderer::Instance()->SystemUpdate();
+
+    // Present the final image.
+    pSwapChain->Present(VSync == FALSE ? 0 : 1, 0);
+
+    // Check if we should post a quit message (I don't think this is ever triggered).
+    if (*ShouldPostQuitMessage != false)
+    {
+        // Flag sMain to quit and post the quit message to the main thread.
+        *ShouldPostQuitMessage = false;
+        sMain::Instance()->ShouldQuit = TRUE;
+        SendMessageA(*sMain::GameWindowHandle, 2, NULL, NULL);
+    }
+
+    // Call some sShader function.
+    ThisPtrCall((void*)0x140693E30, sShader::Instance());
+
+    // Swap the deferred context pointers.
+    ID3D11DeviceContext *pOld = MainThreadDeferredContexts[1];
+    MainThreadDeferredContexts[1] = MainThreadDeferredContexts[0];
+    MainThreadDeferredContexts[0] = pOld;
+
+    ThisPtrCall((void*)0x140661B70, sRender::Instance());
+}
+
+void __stdcall Hook_sRender_SystemCleanup(sRender *thisptr)
+{
+    // Cleanup the imgui renderer.
+    ImGuiRenderer::Instance()->SystemCleanup();
+
+    // Call the trampoline.
+    sRender::_SystemCleanup(thisptr);
 }
 
 sPrim * __stdcall Hook_sPrim_ctor(sPrim *thisptr, DWORD entryCount)

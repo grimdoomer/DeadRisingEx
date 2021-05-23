@@ -3,6 +3,7 @@
 #include "LibMtFramework.h"
 #include "MtFramework/System/cSystem.h"
 #include "MtFramework/System/MtThread.h"
+#include <windows.h>
 
 // sizeof = 0x20248
 struct sMain : public cSystem
@@ -100,5 +101,10 @@ struct sMain : public cSystem
     IMPLEMENT_SINGLETON(sMain, 0x141CF2AA0);
 
     inline static const char *mBuildVersion = GetModuleAddress<const char*>(0x14103CB90);
+
+    inline static HWND *GameWindowHandle = GetModuleAddress<HWND*>(0x141CF2A88);
+
+    inline static LRESULT(__stdcall *_WndProc)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) =
+        GetModuleAddress<LRESULT(__stdcall*)(HWND, UINT, WPARAM, LPARAM)>(0x14002BDC0);
 };
 static_assert(sizeof(sMain) == 0x20248, "sMain incorrect struct size");

@@ -24,6 +24,7 @@
     <ClCompile Include="DeadRisingEx\MtFramework\Archive\sResourceImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Debug\sSnatcherToolImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Game\sMainImpl.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Game\sSnatcherPadImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Game\sSnatcherMainImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Game\Task\cGametaskTitleImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Graphics\rModelImpl.cpp" />
@@ -59,6 +60,7 @@
     <ClInclude Include="DeadRisingEx\MtFramework\Archive\sResourceImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Debug\sSnatcherToolImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Game\sMainImpl.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Game\sSnatcherPadImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Game\sSnatcherMainImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Game\Task\cGametaskTitleImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Graphics\rModelImpl.h" />

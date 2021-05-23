@@ -17,12 +17,17 @@ struct MtObject;
 #define MT_PROP_TYPE_FLOAT          0xC
 //
 #define MT_PROP_TYPE_MTSTRING       0xE
+// COLORARGB 0xf?
+// float POINT/vector2 0x10?
 #define MT_PROP_TYPE_VECTOR3        0x14
 // vector4 0x15?
 #define MT_PROP_TYPE_QUATERNION     0x16
+// function callback 0x18?
 // section header 0x19?
 // line break 0x1F?
 #define MT_PROP_TYPE_STRING_PTR	    0x20
+
+// float POINT/vector2 0x22?
 
 #define MT_PROP_FLAG_READ_ONLY      1       // Field is read only
 // section header 0x4?
