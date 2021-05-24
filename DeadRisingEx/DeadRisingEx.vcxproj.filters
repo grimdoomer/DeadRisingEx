@@ -30,12 +30,6 @@
     <ClCompile Include="DeadRisingEx\MtFramework\Graphics\rModelImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DeadRisingEx\Debugger\TypeInfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DeadRisingEx\Debugger\CommandManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DeadRisingEx\ModConfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -108,6 +102,9 @@
     <ClCompile Include="DeadRisingEx\MtFramework\Game\sSnatcherPadImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\ImGuiConsole.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DeadRisingEx.h">
@@ -129,12 +126,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DeadRisingEx\MtFramework\Archive\cResourceImpl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DeadRisingEx\Debugger\TypeInfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DeadRisingEx\Debugger\CommandManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DeadRisingEx\ModConfig.h">
@@ -216,6 +207,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DeadRisingEx\MtFramework\Game\sSnatcherPadImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\ImGuiConsole.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

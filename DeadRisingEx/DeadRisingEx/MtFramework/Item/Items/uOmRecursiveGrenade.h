@@ -35,7 +35,7 @@ struct uOmRecursiveGrenade : public uOm23
         if (pObject == nullptr)
         {
             // Failed to allocate memory for object.
-            wprintf(L"Failed to allocate memory for uOmRecursiveGrenade!\n");
+            ImGuiConsole::Instance()->ConsolePrint(L"Failed to allocate memory for uOmRecursiveGrenade!\n");
             return nullptr;
         }
 

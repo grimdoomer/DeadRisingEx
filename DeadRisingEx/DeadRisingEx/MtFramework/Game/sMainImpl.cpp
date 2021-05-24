@@ -17,7 +17,7 @@ __int64 EnableDebugZombieSpawner(WCHAR **argv, int argc);
 
 // Table of commands for sRender objects.
 const int g_sMainCommandsLength = 1;
-const CommandEntry g_sMainCommands[g_sMainCommandsLength] =
+const ConsoleCommandInfo g_sMainCommands[g_sMainCommandsLength] =
 {
     { L"enable_zombie_spawner", L"Enables the sMManager debug zombie spawner", EnableDebugZombieSpawner }
 };
@@ -25,7 +25,7 @@ const CommandEntry g_sMainCommands[g_sMainCommandsLength] =
 void sMainImpl::RegisterTypeInfo()
 {
     // Register commands:
-    RegisterCommands(g_sMainCommands, g_sMainCommandsLength);
+    ImGuiConsole::Instance()->RegisterCommands(g_sMainCommands, g_sMainCommandsLength);
 }
 
 bool sMainImpl::InstallHooks()

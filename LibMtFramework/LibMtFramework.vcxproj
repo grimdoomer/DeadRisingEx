@@ -28,7 +28,6 @@
     <ClInclude Include="MtFramework\Area\sAreaManager.h" />
     <ClInclude Include="MtFramework\Config\MtRegistry.h" />
     <ClInclude Include="MtFramework\Debug\sToolBase.h" />
-    <ClInclude Include="MtFramework\Debug\uSnatcherTool.h" />
     <ClInclude Include="MtFramework\Game\Player\uCockpit.h" />
     <ClInclude Include="MtFramework\Game\sMain.h" />
     <ClInclude Include="MtFramework\Game\sSnatcherPad.h" />

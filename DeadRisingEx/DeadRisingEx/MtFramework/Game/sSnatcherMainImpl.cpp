@@ -17,7 +17,7 @@ void Hook_sSnatcherMain_InitializeAllocators(sSnatcherMain *thisptr);
 
 // Table of commands for sRender objects.
 const int g_sSnatcherMainCommandsLength = 2;
-const CommandEntry g_sSnatcherMainCommands[g_sSnatcherMainCommandsLength] =
+const ConsoleCommandInfo g_sSnatcherMainCommands[g_sSnatcherMainCommandsLength] =
 {
     { L"print_mem_stats", L"Prints memory usage stats", PrintMemoryUsage },
     { L"load_area", L"Loads the specified area by id", LoadArea }
@@ -26,7 +26,7 @@ const CommandEntry g_sSnatcherMainCommands[g_sSnatcherMainCommandsLength] =
 void sSnatcherMainImpl::RegisterTypeInfo()
 {
     // Register commands:
-    RegisterCommands(g_sSnatcherMainCommands, g_sSnatcherMainCommandsLength);
+    ImGuiConsole::Instance()->RegisterCommands(g_sSnatcherMainCommands, g_sSnatcherMainCommandsLength);
 }
 
 bool sSnatcherMainImpl::InstallHooks()
@@ -52,8 +52,8 @@ __int64 PrintMemoryUsage(WCHAR **argv, int argc)
     };
 
     // Loop and print memory usage stats.
-    wprintf(L"Pool | Size (MB) | Used (MB)\n");
-    wprintf(L"----------------------------\n");
+    ImGuiConsole::Instance()->ConsolePrint(L"Pool | Size (MB) | Used (MB)\n");
+    ImGuiConsole::Instance()->ConsolePrint(L"----------------------------\n");
     for (int i = 0; i < 8; i++)
     {
         // Pad the allocator name for consistency.
@@ -65,10 +65,10 @@ __int64 PrintMemoryUsage(WCHAR **argv, int argc)
         float memUsed = (float)pMemoryAllocators[i]->mUsedSize / (float)(1024 * 1024);
 
         // Print the memory stats for the current allocator.
-        wprintf(L"%S %d\t%.2f\n", sName.c_str(), memAllocated, memUsed);
+        ImGuiConsole::Instance()->ConsolePrint(L"%S %d\t%.2f\n", sName.c_str(), memAllocated, memUsed);
     }
 
-    wprintf(L"\n");
+    ImGuiConsole::Instance()->ConsolePrint(L"\n");
     return 0;
 }
 
@@ -78,7 +78,7 @@ __int64 LoadArea(WCHAR **argv, int argc)
     if (argc < 1)
     {
         // Invalid syntax.
-        wprintf(L"Invalid command syntax!\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"Invalid command syntax!\n");
         return 0;
     }
 
@@ -88,7 +88,7 @@ __int64 LoadArea(WCHAR **argv, int argc)
     // Get the area id for the area name provided.
     std::string sAreaId = unicConvert.to_bytes(argv[0]);
     DWORD areaId = sAreaManager::Instance()->GetAreaIdFromName(sAreaId.c_str());
-    wprintf(L"Loading area id %d\n", areaId);
+    ImGuiConsole::Instance()->ConsolePrint(L"Loading area id %d\n", areaId);
 
     // Get the gametask object from sMain instance.
     BYTE *psSnatcherMain = (BYTE*)sSnatcherMain::Instance();

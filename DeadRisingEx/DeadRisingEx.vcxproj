@@ -19,8 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DeadRisingEx\Debugger\CommandManager.cpp" />
-    <ClCompile Include="DeadRisingEx\Debugger\TypeInfo.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Archive\sResourceImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Debug\sSnatcherToolImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Game\sMainImpl.cpp" />
@@ -33,6 +31,7 @@
     <ClCompile Include="DeadRisingEx\MtFramework\Object\Npc\uNpcMarkerImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Object\uPhotoImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\imgui.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\ImGuiConsole.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\ImGuiRenderer.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\imgui_demo.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\imgui_draw.cpp" />
@@ -52,8 +51,6 @@
     <ClCompile Include="DeadRisingEx\MtFramework\Archive\ArchiveOverlay.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DeadRisingEx\Debugger\CommandManager.h" />
-    <ClInclude Include="DeadRisingEx\Debugger\TypeInfo.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Archive\ArchiveOverlay.h" />
     <ClInclude Include="DeadRisingEx.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Archive\cResourceImpl.h" />
@@ -70,6 +67,7 @@
     <ClInclude Include="DeadRisingEx\MtFramework\Object\uPhotoImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\imconfig.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\imgui.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\ImGuiConsole.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\ImGuiRenderer.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\imgui_internal.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\imstb_rectpack.h" />

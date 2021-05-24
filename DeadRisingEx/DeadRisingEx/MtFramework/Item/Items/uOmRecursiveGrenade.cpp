@@ -19,7 +19,7 @@ void uOmRecursiveGrenade::SpawnGrenades()
 
     // Pick a random number of grenades to spawn.
     int grenadeCount = (int)(GetRandomFloat(pThing) * 15.0f) % 5;
-    //wprintf(L"Spawning %d grenades\n", grenadeCount);
+    //ImGuiConsole::Instance()->ConsolePrint(L"Spawning %d grenades\n", grenadeCount);
 
     // Loop and spawn grenades.
     for (int i = 0; i < grenadeCount; i++)
@@ -32,21 +32,21 @@ void uOmRecursiveGrenade::SpawnGrenades()
         position.x += GetRandomFloat(pThing) * 350.0f * (round(GetRandomFloat(pThing)) == 1 ? 1.0f : -1.0f);
         position.y += 50.0f;
         position.z += GetRandomFloat(pThing) * 350.0f * (round(GetRandomFloat(pThing)) == 1 ? 1.0f : -1.0f);
-        //wprintf(L"Grenade #%d: %f %f %f\n", i, position.x, position.y, position.z);
+        //ImGuiConsole::Instance()->ConsolePrint(L"Grenade #%d: %f %f %f\n", i, position.x, position.y, position.z);
 
         // Create a new grenade object.
         uOmRecursiveGrenade *pGrenade = uOmRecursiveGrenade::CreateInstance();
         if (pGrenade == nullptr)
         {
             // Failed to spawn the grenage.
-            wprintf(L"Failed to spawn new grenade!\n");
+            ImGuiConsole::Instance()->ConsolePrint(L"Failed to spawn new grenade!\n");
             return;
         }
 
         if (pGrenade->SetupItemProperties() == false)
         {
             // Failed to setup properties for the item.
-            wprintf(L"Failed to setup item properties\n");
+            ImGuiConsole::Instance()->ConsolePrint(L"Failed to setup item properties\n");
             return;
         }
 
@@ -73,7 +73,7 @@ void uOmRecursiveGrenade::SpawnGrenades()
         // Call some sUnit function to add the item to a list?
         if (sUnit_AddObject(*g_sUnitInstance, 9, pGrenade) == false)
         {
-            wprintf(L"sUnit function failed!\n");
+            ImGuiConsole::Instance()->ConsolePrint(L"sUnit function failed!\n");
             return;
         }
 
@@ -85,7 +85,7 @@ void uOmRecursiveGrenade::SpawnGrenades()
         //if (pGrenade == nullptr)
         //{
         //    // Failed to spawn the grenage.
-        //    wprintf(L"Failed to spawn new grenade!\n");
+        //    ImGuiConsole::Instance()->ConsolePrint(L"Failed to spawn new grenade!\n");
         //    return;
         //}
     }

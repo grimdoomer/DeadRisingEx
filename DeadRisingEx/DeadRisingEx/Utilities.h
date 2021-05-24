@@ -6,6 +6,7 @@
 #include <Windows.h>
 #include <stdio.h>
 #include <string>
+#include "DeadRisingEx/MtFramework/Rendering/ImGui/ImGuiConsole.h"
 
 static void DbgPrint(LPCSTR Format, ...)
 {
@@ -31,7 +32,7 @@ static bool ReplaceVTablePointer(void **pVtableAddress, void *pFunctionPtr)
     if (VirtualProtect((void*)pVtableAddress, sizeof(void*), PAGE_READWRITE, &dwOldProtect) == FALSE)
     {
         // Failed to change page permissions.
-        wprintf(L"Failed to change page permissions on address %p!\n", (void*)pVtableAddress);
+        ImGuiConsole::Instance()->ConsolePrint(L"Failed to change page permissions on address %p!\n", (void*)pVtableAddress);
         return false;
     }
 
@@ -42,7 +43,7 @@ static bool ReplaceVTablePointer(void **pVtableAddress, void *pFunctionPtr)
     if (VirtualProtect((void*)pVtableAddress, sizeof(void*), dwOldProtect, &dwOldProtect) == FALSE)
     {
         // Failed to restore page permissions.
-        wprintf(L"Failed to restore page permissions for address %p!\n", (void*)pVtableAddress);
+        ImGuiConsole::Instance()->ConsolePrint(L"Failed to restore page permissions for address %p!\n", (void*)pVtableAddress);
         return false;
     }
 
@@ -58,7 +59,7 @@ template<typename T> static bool PatchBytes(T *pAddress, T newValue)
     if (VirtualProtect(pAddress, sizeof(T), PAGE_READWRITE, &dwOldProtect) == FALSE)
     {
         // Failed to change page permissions.
-        wprintf(L"Failed to change page permissions on address %p!\n", pAddress);
+        ImGuiConsole::Instance()->ConsolePrint(L"Failed to change page permissions on address %p!\n", pAddress);
         return false;
     }
 
@@ -69,7 +70,7 @@ template<typename T> static bool PatchBytes(T *pAddress, T newValue)
     if (VirtualProtect(pAddress, sizeof(T), dwOldProtect, &dwOldProtect) == FALSE)
     {
         // Failed to restore page permissions.
-        wprintf(L"Failed to restore page permissions for address %p!\n", pAddress);
+        ImGuiConsole::Instance()->ConsolePrint(L"Failed to restore page permissions for address %p!\n", pAddress);
         return false;
     }
 
@@ -85,7 +86,7 @@ static bool PatchBytes(void *pAddress, void *pBytes, DWORD length)
     if (VirtualProtect(pAddress, length, PAGE_READWRITE, &dwOldProtect) == FALSE)
     {
         // Failed to change page permissions.
-        wprintf(L"Failed to change page permissions on address %p!\n", pAddress);
+        ImGuiConsole::Instance()->ConsolePrint(L"Failed to change page permissions on address %p!\n", pAddress);
         return false;
     }
 
@@ -96,7 +97,7 @@ static bool PatchBytes(void *pAddress, void *pBytes, DWORD length)
     if (VirtualProtect(pAddress, length, dwOldProtect, &dwOldProtect) == FALSE)
     {
         // Failed to restore page permissions.
-        wprintf(L"Failed to restore page permissions for address %p!\n", pAddress);
+        ImGuiConsole::Instance()->ConsolePrint(L"Failed to restore page permissions for address %p!\n", pAddress);
         return false;
     }
 
@@ -112,7 +113,7 @@ static bool WriteDword(DWORD *pAddress, DWORD newValue)
     if (VirtualProtect(pAddress, sizeof(DWORD), PAGE_READWRITE, &dwOldProtect) == FALSE)
     {
         // Failed to change page permissions.
-        wprintf(L"Failed to change page permissions on address %p!\n", pAddress);
+        ImGuiConsole::Instance()->ConsolePrint(L"Failed to change page permissions on address %p!\n", pAddress);
         return false;
     }
 
@@ -123,7 +124,7 @@ static bool WriteDword(DWORD *pAddress, DWORD newValue)
     if (VirtualProtect(pAddress, sizeof(DWORD), dwOldProtect, &dwOldProtect) == FALSE)
     {
         // Failed to restore page permissions.
-        wprintf(L"Failed to restore page permissions for address %p!\n", pAddress);
+        ImGuiConsole::Instance()->ConsolePrint(L"Failed to restore page permissions for address %p!\n", pAddress);
         return false;
     }
 

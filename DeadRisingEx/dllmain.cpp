@@ -27,6 +27,7 @@
 #include "DeadRisingEx/MtFramework/Graphics/rModelImpl.h"
 #include "DeadRisingEx/MtFramework/Memory/MtHeapAllocatorImpl.h"
 #include "DeadRisingEx/MtFramework/Rendering/ImGui/ImGuiRenderer.h"
+#include "DeadRisingEx/MtFramework/Rendering/ImGui/ImGuiConsole.h"
 #include "DeadRisingEx/MtFramework/Rendering/sRenderImpl.h"
 #include "DeadRisingEx/MtFramework/Rendering/sShaderImpl.h"
 #include "DeadRisingEx/MtFramework/Item/uItemImpl.h"
@@ -48,102 +49,18 @@ void ForceSymbolsHelper()
     MtFileStream *pFileStream = nullptr;
 }
 
-void SetupConsole()
+void(__stdcall *pOutputDebugStringA)(LPCSTR lpOutputString) = OutputDebugStringA;
+
+void __stdcall Hook_OutputDebugStringA(LPCSTR lpOutputString)
 {
-    // Create the console window.
-    if (AllocConsole() == FALSE)
-    {
-        // Failed to create the console window.
-        OutputDebugString("Failed to create console window!\n");
-        return;
-    }
+    // Print the message to the imgui console and the debugger.
+    ImGuiConsole::Instance()->ConsolePrint(lpOutputString);
+    pOutputDebugStringA(lpOutputString);
 
-    // Set the window title.
-    SetConsoleTitle("DRDebugger");
-
-    // Open input/output streams.
-    freopen("CONIN$", "r", stdin);
-    freopen("CONOUT$", "w", stdout);
-    freopen("CONOUT$", "w", stderr);
+    // If the debug log is enabled write all messages to debug log.
+    if (ModConfig::Instance()->DebugLog == true)
+        DebugLog::WriteMessage(lpOutputString);
 }
-
-DWORD __stdcall ProcessConsoleWorker(LPVOID)
-{
-    // Setup the unicode converter.
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> unicConvert;
-
-    // Loop forever.
-    while (true)
-    {
-        std::string sCommand;
-        std::wstring sCommandUnic;
-        CommandEntry commandInfo;
-        LPWSTR *pArguments;
-        int ArgCount;
-
-        // Get the next command and convert it to unicode for parsing.
-        wprintf(L">");
-        std::getline(std::cin, sCommand);
-        sCommandUnic = unicConvert.from_bytes(sCommand);
-
-        // Parse the command string.
-        pArguments = CommandLineToArgvW(sCommandUnic.c_str(), &ArgCount);
-        if (pArguments != NULL)
-        {
-            // Make sure there is at least one argument to process.
-            if (ArgCount == 0)
-                goto CommandEnd;
-
-            // Check if we are accessing a command or local variable.
-            if (pArguments[0][0] == '$')
-            {
-
-            }
-            else
-            {
-                // Check if a command with the specified name exists.
-                if (FindCommand(std::wstring(pArguments[0]), &commandInfo) == false)
-                {
-                    // No matching command found.
-                    wprintf(L"\nUnknown command: %s\n\n", pArguments[0]);
-                    goto CommandEnd;
-                }
-            }
-
-            // Call the command handler.
-            commandInfo.pHandlerFunction(&pArguments[1], ArgCount - 1);
-            wprintf(L"\n");
-
-        CommandEnd:
-            // Free the argument buffer.
-            LocalFree(pArguments);
-        }
-
-        // Sleep and loop.
-        Sleep(50);
-    }
-
-    return 0;
-}
-
-//BOOL(__stdcall *LoadSpriteData)(cAnmSprData *pSpriteData) = GetModuleAddress<BOOL(__stdcall*)(cAnmSprData*)>(0x140025D40);
-//
-//BOOL __stdcall Hook_LoadSpriteData(cAnmSprData *pSpriteData)
-//{
-//    // Call the trampoline.
-//    BOOL result = LoadSpriteData(pSpriteData);
-//
-//    if (result != FALSE)
-//    {
-//        // Fudge the sprite data addresses so we can break on access.
-//        for (int i = 0; i < pSpriteData->pSpriteAnmHeader->SpriteCount; i++)
-//        {
-//            pSpriteData->ppSpriteEntryBuffers[i] = (void*)1;
-//        }
-//    }
-//
-//    return result;
-//}
 
 void ForcePatchInfinityMode()
 {
@@ -240,26 +157,10 @@ BOOL APIENTRY DllMain( HMODULE hModule,
             DbgPrint("Failed to load mod config file, using default settings!\n");
         }
 
-        // Check if we should enable the console window or not.
-        if (ModConfig::Instance()->EnableConsole == true)
-        {
-            // Setup the console window.
-            OutputDebugString("DRDebugger DllMain\n");
-            SetupConsole();
-
-            // Create a worker thread to process console commands.
-            HANDLE hThread = CreateThread(NULL, NULL, ProcessConsoleWorker, NULL, NULL, NULL);
-            CloseHandle(hThread);
-        }
-
-        // Register all commands.
-        RegisterCommands(g_CommandManagerCommands, g_CommandManagerCommandsLength);
-        RegisterCommands(g_TypeInfoCommands, g_TypeInfoCommandsLength);
-
         // Register built in types.
-        RegisterTypeInfo(&Vector3TypeInfo);
+        /*RegisterTypeInfo(&Vector3TypeInfo);
         RegisterTypeInfo(&Vector4TypeInfo);
-        RegisterTypeInfo(&Matrix4x4TypeInfo);
+        RegisterTypeInfo(&Matrix4x4TypeInfo);*/
 
         // Register types and commands.
         MtObjectImpl::RegisterTypeInfo();
@@ -284,9 +185,12 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 
         // If the debug log is enabled hook debug output to file.
         if (ModConfig::Instance()->DebugLog == true)
-            DebugLog::InstallHooks();
+            DebugLog::Initialize();
 
         ForcePatchInfinityMode();
+
+        // Hook debug output to the imgui console.
+        DetourAttach((void**)&pOutputDebugStringA, Hook_OutputDebugStringA);
 
         //DetourAttach((void**)&LoadSpriteData, Hook_LoadSpriteData);
 

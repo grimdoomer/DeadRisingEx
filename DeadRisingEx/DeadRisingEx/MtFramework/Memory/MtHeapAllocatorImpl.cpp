@@ -30,7 +30,7 @@ void * Hook_MtHeapAllocator_Alloc(MtHeapAllocator *thisptr, DWORD size, DWORD al
     if (pAddress == nullptr)
     {
         // Failed to allocate memory.
-        wprintf(L"### FATAL: Hook_MtHeapAllocator_Alloc failed to allocate memory %d (%d)!\n", size, alignment);
+        ImGuiConsole::Instance()->ConsolePrint(L"### FATAL: Hook_MtHeapAllocator_Alloc failed to allocate memory %d (%d)!\n", size, alignment);
         DbgPrint("### FATAL: Hook_MtHeapAllocator_Alloc failed to allocate memory %d (%d)!\n", size, alignment);
         DebugBreak();
     }
@@ -48,7 +48,7 @@ void Hook_MtHeapAllocator_Free(MtHeapAllocator *thisptr, void *pAddress)
 DWORD Hook_MtHeapAllocator_GetAllocationInfo(MtHeapAllocator *thisptr, void *pAddress)
 {
     // Not sure how to emulate this just yet, but this function doesn't seem to be called...
-    wprintf(L"### FATAL: Hook_MtHeapAllocator_GetAllocationInfo not implemented!\n");
+    ImGuiConsole::Instance()->ConsolePrint(L"### FATAL: Hook_MtHeapAllocator_GetAllocationInfo not implemented!\n");
     DbgPrint("### FATAL: Hook_MtHeapAllocator_GetAllocationInfo not implemented!\n");
     DebugBreak();
 

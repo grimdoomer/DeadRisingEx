@@ -16,7 +16,7 @@ public:
         if (pbBuffer == nullptr)
         {
             // Failed to allocate memory for buffer.
-            wprintf(L"AllocateGuardedBuffer(): failed to allocate buffer of size %d!\n", size);
+            ImGuiConsole::Instance()->ConsolePrint(L"AllocateGuardedBuffer(): failed to allocate buffer of size %d!\n", size);
             return (T*)nullptr;
         }
 
@@ -29,10 +29,10 @@ public:
         memset(pbBuffer + 4096, 0, size);
 
         // Print the allocation info so we can set break points in the debugger.
-        wprintf(L"Guarded allocation info:\n");
-        wprintf(L"\tGuard address1: %p\n", pbBuffer);
-        wprintf(L"\tData address: %p\n", pbBuffer + 4096);
-        wprintf(L"\tGuard address2: %p\n", pbBuffer + 4096 + newSize);
+        ImGuiConsole::Instance()->ConsolePrint(L"Guarded allocation info:\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"\tGuard address1: %p\n", pbBuffer);
+        ImGuiConsole::Instance()->ConsolePrint(L"\tData address: %p\n", pbBuffer + 4096);
+        ImGuiConsole::Instance()->ConsolePrint(L"\tGuard address2: %p\n", pbBuffer + 4096 + newSize);
 
         // Return the data address for the allocation.
         return (T*)(pbBuffer + 4096);

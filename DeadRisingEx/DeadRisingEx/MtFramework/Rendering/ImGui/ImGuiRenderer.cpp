@@ -7,6 +7,7 @@
 #include <MtFramework/Utils/VTable.h>
 #include <MtFramework/Game/sMain.h>
 #include <MtFramework/Rendering/sRender.h>
+#include "DeadRisingEx/MtFramework/Rendering/ImGui/ImGuiRenderer.h"
 #include <WinUser.h>
 
 #pragma comment(lib, "d3dcompiler")
@@ -65,7 +66,7 @@ __int64 ShowImGuiDemo(WCHAR **argv, int argc);
 
 // Table of commands for ImGuiRenderer.
 const int g_ImGuiRendererCommandsLength = 1;
-const CommandEntry g_ImGuiRendererCommands[g_ImGuiRendererCommandsLength] =
+const ConsoleCommandInfo g_ImGuiRendererCommands[g_ImGuiRendererCommandsLength] =
 {
     { L"show_imgui_demo", L"Displays the ImGui demo window", ShowImGuiDemo }
 };
@@ -87,7 +88,7 @@ void ImGuiRenderer_dtor(ImGuiRenderer *thisptr)
 
 void ImGuiRenderer::RegisterTypeInfo()
 {
-    RegisterCommands(g_ImGuiRendererCommands, g_ImGuiRendererCommandsLength);
+    ImGuiConsole::Instance()->RegisterCommands(g_ImGuiRendererCommands, g_ImGuiRendererCommandsLength);
 }
 
 ImGuiRenderer * ImGuiRenderer::Instance()
@@ -458,9 +459,16 @@ void ImGuiRenderer::BeginFrame()
     // Start a new imgui frame.
     ImGui::NewFrame();
 
+    // If the imgui UI is not visible bail out.
+    if (this->isVisible == false)
+        return;
+
     // Check if we should draw the imgui demo window.
     //if (g_ShowImGuiDemo == true)
-        ImGui::ShowDemoWindow(&g_ShowImGuiDemo);
+    //ImGui::ShowDemoWindow(&g_ShowImGuiDemo);
+
+    // Draw the console window.
+    ImGuiConsole::Instance()->Draw();
 }
 
 void ImGuiRenderer::SystemUpdate()

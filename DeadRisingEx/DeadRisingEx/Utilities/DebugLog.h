@@ -5,5 +5,7 @@
 class DebugLog
 {
 public:
-    static bool InstallHooks();
+    static bool Initialize();
+
+    static void WriteMessage(LPCSTR lpOutputString);
 };

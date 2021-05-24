@@ -44,10 +44,6 @@ void __stdcall Hook_sSnatcherPad_SystemUpdate(sSnatcherPad *thisptr)
 
     // Update imgui mouse state.
     io.MousePos = ImVec2((float)mousePosition.x, (float)mousePosition.y);
-    /*io.MouseDown[0] = (pMouseState->rgbButtons[0] & 0x80) != 0;
-    io.MouseDown[1] = (pMouseState->rgbButtons[1] & 0x80) != 0;
-    io.MouseDown[2] = (pMouseState->rgbButtons[2] & 0x80) != 0;
-    io.MouseWheel = (float)pMouseState->lZ / 120.0f;*/
 
     // Start a new imgui frame.
     ImGuiRenderer::Instance()->BeginFrame();

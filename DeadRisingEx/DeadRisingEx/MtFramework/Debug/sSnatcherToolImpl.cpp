@@ -10,7 +10,7 @@ __int64 OpenDebugMenu(WCHAR **argv, int argc);
 
 // Table of commands.
 const int g_sSnatcherToolCommandsLength = 1;
-const CommandEntry g_sSnatcherToolCommands[g_sSnatcherToolCommandsLength] =
+const ConsoleCommandInfo g_sSnatcherToolCommands[g_sSnatcherToolCommandsLength] =
 {
     { L"open_debug_menu", L"Opens the in-game debug menu", OpenDebugMenu },
 };
@@ -18,7 +18,7 @@ const CommandEntry g_sSnatcherToolCommands[g_sSnatcherToolCommandsLength] =
 void sSnatcherToolImpl::RegisterTypeInfo()
 {
     // Register commands:
-    RegisterCommands(g_sSnatcherToolCommands, g_sSnatcherToolCommandsLength);
+    ImGuiConsole::Instance()->RegisterCommands(g_sSnatcherToolCommands, g_sSnatcherToolCommandsLength);
 }
 
 __int64 OpenDebugMenu(WCHAR **argv, int argc)
@@ -28,7 +28,7 @@ __int64 OpenDebugMenu(WCHAR **argv, int argc)
     if (sSnatcherTool == nullptr)
     {
         // Snatcher tool instance not initialized.
-        wprintf(L"Snatcher tool instance not initialized\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"Snatcher tool instance not initialized\n");
         return 0;
     }
 
