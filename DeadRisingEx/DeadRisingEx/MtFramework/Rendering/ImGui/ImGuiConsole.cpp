@@ -176,8 +176,13 @@ void ImGuiConsole::Draw()
         ImGui::EndChild();
         ImGui::Separator();
 
+        // Give the command line textbox focus if the window is opening.
+        if (ImGui::IsWindowAppearing())
+            ImGui::SetKeyboardFocusHere(0);
+
         // Command line input:
-        if (ImGui::InputText("CommandLine", this->InputBuf, IM_ARRAYSIZE(this->InputBuf),
+        bool reclaimFocus = false;
+        if (ImGui::InputText("##CommandLine", this->InputBuf, IM_ARRAYSIZE(this->InputBuf),
             ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CallbackCompletion | ImGuiInputTextFlags_CallbackHistory, TextEditCallback, this))
         {
             // Cleanup the input buffer and if it's valid handle the command.
@@ -187,7 +192,14 @@ void ImGuiConsole::Draw()
 
             // Clear the input buffer.
             this->InputBuf[0] = (char)0;
+
+            // Flag to reclaim focus.
+            reclaimFocus = true;
         }
+
+        // Check if we need to give the command box focus.
+        if (reclaimFocus == true)
+            ImGui::SetKeyboardFocusHere(-1);
     }
     ImGui::End();
 }

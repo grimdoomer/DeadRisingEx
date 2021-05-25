@@ -8,6 +8,7 @@
 #include <MtFramework/Game/sMain.h>
 #include <MtFramework/Rendering/sRender.h>
 #include "DeadRisingEx/MtFramework/Rendering/ImGui/ImGuiRenderer.h"
+#include "DeadRisingEx/MtFramework/Debug/sSnatcherToolImpl.h"
 #include <WinUser.h>
 
 #pragma comment(lib, "d3dcompiler")
@@ -469,6 +470,9 @@ void ImGuiRenderer::BeginFrame()
 
     // Draw the console window.
     ImGuiConsole::Instance()->Draw();
+
+    // Draw the debug menu.
+    sSnatcherToolImpl::Instance()->Draw();
 }
 
 void ImGuiRenderer::SystemUpdate()
