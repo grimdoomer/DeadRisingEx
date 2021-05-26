@@ -8,5 +8,5 @@ struct uNpcMarker : public cUnit
     /* 0x28 */
 
     inline static void(__stdcall *_Cleanup)(uNpcMarker *thisptr) =
-        GetModuleAddress<void(__stdcall*)(uNpcMarker*)>(0x1402EB720);
+        (void(__stdcall*)(uNpcMarker*))GetModuleAddress(0x1402EB720);
 };

@@ -3,7 +3,7 @@
 #include <detours.h>
 
 // Asm hook functions:
-void *cGametaskTitle_UnkUpdateFunc = GetModuleAddress<void*>(0x14020CFAB);
+void *cGametaskTitle_UnkUpdateFunc = (void*)GetModuleAddress(0x14020CFAB);
 
 bool cGametaskTitleImpl::InstallHooks()
 {

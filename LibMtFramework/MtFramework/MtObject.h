@@ -35,20 +35,20 @@ struct MtDTI
     /* 0x30 */ void     *pUnknown3;
 
     inline static MtDTI * (__stdcall *_ctor)(MtDTI *thisptr, const char *psTypeName, MtDTI *pParentType, DWORD dwSizeOf, DWORD dwFileType, BYTE flags) =
-        GetModuleAddress<MtDTI*(__stdcall*)(MtDTI*, const char*, MtDTI*, DWORD, DWORD, BYTE)>(0x1406184C0);
+        (MtDTI*(__stdcall*)(MtDTI*, const char*, MtDTI*, DWORD, DWORD, BYTE))GetModuleAddress(0x1406184C0);
 
     inline static MtDTI * (__stdcall *_dtor)(MtDTI *thisptr, bool bFreeMemory) =
-        GetModuleAddress<MtDTI*(__stdcall*)(MtDTI*, bool)>(0x1400AF010);
+        (MtDTI*(__stdcall*)(MtDTI*, bool))GetModuleAddress(0x1400AF010);
 
     inline static MtDTI * (__stdcall *_FindDTIByFileType)(DWORD dwFileType, MtDTI *pRoot) = 
-        GetModuleAddress<MtDTI*(__stdcall*)(DWORD, MtDTI*)>((void*)0x140618590);
+        (MtDTI*(__stdcall*)(DWORD, MtDTI*))GetModuleAddress((void*)0x140618590);
 
     inline static MtDTI * (__stdcall *_FindDTIByName)(const char *psTypeName, MtDTI *pRoot) =
-        GetModuleAddress<MtDTI*(__stdcall*)(const char*, MtDTI*)>(0x1406185F0);
+        (MtDTI*(__stdcall*)(const char*, MtDTI*))GetModuleAddress(0x1406185F0);
 
 
     // Default DTI parent object if not parent object is specified.
-    inline static MtDTI *DefaultMtDTIParentObject = GetModuleAddress<MtDTI*>(0x141928468);
+    inline static MtDTI *DefaultMtDTIParentObject = (MtDTI*)GetModuleAddress(0x141928468);
 
     /*
         Parameters:
@@ -65,7 +65,7 @@ struct MtDTI
 
     ~MtDTI()
     {
-        ThisPtrCallNoFixup<void, bool>(this->vtable[0], this, false);
+        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
     }
 
     /*
@@ -73,7 +73,7 @@ struct MtDTI
     */
     MtObject * CreateInstance()
     {
-        return ThisPtrCallNoFixup<MtObject*>(this->vtable[1], this);
+        return (MtObject*)ThisPtrCallNoFixup(this->vtable[1], this);
     }
 
     /*
@@ -122,10 +122,10 @@ static_assert(sizeof(MtDTI) == 0x38, "MtDTI struct has incorrect size");
 struct MyDTI : public MtDTI \
 { \
     inline static MyDTI * (__stdcall *_dtor)(MyDTI *thisptr, bool bFreeMemory) = \
-        GetModuleAddress<MyDTI*(__stdcall*)(MyDTI*, bool)>(dtorAddr); \
+        (MyDTI*(__stdcall*)(MyDTI*, bool))GetModuleAddress(dtorAddr); \
 \
     inline static type * (__stdcall *_CreateInstance)(MyDTI *thisptr) = \
-        GetModuleAddress<type*(__stdcall*)(MyDTI*)>(createInstAddr); \
+        (type*(__stdcall*)(MyDTI*))GetModuleAddress(createInstAddr); \
 \
     MyDTI(const char *psTypeName, MtDTI *pParentType, DWORD dwSizeOf, DWORD dwFileType, BYTE flags) : \
         MtDTI(psTypeName, pParentType, dwSizeOf, dwFileType, flags) \
@@ -133,14 +133,14 @@ struct MyDTI : public MtDTI \
     } \
 }; \
 \
-inline static MtDTI *DebugTypeInfo = GetModuleAddress<MyDTI*>(dtiAddr)
+inline static MtDTI *DebugTypeInfo = (MyDTI*)GetModuleAddress(dtiAddr)
 
 
 /*
     Implements a singleton pattern for the object.
 */
 #define IMPLEMENT_SINGLETON(type, instanceAddr) \
-inline static type **_Instance = GetModuleAddress<type**>(instanceAddr); \
+inline static type **_Instance = (type**)GetModuleAddress(instanceAddr); \
 \
 inline static type * Instance() \
 { \
@@ -171,7 +171,7 @@ struct MtObject
     */
     void RegisterDebugOptions(MtPropertyList *pPropList)
     {
-        ThisPtrCallNoFixup<void, MtPropertyList*>(this->vtable[3], this, pPropList);
+        (void)ThisPtrCallNoFixup(this->vtable[3], this, pPropList);
     }
 
     /*
@@ -179,7 +179,7 @@ struct MtObject
     */
     MtDTI * GetDTI()
     {
-        return ThisPtrCallNoFixup<MtDTI*>(this->vtable[4], this);
+        return (MtDTI*)ThisPtrCallNoFixup(this->vtable[4], this);
     }
 };
 static_assert(sizeof(MtObject) == 8, "MtObject incorrect struct size");

@@ -31,7 +31,7 @@ void sMainImpl::RegisterTypeInfo()
 bool sMainImpl::InstallHooks()
 {
     // Pre-emptively patch the debug zombie spawner to work on button held instead of button press.
-    PatchBytes<WORD>(GetModuleAddress<WORD*>(0x1400A07BB + 3), 0x45C);
+    PatchBytes<WORD>((WORD*)GetModuleAddress(0x1400A07BB + 3), 0x45C);
 
     DetourAttach((void**)&sMain::_WndProc, Hook_WndProc);
     DetourAttach((void**)&pSetCursorPosition, Hook_SetCursorPos);

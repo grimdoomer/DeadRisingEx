@@ -51,10 +51,10 @@ struct rArchive : public cResource
         /* 0x48 */ z_stream_s zStream;
 
         inline static DecompressStream * (__stdcall *_ctor)(DecompressStream *thisptr, MtFileStream *pFileStream) =
-            GetModuleAddress<DecompressStream*(__stdcall*)(DecompressStream*, MtFileStream*)>(0x14064FD90);
+            (DecompressStream*(__stdcall*)(DecompressStream*, MtFileStream*))GetModuleAddress(0x14064FD90);
 
         inline static DecompressStream * (__stdcall *_dtor)(DecompressStream *thisptr, bool bFreeMemory) =
-            GetModuleAddress<DecompressStream*(__stdcall*)(DecompressStream*, bool)>(0x14064FE90);
+            (DecompressStream*(__stdcall*)(DecompressStream*, bool))GetModuleAddress(0x14064FE90);
 
         /*
             Description: Creates a new decompression stream from the file stream specified.
@@ -69,7 +69,7 @@ struct rArchive : public cResource
 
         ~DecompressStream()
         {
-            ThisPtrCallNoFixup<void, bool>(this->vtable[0], this, false);
+            (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
         }
     };
     static_assert(sizeof(DecompressStream) == 0xA0, "rArchive::DecompressStream incorrect struct size");

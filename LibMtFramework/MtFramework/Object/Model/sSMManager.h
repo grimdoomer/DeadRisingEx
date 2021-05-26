@@ -24,8 +24,8 @@ struct sSMManager : public cSystem
     IMPLEMENT_SINGLETON(sSMManager, 0x141946AB0);
 
     inline static void(__stdcall *_AddModel)(sSMManager *thisptr, uSnatcherModel *pModel) =
-        GetModuleAddress<void(__stdcall*)(sSMManager*, uSnatcherModel*)>(0x14009EC10);
+        (void(__stdcall*)(sSMManager*, uSnatcherModel*))GetModuleAddress(0x14009EC10);
 
     inline static bool(__stdcall *_RemoveModel)(sSMManager *thisptr, uSnatcherModel *pModel) =
-        GetModuleAddress<bool(__stdcall*)(sSMManager*, uSnatcherModel*)>(0x14009F9C0);
+        (bool(__stdcall*)(sSMManager*, uSnatcherModel*))GetModuleAddress(0x14009F9C0);
 };

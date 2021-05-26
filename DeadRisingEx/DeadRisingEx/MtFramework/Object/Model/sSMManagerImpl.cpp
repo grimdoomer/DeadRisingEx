@@ -3,7 +3,7 @@
 #include <MtFramework/Object/Model/sSMManager.h>
 #include <detours.h>
 
-BOOL *pGlobalLockStatus = GetModuleAddress<BOOL*>(0x141CF2A50);
+BOOL *pGlobalLockStatus = (BOOL*)GetModuleAddress(0x141CF2A50);
 
 void __stdcall Hook_sSMManager_AddModel(sSMManager *thisptr, uSnatcherModel *pModel);
 

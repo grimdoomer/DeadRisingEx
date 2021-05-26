@@ -100,11 +100,11 @@ struct sMain : public cSystem
 
     IMPLEMENT_SINGLETON(sMain, 0x141CF2AA0);
 
-    inline static const char *mBuildVersion = GetModuleAddress<const char*>(0x14103CB90);
+    inline static const char *mBuildVersion = (const char*)GetModuleAddress(0x14103CB90);
 
-    inline static HWND *GameWindowHandle = GetModuleAddress<HWND*>(0x141CF2A88);
+    inline static HWND *GameWindowHandle = (HWND*)GetModuleAddress(0x141CF2A88);
 
     inline static LRESULT(__stdcall *_WndProc)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) =
-        GetModuleAddress<LRESULT(__stdcall*)(HWND, UINT, WPARAM, LPARAM)>(0x14002BDC0);
+        (LRESULT(__stdcall*)(HWND, UINT, WPARAM, LPARAM))GetModuleAddress(0x14002BDC0);
 };
 static_assert(sizeof(sMain) == 0x20248, "sMain incorrect struct size");

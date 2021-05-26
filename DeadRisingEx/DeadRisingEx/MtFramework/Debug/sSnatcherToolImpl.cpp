@@ -7,7 +7,7 @@
 
 #define FIELD_NAME_WIDTH 300.0f
 
-void **g_sToolBaseInstance = GetModuleAddress<void**>(0x141CF3230);
+void **g_sToolBaseInstance = (void**)GetModuleAddress(0x141CF3230);
 
 // Forward declarations for command functions.
 __int64 OpenDebugMenu(WCHAR **argv, int argc);

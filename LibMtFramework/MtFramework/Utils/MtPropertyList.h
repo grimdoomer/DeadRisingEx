@@ -4,7 +4,7 @@
 
 struct MtObject;
 
-// pointer 2?
+// pointer to MtObject 2?
 #define MT_PROP_TYPE_BOOL           3
 #define MT_PROP_TYPE_BYTE           4
 #define MT_PROP_TYPE_WORD           5
@@ -32,8 +32,9 @@ struct MtObject;
 
 #define MT_PROP_FLAG_READ_ONLY      1       // Field is read only
 // clickable 0x2?
-// is MtObject 0x4?
 // getter is function callback 0x8?
+//#define MT_PROP_FLAG_IS_ARRAY               0x20    // Property is an array (valid for types 1 and 2)
+//#define MT_PROP_FLAG_GETTER_IS_CALLBACK     0x80    // pGetter is a function callback for querying the property value
 
 typedef void(*MtPropertyEntry_ItemAction)(void *pObject);
 typedef void(*MtPropertyEntry_GetArrayLength)(void *pResource);
@@ -67,19 +68,19 @@ struct MtPropertyList
     */
 
     inline static MtPropertyList * (__stdcall *_ctor)(MtPropertyList *thisptr) =
-        GetModuleAddress<MtPropertyList*(__stdcall*)(MtPropertyList*)>(0x1406188A0);
+        (MtPropertyList*(__stdcall*)(MtPropertyList*))GetModuleAddress(0x1406188A0);
 
     inline static MtPropertyList * (__stdcall *_dtor)(MtPropertyList *thisptr, bool bFreeMemory) =
-        GetModuleAddress<MtPropertyList*(__stdcall*)(MtPropertyList*, bool)>(0x140618910);
+        (MtPropertyList*(__stdcall*)(MtPropertyList*, bool))GetModuleAddress(0x140618910);
 
     inline static MtPropertyListEntry * (__stdcall *_AllocatePropertyEntry)(MtPropertyList *thisptr) =
-        GetModuleAddress<MtPropertyListEntry*(__stdcall*)(MtPropertyList*)>(0x140618AB0);
+        (MtPropertyListEntry*(__stdcall*)(MtPropertyList*))GetModuleAddress(0x140618AB0);
 
     inline static MtPropertyListEntry * (__stdcall *_GetFirstNode)(MtPropertyList *thisptr) =
-        GetModuleAddress<MtPropertyListEntry*(__stdcall*)(MtPropertyList*)>(0x140618950);
+        (MtPropertyListEntry*(__stdcall*)(MtPropertyList*))GetModuleAddress(0x140618950);
 
     inline static MtPropertyListEntry * (__stdcall *_FindProperty)(MtPropertyList *thisptr, DWORD propertyType, const char *psPropertyName) =
-        GetModuleAddress<MtPropertyListEntry*(__stdcall*)(MtPropertyList*, DWORD, const char*)>(0x140618A40);
+        (MtPropertyListEntry*(__stdcall*)(MtPropertyList*, DWORD, const char*))GetModuleAddress(0x140618A40);
 
     MtPropertyList()
     {
@@ -88,7 +89,7 @@ struct MtPropertyList
 
     ~MtPropertyList()
     {
-        ThisPtrCallNoFixup<void, bool>(this->vtable[0], this, false);
+        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
     }
 
     /*

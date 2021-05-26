@@ -46,5 +46,5 @@ struct sPrim : public cSystem
     /* 0x60C8 */ // cTrans::VertexDecl *
 
     inline static sPrim * (__stdcall *_ctor)(sPrim *thisptr, DWORD entryCount) =
-        GetModuleAddress<sPrim*(__stdcall*)(sPrim*, DWORD)>(0x14068D770);
+        (sPrim*(__stdcall*)(sPrim*, DWORD))GetModuleAddress(0x14068D770);
 };

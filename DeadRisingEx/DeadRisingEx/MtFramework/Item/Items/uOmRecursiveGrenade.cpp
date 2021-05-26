@@ -4,11 +4,11 @@
 #include "DeadRisingEx/MtFramework/Item/uItemImpl.h"
 #include "DeadRisingEx/MtFramework/Player/uPlayerImpl.h"
 
-void **g_sMainInstance = GetModuleAddress<void**>(0x141CF2AA0);
+void **g_sMainInstance = (void**)GetModuleAddress(0x141CF2AA0);
 
-float(__stdcall *GetRandomFloat)(void *pThing) = GetModuleAddress<float(__stdcall*)(void*)>(0x14000ADA0);
+float(__stdcall *GetRandomFloat)(void *pThing) = (float(__stdcall*)(void*))GetModuleAddress(0x14000ADA0);
 
-void(__stdcall *CalculateMatrix)(void *pMatrix, void *pVector) = GetModuleAddress<void(__stdcall*)(void*, void*)>(0x14061B880);
+void(__stdcall *CalculateMatrix)(void *pMatrix, void *pVector) = (void(__stdcall*)(void*, void*))GetModuleAddress(0x14061B880);
 
 float velocity = 3.0f;
 Vector3 UnkVec = { 0.0f, 0.0f, 0.0f };

@@ -56,5 +56,5 @@ struct sSnatcherMain : public sMain
     IMPLEMENT_SINGLETON(sSnatcherMain, 0x141944DD8);
 
     inline static void(__stdcall *_InitializeAllocators)(sSnatcherMain *thisptr) =
-        GetModuleAddress<void(__stdcall*)(sSnatcherMain*)>(0x1400AB750);
+        (void(__stdcall*)(sSnatcherMain*))GetModuleAddress(0x1400AB750);
 };

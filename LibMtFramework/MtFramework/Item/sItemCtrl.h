@@ -11,16 +11,16 @@ struct sItemCtrl : public cSystem
     /* 0x38 */ // array, 64 items, 0x40 element size
 
     inline static sItemCtrl * (__stdcall *_ctor)(sItemCtrl *thisptr) =
-        GetModuleAddress<sItemCtrl*(__stdcall*)(sItemCtrl*)>(0x1400680E0);
+        (sItemCtrl*(__stdcall*)(sItemCtrl*))GetModuleAddress(0x1400680E0);
 
     inline static sItemCtrl * (__stdcall *_dtor)(sItemCtrl *thisptr, bool bFreeMemory) =
-        GetModuleAddress<sItemCtrl*(__stdcall*)(sItemCtrl*, bool)>(0x14006D9A0);
+        (sItemCtrl*(__stdcall*)(sItemCtrl*, bool))GetModuleAddress(0x14006D9A0);
 
     inline static uItem * (__stdcall *_SpawnAndPlaceItem)(sItemCtrl *thisptr, DWORD dwItemId, Vector4 *pPosition, Vector4 *pRotation) =
-        GetModuleAddress<uItem*(__stdcall*)(sItemCtrl*, DWORD, Vector4*, Vector4*)>(0x140075540);
+        (uItem*(__stdcall*)(sItemCtrl*, DWORD, Vector4*, Vector4*))GetModuleAddress(0x140075540);
 
     inline static uItem * (__stdcall *_SpawnItem)(sItemCtrl *thisptr, DWORD dwItemId) =
-        GetModuleAddress<uItem*(__stdcall*)(sItemCtrl*, DWORD)>(0x140075680);
+        (uItem*(__stdcall*)(sItemCtrl*, DWORD))GetModuleAddress(0x140075680);
 
     IMPLEMENT_SINGLETON(sItemCtrl, 0x141CF2620);
 

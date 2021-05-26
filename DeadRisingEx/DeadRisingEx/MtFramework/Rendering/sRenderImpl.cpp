@@ -18,8 +18,8 @@
 
 void *g_sRenderSingletonInst = (void*)0x141CF3268;
 
-void *sRender_DrawFrame_Hook_Start_address = GetModuleAddress<void*>(0x140662362);
-void *sRender_DrawFrame_Hook_End_address = GetModuleAddress<void*>(0x140663181);
+void *sRender_DrawFrame_Hook_Start_address = (void*)GetModuleAddress(0x140662362);
+void *sRender_DrawFrame_Hook_End_address = (void*)GetModuleAddress(0x140663181);
 
 bool g_CaptureFrame = false;
 bool g_CaptureStarted = false;
@@ -104,7 +104,7 @@ __int64 PrintVertexDeclarations(WCHAR **argv, int argc)
     DWORD VertexDeclCount = *(DWORD*)(GetModulePointer<__int64>(g_sRenderSingletonInst) + 0x2F460);
     for (int i = 0; i < VertexDeclCount; i++)
     {
-        const char *psTypeName = (const char*)*(__int64*)GetModuleAddress<__int64*>((void*)0x141CF3738);
+        const char *psTypeName = (const char*)*(__int64*)(__int64*)GetModuleAddress((void*)0x141CF3738);
         MtDTI *pDTIInfo = ppDecl[i]->GetDTI();
 
         // Check the name of the DTI type is 'cTrans::VertexDecl'.

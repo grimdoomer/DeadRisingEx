@@ -11,10 +11,10 @@ struct z_stream_s;
 #define ZLIB_VERSION    "1.2.6"
 
 static unsigned long(__stdcall *inflateInit)(z_stream_s *zstream, const char *psVersion, unsigned long streamsize) = 
-    GetModuleAddress<unsigned long(__stdcall*)(z_stream_s*, const char*, unsigned long)>(0x140742C40);
+    (unsigned long(__stdcall*)(z_stream_s*, const char*, unsigned long))GetModuleAddress(0x140742C40);
 
 static unsigned long(__stdcall *inflateEnd)(z_stream_s *zstream) = 
-    GetModuleAddress<unsigned long(__stdcall*)(z_stream_s*)>(0x140742AF0);
+    (unsigned long(__stdcall*)(z_stream_s*))GetModuleAddress(0x140742AF0);
 
 // sizeof = 0x58
 struct z_stream_s

@@ -39,13 +39,13 @@ struct cUnit : public MtObject // abstract
     */
 
     inline static cUnit * (__stdcall *_ctor)(cUnit *thisptr) =
-        GetModuleAddress<cUnit*(__stdcall*)(cUnit*)>(0x1406466A0);
+        (cUnit*(__stdcall*)(cUnit*))GetModuleAddress(0x1406466A0);
 
     inline static cUnit * (__stdcall *_dtor)(cUnit *thisptr, bool bFreeMemory) =
-        GetModuleAddress<cUnit*(__stdcall*)(cUnit*, bool)>(0x1402178A0);
+        (cUnit*(__stdcall*)(cUnit*, bool))GetModuleAddress(0x1402178A0);
 
     inline static const char * (__stdcall *_GetObjectName)(cUnit *thisptr) =
-        GetModuleAddress<const char*(__stdcall*)(cUnit*)>(0x140646C80);
+        (const char*(__stdcall*)(cUnit*))GetModuleAddress(0x140646C80);
 
     IMPLEMENT_MYDTI(cUnit, 0x141CF2B78, 0x1400AF010, 0x1401E94B0);
 
@@ -56,7 +56,7 @@ struct cUnit : public MtObject // abstract
 
     ~cUnit()
     {
-        ThisPtrCallNoFixup<void, bool>(this->vtable[0], this, false);
+        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
     }
 
     /*
@@ -64,7 +64,7 @@ struct cUnit : public MtObject // abstract
     */
     const char * GetObjectName()
     {
-        return ThisPtrCallNoFixup<const char*>(this->vtable[10], this);
+        return (const char*)ThisPtrCallNoFixup(this->vtable[10], this);
     }
 };
 static_assert(sizeof(cUnit) == 0x28, "cUnit incorrect struct size");

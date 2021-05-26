@@ -56,10 +56,10 @@ struct sRender : public cSystem
         /* 0x28 */ DWORD                BufferType;         // Type of buffer see BUFFER_TYPE_* above
 
         inline static Buffer * (__stdcall *_ctor)(Buffer *thisptr, ID3D11DeviceContext *pDeviceContext, DWORD dwBufferSize, DWORD dwBufferType) =
-            GetModuleAddress<Buffer*(__stdcall*)(Buffer*, ID3D11DeviceContext*, DWORD, DWORD)>(0x14065A030);
+            (Buffer*(__stdcall*)(Buffer*, ID3D11DeviceContext*, DWORD, DWORD))GetModuleAddress(0x14065A030);
 
         inline static void * (__stdcall *_MapForWrite)(Buffer *thisptr, DWORD dwSize) =
-            GetModuleAddress<void*(__stdcall*)(Buffer*, DWORD)>(0x14065DEC0);
+            (void*(__stdcall*)(Buffer*, DWORD))GetModuleAddress(0x14065DEC0);
 
         /*
             Description: Maps the buffer for writing. If the current position in the buffer is 0 the contents are discarded on mapping,
@@ -178,28 +178,28 @@ struct sRender : public cSystem
     IMPLEMENT_SINGLETON(sRender, 0x141CF3268);
 
     static inline sRender* (__stdcall *_ctor)(sRender *thisptr, DWORD interval, DWORD dwUnused1, DWORD dwGraphicsMemSize, DWORD dwUnused2) =
-        GetModuleAddress<sRender*(__stdcall*)(sRender*, DWORD, DWORD, DWORD, DWORD)>(0x14065A140);
+        (sRender*(__stdcall*)(sRender*, DWORD, DWORD, DWORD, DWORD))GetModuleAddress(0x14065A140);
 
     static inline void(__stdcall *_SystemUpdate)(sRender *thisptr) =
-        GetModuleAddress<void(__stdcall*)(sRender*)>(0x1406638E0);
+        (void(__stdcall*)(sRender*))GetModuleAddress(0x1406638E0);
 
     static inline void(__stdcall *_SystemCleanup)(sRender *thisptr) =
-        GetModuleAddress<void(__stdcall*)(sRender*)>(0x1406642B0);
+        (void(__stdcall*)(sRender*))GetModuleAddress(0x1406642B0);
 
     static inline void(__stdcall *_RenderFrame)(sRender *thisptr) =
-        GetModuleAddress<void(__stdcall*)(sRender*)>(0x140666860);
+        (void(__stdcall*)(sRender*))GetModuleAddress(0x140666860);
 
     static inline void(__stdcall *_BeginFrame)(sRender *thisptr) =
-        GetModuleAddress<void(__stdcall*)(sRender*)>(0x14065ED90);
+        (void(__stdcall*)(sRender*))GetModuleAddress(0x14065ED90);
 
     static inline void(__stdcall *_DrawFrame)(sRender *thisptr) =
-        GetModuleAddress<void(__stdcall*)(sRender*)>(0x140662200);
+        (void(__stdcall*)(sRender*))GetModuleAddress(0x140662200);
 
     static inline void(__stdcall *_EndFrame)(sRender *thisptr) =
-        GetModuleAddress<void(__stdcall*)(sRender*)>(0x140661D30);
+        (void(__stdcall*)(sRender*))GetModuleAddress(0x140661D30);
 
     static inline void(__stdcall *_Present)(sRender *thisptr) =
-        GetModuleAddress<void(__stdcall*)(sRender*)>(0x140661AD0);
+        (void(__stdcall*)(sRender*))GetModuleAddress(0x140661AD0);
 
     /*
         Description: If asynchronous rendering is disabled draws the next frame, otherwise waits for the rendering thread

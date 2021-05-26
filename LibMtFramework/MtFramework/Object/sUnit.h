@@ -22,10 +22,10 @@ struct sUnit : public cSystem
         /* 0x20 */ cUnit        *pFLink;
 
         inline static MoveLine * (__stdcall *_ctor)(MoveLine *thisptr) =
-            GetModuleAddress<MoveLine*(__stdcall*)(MoveLine*)>(0x14062FF60);
+            (MoveLine*(__stdcall*)(MoveLine*))GetModuleAddress(0x14062FF60);
 
         inline static MoveLine * (__stdcall *_dtor)(MoveLine *thisptr, bool bFreeMemory) =
-            GetModuleAddress<MoveLine*(__stdcall*)(MoveLine*, bool)>(0x1400C72B0);
+            (MoveLine*(__stdcall*)(MoveLine*, bool))GetModuleAddress(0x1400C72B0);
 
         IMPLEMENT_MYDTI(MoveLine, 0x141CF2628, 0x1400AF010, 0x140630900);
 
@@ -36,7 +36,7 @@ struct sUnit : public cSystem
 
         ~MoveLine()
         {
-            ThisPtrCallNoFixup<void, bool>(this->vtable[0], this, false);
+            (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
         }
     };
     static_assert(sizeof(MoveLine) == 0x28, "sUnit::MoveLine incorrect struct size");
@@ -53,16 +53,16 @@ struct sUnit : public cSystem
     */
 
     inline static sUnit * (__stdcall *_ctor)(sUnit *thisptr) =
-        GetModuleAddress<sUnit*(__stdcall*)(sUnit*)>(0x14062FF90);
+        (sUnit*(__stdcall*)(sUnit*))GetModuleAddress(0x14062FF90);
 
     inline static sUnit * (__stdcall *_dtor)(sUnit *thisptr, bool bFreeMemory) =
-        GetModuleAddress<sUnit*(__stdcall*)(sUnit*, bool)>(0x140630030);
+        (sUnit*(__stdcall*)(sUnit*, bool))GetModuleAddress(0x140630030);
 
     inline static bool(__stdcall *_AddObjectToMoveLine)(sUnit *thisptr, DWORD dwLineIndex, cUnit *pObject) =
-        GetModuleAddress<bool(__stdcall*)(sUnit*, DWORD, cUnit*)>(0x1406300B0);
+        (bool(__stdcall*)(sUnit*, DWORD, cUnit*))GetModuleAddress(0x1406300B0);
 
     inline static const char * (__stdcall *_GetMoveLineName)(sUnit *thisptr, DWORD dwLineIndex) =
-        GetModuleAddress<const char*(__stdcall*)(sUnit*, DWORD)>(0x1406305C0);
+        (const char*(__stdcall*)(sUnit*, DWORD))GetModuleAddress(0x1406305C0);
 
     IMPLEMENT_MYDTI(sUnit, 0x141CF2658, 0x1400AF010, 0x140630950);
 
@@ -75,7 +75,7 @@ struct sUnit : public cSystem
 
     ~sUnit()
     {
-        ThisPtrCallNoFixup<void, bool>(this->vtable[0], this, false);
+        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
     }
 
     /*
@@ -97,7 +97,7 @@ struct sUnit : public cSystem
     */
     const char * GetMoveLineName(DWORD dwLineIndex)
     {
-        return ThisPtrCallNoFixup<const char*, DWORD>(this->vtable[10], this, dwLineIndex);
+        return (const char*)ThisPtrCallNoFixup(this->vtable[10], this, dwLineIndex);
     }
 };
 static_assert(sizeof(sUnit) == 0x538, "sUnit incorrect struct size");

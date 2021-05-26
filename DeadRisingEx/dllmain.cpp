@@ -64,8 +64,8 @@ void __stdcall Hook_OutputDebugStringA(LPCSTR lpOutputString)
 
 void ForcePatchInfinityMode()
 {
-    void *pPatchAddr1 = GetModuleAddress<void*>(0x14021155F);
-    void *pPatchAddr2 = GetModuleAddress<void*>(0x1402115EF);
+    void *pPatchAddr1 = (void*)GetModuleAddress(0x14021155F);
+    void *pPatchAddr2 = (void*)GetModuleAddress(0x1402115EF);
 
     BYTE NopBytes[2] = { 0x90, 0x90 };
 

@@ -27,10 +27,10 @@ struct MtAllocator : public MtObject
     /* 0x28 */ CRITICAL_SECTION        ListLock;
 
     inline static MtAllocator * (__stdcall *_ctor)(MtAllocator *thisptr, const char *psName, DWORD type) =
-        GetModuleAddress<MtAllocator*(__stdcall*)(MtAllocator*, const char*, DWORD)>(0x140623A00);
+        (MtAllocator*(__stdcall*)(MtAllocator*, const char*, DWORD))GetModuleAddress(0x140623A00);
 
     inline static MtAllocator * (__stdcall *_dtor)(MtAllocator *thisptr, bool bFreeMemory) =
-        GetModuleAddress<MtAllocator*(__stdcall*)(MtAllocator*, bool)>(0x140623E80);
+        (MtAllocator*(__stdcall*)(MtAllocator*, bool))GetModuleAddress(0x140623E80);
 
     /*
         Description: Creates a new MtAllocator with the specified name and type.
@@ -46,7 +46,7 @@ struct MtAllocator : public MtObject
 
     ~MtAllocator()
     {
-        ThisPtrCallNoFixup<void, bool>(this->vtable[0], this, false);
+        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
     }
 
     /*
@@ -60,7 +60,7 @@ struct MtAllocator : public MtObject
     */
     void * Alloc(ULONGLONG size, DWORD alignment)
     {
-        return ThisPtrCallNoFixup<void*, ULONGLONG, DWORD>(this->vtable[5], this, size, alignment);
+        return (void*)ThisPtrCallNoFixup(this->vtable[5], this, size, alignment);
     }
 
     /*
@@ -85,7 +85,7 @@ struct MtAllocator : public MtObject
     */
     void Free(void *pAddress)
     {
-        ThisPtrCallNoFixup<void, void*>(this->vtable[6], this, pAddress);
+        (void)ThisPtrCallNoFixup(this->vtable[6], this, pAddress);
     }
 };
 static_assert(sizeof(MtAllocator) == 0x50, "MtAllocator incorrect struct size");

@@ -37,52 +37,52 @@ struct MtFile : public MtObject
     BYTE _[0x134];
 
     inline static MtFile * (__stdcall *_ctor)(MtFile *thisptr, const char *psFileName, DWORD flags) =
-        GetModuleAddress<MtFile*(__stdcall*)(MtFile*, const char*, DWORD)>(0x140618ED0);
+        (MtFile*(__stdcall*)(MtFile*, const char*, DWORD))GetModuleAddress(0x140618ED0);
 
     inline static MtFile * (__stdcall *_dtor)(MtFile *thisptr, bool bFreeMemory) =
-        GetModuleAddress<MtFile*(__stdcall*)(MtFile*, bool)>(0x140619130);
+        (MtFile*(__stdcall*)(MtFile*, bool))GetModuleAddress(0x140619130);
 
     inline static MtDTI * (__stdcall *_GetDTI)(MtFile *thisptr) =
-        GetModuleAddress<MtDTI*(__stdcall*)(MtFile*)>(0x140619780);
+        (MtDTI*(__stdcall*)(MtFile*))GetModuleAddress(0x140619780);
 
     inline static bool(__stdcall *_OpenFile)(MtFile *thisptr, const char *psFileName, DWORD flags) =
-        GetModuleAddress<bool(__stdcall*)(MtFile*, const char*, DWORD)>(0x140619940);
+        (bool(__stdcall*)(MtFile*, const char*, DWORD))GetModuleAddress(0x140619940);
 
     inline static void(__stdcall *_CloseFile)(MtFile *thisptr) =
-        GetModuleAddress<void(__stdcall*)(MtFile*)>(0x140619160);
+        (void(__stdcall*)(MtFile*))GetModuleAddress(0x140619160);
 
     inline static DWORD(__stdcall *_ReadFile)(MtFile *thisptr, void *pBuffer, DWORD dwNumberOfBytes) =
-        GetModuleAddress<DWORD(__stdcall*)(MtFile*, void*, DWORD)>(0x140619B20);
+        (DWORD(__stdcall*)(MtFile*, void*, DWORD))GetModuleAddress(0x140619B20);
 
     inline static DWORD(__stdcall *_ReadFileAsync)(MtFile *thisptr, void *pBuffer, DWORD dwNumberOfBytes) =
-        GetModuleAddress<DWORD(__stdcall*)(MtFile*, void*, DWORD)>(0x140619E40);
+        (DWORD(__stdcall*)(MtFile*, void*, DWORD))GetModuleAddress(0x140619E40);
 
     inline static void(__stdcall *_WaitForCompletion)(MtFile *thisptr) =
-        GetModuleAddress<void(__stdcall*)(MtFile*)>(0x14061A050);
+        (void(__stdcall*)(MtFile*))GetModuleAddress(0x14061A050);
 
     inline static DWORD(__stdcall *_WriteFile)(MtFile *thisptr, void *pBuffer, DWORD dwNumberOfBytes) =
-        GetModuleAddress<DWORD(__stdcall*)(MtFile*, void*, DWORD)>(0x14061A1D0);
+        (DWORD(__stdcall*)(MtFile*, void*, DWORD))GetModuleAddress(0x14061A1D0);
 
     inline static DWORD(__stdcall* _Seek)(MtFile *thisptr, DWORD dwOffset, int seekOrigin) =
-        GetModuleAddress<DWORD(__stdcall*)(MtFile*, DWORD, int)>(0x14061A0A0);
+        (DWORD(__stdcall*)(MtFile*, DWORD, int))GetModuleAddress(0x14061A0A0);
 
     inline static DWORD(__stdcall *_GetCurrentPosition)(MtFile *thisptr) =
-        GetModuleAddress<DWORD(__stdcall*)(MtFile*)>(0x1406197F0);
+        (DWORD(__stdcall*)(MtFile*))GetModuleAddress(0x1406197F0);
 
     inline static DWORD(__stdcall *_GetFileSize)(MtFile *thisptr) =
-        GetModuleAddress<DWORD(__stdcall*)(MtFile*)>(0x140619860);
+        (DWORD(__stdcall*)(MtFile*))GetModuleAddress(0x140619860);
 
     inline static DWORD(__stdcall *_SetFileSize)(MtFile *thisptr, DWORD dwFileSize) =
-        GetModuleAddress<DWORD(__stdcall*)(MtFile*, DWORD)>(0x14061A170);
+        (DWORD(__stdcall*)(MtFile*, DWORD))GetModuleAddress(0x14061A170);
 
     inline static bool(__stdcall *_CanRead)(MtFile *thisptr) =
-        GetModuleAddress<bool(__stdcall*)(MtFile*)>(0x140619840);
+        (bool(__stdcall*)(MtFile*))GetModuleAddress(0x140619840);
 
     inline static bool(__stdcall *_CanWrite)(MtFile *thisptr) =
-        GetModuleAddress<bool(__stdcall*)(MtFile*)>(0x140619850);
+        (bool(__stdcall*)(MtFile*))GetModuleAddress(0x140619850);
 
     inline static bool(__stdcall *_IsAsync)(MtFile *thisptr) =
-        GetModuleAddress<bool(__stdcall*)(MtFile*)>(0x140619810);
+        (bool(__stdcall*)(MtFile*))GetModuleAddress(0x140619810);
 
     IMPLEMENT_MYDTI(MtFile, 0x141CE5E28, 0x1400AF010, 0x1406198D0);
 
@@ -106,7 +106,7 @@ struct MtFile : public MtObject
 
     ~MtFile()
     {
-        ThisPtrCallNoFixup<void, bool>(this->vtable[0], this, false);
+        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
     }
 
     /*
@@ -120,7 +120,7 @@ struct MtFile : public MtObject
     */
     bool OpenFile(const char *psFileName, DWORD flags)
     {
-        return ThisPtrCallNoFixup<bool, const char*, DWORD>(this->vtable[5], this, psFileName, flags);
+        return (bool)ThisPtrCallNoFixup(this->vtable[5], this, psFileName, flags);
     }
 
     /*
@@ -128,7 +128,7 @@ struct MtFile : public MtObject
     */
     void CloseFile()
     {
-        ThisPtrCallNoFixup<void>(this->vtable[6], this);
+        (void)ThisPtrCallNoFixup(this->vtable[6], this);
     }
 
     // ReadFile
@@ -137,7 +137,7 @@ struct MtFile : public MtObject
 
     void WaitForCompletion()
     {
-        ThisPtrCallNoFixup<void>(this->vtable[9], this);
+        (void)ThisPtrCallNoFixup(this->vtable[9], this);
     }
 
     /*
@@ -151,7 +151,7 @@ struct MtFile : public MtObject
     */
     DWORD WriteFile(void *pBuffer, DWORD dwNumberOfBytes)
     {
-        return ThisPtrCallNoFixup<DWORD, void*, DWORD>(this->vtable[10], this, pBuffer, dwNumberOfBytes);
+        return (DWORD)ThisPtrCallNoFixup(this->vtable[10], this, pBuffer, dwNumberOfBytes);
     }
 
     // Seek origin:
@@ -170,7 +170,7 @@ struct MtFile : public MtObject
     */
     DWORD Seek(DWORD dwOffset, int seekOrigin)
     {
-        return ThisPtrCallNoFixup<DWORD, DWORD, int>(this->vtable[11], this, dwOffset, seekOrigin);
+        return (DWORD)ThisPtrCallNoFixup(this->vtable[11], this, dwOffset, seekOrigin);
     }
 
     /*
@@ -178,7 +178,7 @@ struct MtFile : public MtObject
     */
     DWORD GetCurrentPosition()
     {
-        return ThisPtrCallNoFixup<DWORD>(this->vtable[12], this);
+        return (DWORD)ThisPtrCallNoFixup(this->vtable[12], this);
     }
 
     /*
@@ -186,7 +186,7 @@ struct MtFile : public MtObject
     */
     DWORD GetFileSize()
     {
-        return ThisPtrCallNoFixup<DWORD>(this->vtable[13], this);
+        return (DWORD)ThisPtrCallNoFixup(this->vtable[13], this);
     }
 
     /*
@@ -199,7 +199,7 @@ struct MtFile : public MtObject
     */
     DWORD SetFileSize(DWORD dwLength)
     {
-        return ThisPtrCallNoFixup<DWORD, DWORD>(this->vtable[14], this, dwLength);
+        return (DWORD)ThisPtrCallNoFixup(this->vtable[14], this, dwLength);
     }
 
     /*
@@ -207,7 +207,7 @@ struct MtFile : public MtObject
     */
     bool CanRead()
     {
-        return ThisPtrCallNoFixup<bool>(this->vtable[15], this);
+        return (bool)ThisPtrCallNoFixup(this->vtable[15], this);
     }
 
     /*
@@ -215,7 +215,7 @@ struct MtFile : public MtObject
     */
     bool CanWrite()
     {
-        return ThisPtrCallNoFixup<bool>(this->vtable[16], this);
+        return (bool)ThisPtrCallNoFixup(this->vtable[16], this);
     }
 
     /*
@@ -223,7 +223,7 @@ struct MtFile : public MtObject
     */
     bool IsAsync()
     {
-        return ThisPtrCallNoFixup<bool>(this->vtable[17], this);
+        return (bool)ThisPtrCallNoFixup(this->vtable[17], this);
     }
 };
 static_assert(sizeof(MtFile) == 0x148, "MtFile incorrect struct size");

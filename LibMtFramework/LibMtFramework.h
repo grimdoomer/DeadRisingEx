@@ -6,6 +6,7 @@
 #include <Windows.h>
 #include "Misc/AsmHelpers.h"
 
+#pragma warning(disable: 4200) // nonstandard extension used: zero-sized array in struct/union
 
 struct Vector2
 {

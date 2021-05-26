@@ -13,7 +13,7 @@ struct sAreaManager : public cSystem
     IMPLEMENT_SINGLETON(sAreaManager, 0x141945F70);
 
     inline static DWORD(__stdcall *_GetAreaIdFromName)(sAreaManager *thisptr, const char *psAreaName) =
-        GetModuleAddress<DWORD(__stdcall*)(sAreaManager*, const char*)>(0x14005FEB0);
+        (DWORD(__stdcall*)(sAreaManager*, const char*))GetModuleAddress(0x14005FEB0);
 
     /*
         Description: Gets the area id from the specified area name.

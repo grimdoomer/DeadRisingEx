@@ -15,18 +15,18 @@
 #include "DeadRisingEx/MtFramework/Player/uPlayerImpl.h"
 
 bool(__stdcall *sUnit_Something)(void *thisptr, int unk, uItem *pItem) =
-    GetModuleAddress<bool(__stdcall*)(void*, int, uItem*)>(0x1406300B0);
+    (bool(__stdcall*)(void*, int, uItem*))GetModuleAddress(0x1406300B0);
 
 void(__stdcall *CopyMtString)(void *thisptr, MtString **ppString) =
-    GetModuleAddress<void(__stdcall*)(void*, MtString**)>(0x1400CCE80);
+    (void(__stdcall*)(void*, MtString**))GetModuleAddress(0x1400CCE80);
 
 void(__stdcall *uCoord_SetRotation)(void *thisptr, Vector4 *pRotation) =
-    GetModuleAddress<void(__stdcall*)(void*, Vector4*)>(0x14063EB90);
+    (void(__stdcall*)(void*, Vector4*))GetModuleAddress(0x14063EB90);
 
 bool(__stdcall *sUnit_AddObject)(void *thisptr, DWORD Unk, void *pObject) =
-    GetModuleAddress<bool(__stdcall*)(void*, DWORD, void*)>(0x1406300B0);
+    (bool(__stdcall*)(void*, DWORD, void*))GetModuleAddress(0x1406300B0);
 
-MtDTI *g_uSnatcherModelDTI = GetModuleAddress<MtDTI*>(0x141949C20);
+MtDTI *g_uSnatcherModelDTI = (MtDTI*)GetModuleAddress(0x141949C20);
 
 std::hash<std::string> stringHasher;
 std::map<size_t, const char*> mObjectArchiveLookupTable;
