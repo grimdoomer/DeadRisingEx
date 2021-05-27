@@ -36,8 +36,8 @@ template<typename T> T GetFieldValue(MtPropertyListEntry *pEntry)
     else
     {
         // If the address is not null read the value.
-        if (pEntry->pGetter != nullptr)
-            value = *(T*)pEntry->pGetter;
+        if (pEntry->pFieldValue != nullptr)
+            value = *(T*)pEntry->pFieldValue;
     }
 
     // Return the field value.
@@ -57,12 +57,6 @@ void sSnatcherToolImpl::Draw()
 
         // Get the starting link pointer.
         MtPropertyListEntry *pEntry = this->propertyList.GetFirstNode();
-        //if (pEntry != nullptr)
-        //{
-        //    // Seek to the end of the linked list since it is in reverse order.
-        //    while (pEntry->pFLink != nullptr)
-        //        pEntry = pEntry->pFLink;
-        //}
 
         // Loop and draw all the menu options.
         bool inSection = false;
@@ -123,11 +117,13 @@ void sSnatcherToolImpl::Draw()
                 ImGui::SameLine(FIELD_NAME_WIDTH);
 
                 // Get the field value and display it.
-                bool value = GetFieldValue<bool>(pEntry);
-                if (value == false)
-                    ImGui::Text("False");
-                else
-                    ImGui::Text("True");
+                bool value = (bool)pEntry->GetValueByte();
+                ImGui::PushID(pEntry);
+                if (ImGui::Checkbox("", &value) == true)
+                {
+                    // TODO:
+                }
+                ImGui::PopID();
                 break;
             }
             case MT_PROP_TYPE_BYTE:
@@ -139,9 +135,17 @@ void sSnatcherToolImpl::Draw()
             case MT_PROP_TYPE_SINT:
             case MT_PROP_TYPE_LONGLONG:
             case MT_PROP_TYPE_FLOAT:
+            case MT_PROP_TYPE_DOUBLE:
             {
                 // Draw the field name.
-                ImGui::Text(pEntry->pPropertyName);
+                ImGui::Text(pEntry->GetDisplayName());
+                if (ImGui::IsItemHovered() == true)
+                {
+                    // Display the tool tip dialog.
+                    ImGui::BeginTooltip();
+                    ImGui::Text(pEntry->pPropertyName);
+                    ImGui::EndTooltip();
+                }
                 ImGui::SameLine(FIELD_NAME_WIDTH);
 
                 // Determine the imgui field type.
@@ -157,21 +161,26 @@ void sSnatcherToolImpl::Draw()
                 case MT_PROP_TYPE_SINT: dataType = ImGuiDataType_S32; break;
                 case MT_PROP_TYPE_LONGLONG: dataType = ImGuiDataType_S64; break;
                 case MT_PROP_TYPE_FLOAT: dataType = ImGuiDataType_Float; break;
+                case MT_PROP_TYPE_DOUBLE: dataType = ImGuiDataType_Double; break;
                 default: DebugBreak(); break;
                 }
 
+                // TODO: Handle array fields
+
                 // Check if the field has a getter callback.
-                if ((pEntry->Flags & 0x80000) != 0)
+                if ((pEntry->Flags & MT_PROP_FLAG_USE_FUNCTION_POINTERS) != 0)
                 {
                     // TODO:
                 }
                 else
                 {
-                    char sFieldId[32] = { 0 };
-                    snprintf(sFieldId, sizeof(sFieldId), "##%p", pEntry);
-
+                    // Set the width of the input field.
                     ImGui::SetNextItemWidth(150.0f);
-                    ImGui::InputScalar(sFieldId, dataType, pEntry->pGetter);
+
+                    // Input field:
+                    ImGui::PushID(pEntry);
+                    ImGui::InputScalar("", dataType, pEntry->pFieldValue);
+                    ImGui::PopID();
                 }
                 break;
             }
@@ -202,27 +211,6 @@ void sSnatcherToolImpl::Draw()
 
 __int64 OpenDebugMenu(WCHAR **argv, int argc)
 {
-    //// Get the sSnatcherTool instance from sSnatcherMain.
-    //sToolBase *sSnatcherTool = (sToolBase*)(*g_sToolBaseInstance);
-    //if (sSnatcherTool == nullptr)
-    //{
-    //    // Snatcher tool instance not initialized.
-    //    ImGuiConsole::Instance()->ConsolePrint(L"Snatcher tool instance not initialized\n");
-    //    return 0;
-    //}
-
-    //// Register the debug menu options.
-    ////sSnatcherTool->RegisterDebugOptions(&sSnatcherTool->DebugOptionList);
-    //ThisPtrCall((void*)0x1400AE590, sSnatcherTool, &sSnatcherTool->DebugOptionList);
-    //sSnatcherTool->Unk1 = 15;
-
-    //// Change the menu open state.
-    //sSnatcherTool->ShowDebugMenu = 1;
-
-    //return 0;
-
-
-
     // Get the sSnatcherToolImpl instance.
     sSnatcherToolImpl *pSnatcherTool = sSnatcherToolImpl::Instance();
 

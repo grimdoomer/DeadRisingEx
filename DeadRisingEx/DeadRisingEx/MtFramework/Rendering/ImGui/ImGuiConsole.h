@@ -26,20 +26,29 @@ class ImGuiConsole
 
 protected:
 
-    char                  InputBuf[256];
-    ImVector<char*>       Items;
-    ImVector<const char*> Commands;
+    char                    InputBuf[256];
+    ImVector<char*>         Items;
+
+    ImVector<const char*>   Commands;
     std::unordered_map<std::wstring, const ConsoleCommandInfo*> CommandInfo;
-    ImVector<char*>       History;
-    int                   HistoryPos;    // -1: new line, 0..History.Size-1 browsing history.
-    ImGuiTextFilter       Filter;
-    bool                  AutoScroll;
-    bool                  ScrollToBottom;
-    std::mutex            ConsoleLogMutex;
+
+    ImVector<char*>         History;
+    int                     HistoryPos;    // -1: new line, 0..History.Size-1 browsing history.
+
+    ImVector<const char*>   AutoCompleteCommands;
+    int                     AutoCompletePos;
+    bool                    DrawAutoComplete;
+
+    ImGuiTextFilter         Filter;
+    bool                    AutoScroll;
+    bool                    ScrollToBottom;
+    std::mutex              ConsoleLogMutex;
 
     int TextEditHandler(ImGuiInputTextCallbackData* data);
 
     void ExecuteCommand(const char *psCommand);
+
+    void InsertAutoCompleteOption(const char *pItem);
 
 public:
 

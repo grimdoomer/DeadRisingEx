@@ -18,7 +18,7 @@ const ConsoleCommandInfo g_sRenderCommands[] =
 int TextEditCallback(ImGuiInputTextCallbackData* data)
 {
     // Handle text input.
-    return ((ImGuiConsole*)data)->TextEditHandler(data);
+    return ((ImGuiConsole*)data->UserData)->TextEditHandler(data);
 }
 
 ImGuiConsole::ImGuiConsole()
@@ -27,8 +27,14 @@ ImGuiConsole::ImGuiConsole()
     memset(this->InputBuf, 0, sizeof(this->InputBuf));
     this->HistoryPos = -1;
 
+    this->AutoCompletePos = -1;
+    this->DrawAutoComplete = false;
+
     this->AutoScroll = true;
     this->ScrollToBottom = false;
+
+    // Register the help command.
+    RegisterCommands(g_sRenderCommands, ARRAYSIZE(g_sRenderCommands));
 }
 
 ImGuiConsole::~ImGuiConsole()
@@ -136,12 +142,16 @@ void ImGuiConsole::ClearConsole()
 
 void ImGuiConsole::Draw()
 {
+    float cmdPosition;
+    ImVec2 consoleSize;
+
     // Draw the console window.
     if (ImGui::Begin("ConsoleWindow", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar) == true)
     {
         // Set the size and position of the console window.
         SIZE windowSize = *(SIZE*)(((BYTE*)sRender::Instance()) + 0x8620);
-        ImGui::SetWindowSize(ImVec2((float)windowSize.cx, (float)windowSize.cy / 5.0f));
+        consoleSize = ImVec2((float)windowSize.cx, (float)windowSize.cy / 5.0f);
+        ImGui::SetWindowSize(consoleSize);
         ImGui::SetWindowPos(ImVec2(0.0f, 0.0f));
 
         // Reserve enough space for the line seperator and command textbox.
@@ -183,7 +193,7 @@ void ImGuiConsole::Draw()
         // Command line input:
         bool reclaimFocus = false;
         if (ImGui::InputText("##CommandLine", this->InputBuf, IM_ARRAYSIZE(this->InputBuf),
-            ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CallbackCompletion | ImGuiInputTextFlags_CallbackHistory, TextEditCallback, this))
+            ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CallbackCompletion | ImGuiInputTextFlags_CallbackHistory | ImGuiInputTextFlags_CallbackAlways, TextEditCallback, this))
         {
             // Cleanup the input buffer and if it's valid handle the command.
             Strtrim(this->InputBuf);
@@ -200,8 +210,36 @@ void ImGuiConsole::Draw()
         // Check if we need to give the command box focus.
         if (reclaimFocus == true)
             ImGui::SetKeyboardFocusHere(-1);
+
+        // Check if we should draw the auto complete window.
+        if (this->DrawAutoComplete == true)
+        {
+            // Get the position and size of the command line input.
+            cmdPosition = ImGui::GetCursorPosX();
+        }
     }
     ImGui::End();
+
+    // Check if we need to draw the auto complete window.
+    if (this->DrawAutoComplete == true)
+    {
+        // Set the size and color of the auto complete window.
+        ImGui::SetNextWindowBgAlpha(ImGui::GetStyleColorVec4(ImGuiCol_PopupBg).w * 0.60f);
+        ImGui::SetNextWindowPos(ImVec2(cmdPosition, consoleSize.y));
+
+        // Draw the auto complete window.
+        ImGui::Begin("##AutoComplete", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_AlwaysAutoResize);
+        {
+            // Loop and draw all auto complete items.
+            for (int i = 0; i < this->AutoCompleteCommands.size(); i++)
+            {
+                // Auto complete option:
+                if (ImGui::Selectable(this->AutoCompleteCommands[i], this->AutoCompletePos == i) == true)
+                    this->AutoCompletePos = i;
+            }
+        }
+        ImGui::End();
+    }
 }
 
 void ImGuiConsole::ExecuteCommand(const char *psCommand)
@@ -223,6 +261,9 @@ void ImGuiConsole::ExecuteCommand(const char *psCommand)
         this->History.push_back(Strdup(psCommand));
     }
     this->HistoryPos = -1;
+
+    // Close the auto complete window.
+    this->DrawAutoComplete = false;
 
     // Setup the string converter.
     std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
@@ -246,8 +287,171 @@ void ImGuiConsole::ExecuteCommand(const char *psCommand)
     }
 }
 
+void ImGuiConsole::InsertAutoCompleteOption(const char *pItem)
+{
+    // Setup our high and low pointers.
+    int low = 0;
+    int high = this->AutoCompleteCommands.size() - 1;
+
+    // If there are no items in the list just add the item and bail out.
+    if (this->AutoCompleteCommands.size() == 0)
+    {
+        // Add the item and return.
+        this->AutoCompleteCommands.push_back(pItem);
+        return;
+    }
+
+    // Get the length of the string to insert.
+    int length = strlen(pItem);
+
+    // Loop until we find a place to insert the command.
+    while (true)
+    {
+        // If our search points are the same determine where to add the item.
+        if (low == high)
+        {
+            // Check if we should insert before or after the current position.
+            if (strncmp(pItem, this->AutoCompleteCommands[low], length) <= 0)
+                this->AutoCompleteCommands.insert(&this->AutoCompleteCommands[low], pItem);
+            else if (low == this->AutoCompleteCommands.size() - 1)
+                this->AutoCompleteCommands.push_back(pItem);
+            else
+                this->AutoCompleteCommands.insert(&this->AutoCompleteCommands[low + 1], pItem);
+
+            return;
+        }
+        else if (high == low + 1)
+        {
+            // Determine if we are inserting at high or low.
+            if (strncmp(pItem, this->AutoCompleteCommands[low], length) <= 0)
+                this->AutoCompleteCommands.insert(&this->AutoCompleteCommands[low], pItem);
+            else if (strncmp(pItem, this->AutoCompleteCommands[high], length) <= 0)
+                this->AutoCompleteCommands.insert(&this->AutoCompleteCommands[high], pItem);
+            else if (high == this->AutoCompleteCommands.size() - 1)
+                this->AutoCompleteCommands.push_back(pItem);
+            else
+                this->AutoCompleteCommands.insert(&this->AutoCompleteCommands[high + 1], pItem);
+
+            return;
+        }
+
+        // Binary search between [low, high].
+        int middle = low + ((high - low) / 2);
+
+        // Check the string at the pivot point compared to the item to be inserted.
+        if (strncmp(pItem, this->AutoCompleteCommands[middle], length) <= 0)
+            high = middle;
+        else
+            low = middle;
+    }
+}
+
 int ImGuiConsole::TextEditHandler(ImGuiInputTextCallbackData* data)
 {
+    // Check the event type and handle accordingly.
+    switch (data->EventFlag)
+    {
+    case ImGuiInputTextFlags_CallbackAlways:
+    {
+        // The line has been modified so reset the history buffer position.
+        this->HistoryPos = -1;
+
+        // Clear the auto complete items list.
+        this->AutoCompleteCommands.clear();
+        this->DrawAutoComplete = false;
+
+        // If the length of the input string is 0 don't process auto complete.
+        if (data->BufTextLen == 0)
+        {
+            this->AutoCompletePos = -1;
+            return 0;
+        }
+
+        // Loop and add any commands that match the entered text to the auto complete list.
+        for (int i = 0; i < this->Commands.size(); i++)
+        {
+            // Check if the entered text matches the start of the command.
+            if (strncmp(data->Buf, this->Commands[i], data->BufTextLen) == 0)
+            {
+                // Insert the command into the auto complete list in a sorted manor.
+                InsertAutoCompleteOption(this->Commands[i]);
+                this->DrawAutoComplete = true;
+            }
+        }
+
+        // Check if we need to reset the auto complete position.
+        if (this->DrawAutoComplete == true && this->AutoCompletePos == -1)
+            this->AutoCompletePos = 0;
+        break;
+    }
+    case ImGuiInputTextFlags_CallbackCompletion:
+    {
+        // If the auto complete index is valid auto complete the input.
+        if (this->AutoCompletePos != -1)
+        {
+            // Auto complete the input.
+            data->DeleteChars(0, data->BufTextLen);
+            data->InsertChars(0, this->AutoCompleteCommands[this->AutoCompletePos]);
+
+            // Reset the auto complete state.
+            this->DrawAutoComplete = false;
+            this->AutoCompletePos = -1;
+        }
+        break;
+    }
+    case ImGuiInputTextFlags_CallbackHistory:
+    {
+        // Check if we should update the history buffer or auto complete.
+        if (this->DrawAutoComplete == true)
+        {
+            // Check the key pressed and handle accordingly.
+            if (data->EventKey == ImGuiKey_UpArrow)
+            {
+                // If possible move up in the auto complete list.
+                if (this->AutoCompletePos > 0)
+                    this->AutoCompletePos--;
+            }
+            else if (data->EventKey == ImGuiKey_DownArrow)
+            {
+                // If possible move down in the auto complete list.
+                if (this->AutoCompletePos < this->AutoCompleteCommands.size() - 1)
+                    this->AutoCompletePos++;
+            }
+        }
+        else
+        {
+            // If the history buffer position is not set, set it to the end of the history buffer.
+            if (this->HistoryPos == -1)
+            {
+                // If the history buffer is empty bail out.
+                if (this->History.size() == 0)
+                    return 0;
+                else
+                    this->HistoryPos = this->History.size();
+            }
+
+            // Check the key pressed and handle accordingly.
+            if (data->EventKey == ImGuiKey_UpArrow)
+            {
+                // If possible move up in the history buffer.
+                if (this->HistoryPos > 0)
+                    this->HistoryPos--;
+            }
+            else if (data->EventKey == ImGuiKey_DownArrow)
+            {
+                // If possible move down in the history buffer.
+                if (this->History.size() > 0 && this->HistoryPos < this->History.size() - 1)
+                    this->HistoryPos++;
+            }
+
+            // Replace the current line with the command in the history buffer.
+            data->DeleteChars(0, data->BufTextLen);
+            data->InsertChars(0, this->History[this->HistoryPos]);
+        }
+        break;
+    }
+    }
+
     return 0;
 }
 
@@ -283,12 +487,12 @@ void ImGuiConsole::PrintCommandHelp(const char *psCommandName)
     // If no command is provided print descriptions for all commands.
     if (psCommandName == nullptr)
     {
-        // Loop and print info for all commands.
-        for (auto iter = this->CommandInfo.begin(); iter != this->CommandInfo.end(); iter++)
+        // Loop through all of the commands and print each one.
+        for (auto iter = this->CommandInfo.begin(); iter != CommandInfo.end(); iter++)
         {
-            // Print the command info.
-            int length = min(0, 32 - lstrlenW(iter->first.c_str()));
-            ConsolePrint("\t%S %*S\n", iter->first, length, iter->second->psHelpMessage);
+            // Format the command text.
+            int length = min(0, 32 - lstrlenW(iter->second->psName));
+            ConsolePrint(L"\t%s %*s\n", iter->second->psName, length, iter->second->psHelpMessage);
         }
     }
     else

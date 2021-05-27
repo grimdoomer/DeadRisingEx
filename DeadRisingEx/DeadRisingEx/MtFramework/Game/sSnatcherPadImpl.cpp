@@ -32,9 +32,10 @@ void __stdcall Hook_sSnatcherPad_SystemUpdate(sSnatcherPad *thisptr)
     ImGuiIO& io = ImGui::GetIO();
 
     // Set special case keys.
-    io.KeyCtrl = pKeyboardState[VK_CONTROL] != 0;
+    // DO NOT USE: pKeyboardState is not accurate for VK_ indexing!!
+    /*io.KeyCtrl = pKeyboardState[VK_CONTROL] != 0;
     io.KeyShift = pKeyboardState[VK_SHIFT] != 0;
-    io.KeyAlt = pKeyboardState[VK_MENU] != 0;
+    io.KeyAlt = pKeyboardState[VK_MENU] != 0;*/
     io.KeySuper = false;
 
     // Get the position of the cursor within the window.

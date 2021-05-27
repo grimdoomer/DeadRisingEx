@@ -74,7 +74,7 @@ void PrintPropertyListReversed(MtPropertyListEntry *pEntry, void *pBaseAddress)
 
     // Check if we know the property type or not.
     std::string sFieldName = FixFieldName(pEntry->pPropertyName);
-    DWORD address = (BYTE*)pEntry->pGetter - (BYTE*)pBaseAddress;
+    DWORD address = (BYTE*)pEntry->pFieldValue - (BYTE*)pBaseAddress;
     if (pEntry->PropertyType < PROPERTY_TYPE_COUNT && MtPropertyTypeNames[pEntry->PropertyType] != nullptr)
         //ImGuiConsole::Instance()->ConsolePrint(L"   %S %S 0x%04x ", MtPropertyTypeNames[pEntry->PropertyType], pEntry->pPropertyName, pEntry->Flags);
         ImGuiConsole::Instance()->ConsolePrint(L"/* 0x%02X */ %S \t%S;", address, MtPropertyTypeNames[pEntry->PropertyType], sFieldName.c_str());
