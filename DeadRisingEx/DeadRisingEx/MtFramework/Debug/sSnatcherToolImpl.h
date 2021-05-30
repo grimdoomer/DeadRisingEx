@@ -2,6 +2,8 @@
 #pragma once
 #include "DeadRisingEx.h"
 #include <MtFramework/Utils/MtPropertyList.h>
+#include <vector>
+#include <string>
 
 class sSnatcherToolImpl
 {
@@ -9,8 +11,12 @@ class sSnatcherToolImpl
 
 protected:
 
-    bool            sysMenuOpen = false;
-    MtPropertyList  propertyList;
+    bool                        sysMenuOpen = false;
+    int                         sysMenuIndex;
+    std::vector<std::string>    sysMenuNavList;
+    std::vector<MtPropertyList*>    sysMenuPropertyList;
+
+    void DrawSection(MtPropertyListEntry *pEntry);
 
 public:
     static void RegisterTypeInfo();

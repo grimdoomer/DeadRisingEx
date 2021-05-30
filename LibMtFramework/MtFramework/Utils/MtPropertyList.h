@@ -5,7 +5,8 @@
 
 struct MtObject;
 
-// pointer to MtObject 2?
+#define MT_PROP_TYPE_POINTER1       1
+#define MT_PROP_TYPE_POINTER2       2
 #define MT_PROP_TYPE_BOOL           3
 #define MT_PROP_TYPE_BYTE           4
 #define MT_PROP_TYPE_WORD           5
@@ -39,9 +40,10 @@ struct MtObject;
 #define MT_PROP_FLAG_IS_ARRAY               0x20    // Property is an array (valid for types 1 and 2), also used to pass a second parameter to getter callback (array index?)
 #define MT_PROP_FLAG_USE_FUNCTION_POINTERS  0x80    // pFieldValue and pArrayLength are function pointers
 
-typedef void(*MtPropertyEntry_ItemAction)(void *pObject);
 typedef unsigned long long(*MtPropertyEntry_GetValue)(void *pOwner, DWORD arrayIndex);
 typedef unsigned long long(*MtPropertyEntry_GetArrayLength)(void *pResource);
+typedef void(*MtPropertyEntry_ItemAction)(void *pOwner, __int64 arg);
+//typedef void(*MtPropertyEntry_SetFieldValue)(void *pOwner, DWORD arrayIndex);
 
 // sizeof = 0x50
 struct MtPropertyListEntry
@@ -50,9 +52,9 @@ struct MtPropertyListEntry
     /* 0x08 */ WORD         PropertyType;           // See MT_PROP_TYPE_* above
     /* 0x0A */ WORD         Flags;
     /* 0x10 */ MtObject     *pOwnerObject;                          // Object that owns the field, acts as a this pointer
-    /* 0x18 */ MtPropertyEntry_GetValue         *pFieldValue;       // If MT_PROP_FLAG_USE_FUNCTION_POINTERS is not set pFieldValue is the address of the field, if flag is set is a function pointer to get the field value
-    /* 0x20 */ MtPropertyEntry_GetArrayLength   *pArrayLength;      // If MT_PROP_FLAG_USE_FUNCTION_POINTERS is not set pArrayLength is the length of the array, if flag is set is a function pointer to get the array length
-    /* 0x28 */ void         *pUnkFunc1;
+    /* 0x18 */ MtPropertyEntry_GetValue         pFieldValue;        // If MT_PROP_FLAG_USE_FUNCTION_POINTERS is not set pFieldValue is the address of the field, if flag is set is a function pointer to get the field value
+    /* 0x20 */ MtPropertyEntry_GetArrayLength   pArrayLength;       // If MT_PROP_FLAG_USE_FUNCTION_POINTERS is not set pArrayLength is the length of the array, if flag is set is a function pointer to get the array length
+    /* 0x28 */ MtPropertyEntry_ItemAction       pSetFieldValue;     // Used when MT_PROP_FLAG_USE_FUNCTION_POINTERS is set as an "action" callback when the item is clicked in the UI
     /* 0x30 */ void         *pUnkFunc2;
     /* 0x38 */ void         *pUnkFunc3;                             // Current index in the array if MT_PROP_FLAG_IS_ARRAY flag is set
     /* 0x40 */ MtPropertyListEntry  *pBLink;
@@ -79,14 +81,17 @@ struct MtPropertyListEntry
     inline static __int64(__stdcall *_GetPrimitiveFieldValue)(MtPropertyListEntry *thisptr) =
         (__int64(__stdcall*)(MtPropertyListEntry*))GetModuleAddress(0x140621520);
     
-    inline static __m128(__stdcall *_GetValueVector)(MtPropertyListEntry *thisptr) =
-        (__m128(__stdcall*)(MtPropertyListEntry*))GetModuleAddress(0x140621D30);
+    inline static void(__stdcall *_GetValueVector)(MtPropertyListEntry *thisptr, Vector4 *pVector) =
+        (void(__stdcall*)(MtPropertyListEntry*,Vector4*))GetModuleAddress(0x140621D30);
 
     inline static MtObject *(__stdcall *_GetValueMtObject)(MtPropertyListEntry *thisptr) =
         (MtObject*(__stdcall*)(MtPropertyListEntry*))GetModuleAddress(0x140621210);
 
-    inline static const char *(__stdcall *_GetDisplayName)(MtPropertyListEntry *thisptr) =
-        (const char*(__stdcall*)(MtPropertyListEntry*))GetModuleAddress(0x1407A5AB0);
+    inline static const char *(__stdcall *_GetValueString)(MtPropertyListEntry *thisptr) =
+        (const char *(__stdcall*)(MtPropertyListEntry*))GetModuleAddress(0x140621B10);
+
+    inline static const char *(__stdcall *_GetDisplayName)(const char *psPropertyName) =
+        (const char*(__stdcall*)(const char*))GetModuleAddress(0x1407A5AB0);
 
     inline static unsigned long long(__stdcall *_GetArrayLength)(MtPropertyListEntry *thisptr) =
         (unsigned long long(__stdcall*)(MtPropertyListEntry*))GetModuleAddress(0x140621320);
@@ -151,9 +156,9 @@ struct MtPropertyListEntry
     /*
         Gets the value as a vector, used for Vector3, Vector4, Quaternion, and other multi-float types
     */
-    __m128 GetValueVector()
+    void GetValueVector(Vector4 *pVector)
     {
-        return _GetValueVector(this);
+        _GetValueVector(this, pVector);
     }
 
     /*
@@ -165,11 +170,22 @@ struct MtPropertyListEntry
     }
 
     /*
-        Gets the display name of the property to be displayed in the debug menu ui
+        Gets the value as a string
     */
-    const char * GetDisplayName()
+    const char * GetValueString()
     {
-        return _GetDisplayName(this);
+        return _GetValueString(this);
+    }
+
+    /*
+        Description: Gets a name suitable for displaying in the debug menu ui for the specified name
+
+        Parameters:
+            - psPropertyName: Property name or MtObject name string
+    */
+    static const char * GetDisplayName(const char *psPropertyName)
+    {
+        return _GetDisplayName(psPropertyName);
     }
 
     /*

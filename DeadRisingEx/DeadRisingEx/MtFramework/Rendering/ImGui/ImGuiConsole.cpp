@@ -491,7 +491,7 @@ void ImGuiConsole::PrintCommandHelp(const char *psCommandName)
         for (auto iter = this->CommandInfo.begin(); iter != CommandInfo.end(); iter++)
         {
             // Format the command text.
-            int length = min(0, 32 - lstrlenW(iter->second->psName));
+            int length = max(0, 32 - lstrlenW(iter->second->psName));
             ConsolePrint(L"\t%s %*s\n", iter->second->psName, length, iter->second->psHelpMessage);
         }
     }

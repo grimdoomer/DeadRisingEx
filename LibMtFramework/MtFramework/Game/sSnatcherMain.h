@@ -2,13 +2,14 @@
 #pragma once
 #include "MtFramework/MtObject.h"
 #include "sMain.h"
+#include "sSnatcherTool.h"
 
 // sizeof = 0x21110
 struct sSnatcherMain : public sMain
 {
     /* 0x20248 */
     /* 0x20250 */ void  *mpRender;
-    /* 0x20258 */ void  *mpSnatcherTool;
+    /* 0x20258 */ sSnatcherTool *mpSnatcherTool;
     /* 0x20260 */ void  *mpUnit;
     /* 0x20268 */ void  *mpResource;
     /* 0x20270 */ void  *mpCamera;
