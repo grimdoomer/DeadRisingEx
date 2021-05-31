@@ -1,5 +1,7 @@
 
 #include "sSnatcherToolImpl.h"
+#include <MtFramework/Archive/cResource.h>
+#include <MtFramework/Area/sAreaManager.h>
 #include <MtFramework/Game/sSnatcherMain.h>
 #include <MtFramework/Debug/sToolBase.h>
 #include <MtFramework/Rendering/sRender.h>
@@ -26,6 +28,79 @@ void sSnatcherToolImpl::RegisterTypeInfo()
     ImGuiConsole::Instance()->RegisterCommands(g_sSnatcherToolCommands, g_sSnatcherToolCommandsLength);
 }
 
+template<typename T> void SetFieldValue(MtPropertyListEntry *pEntry, T value)
+{
+    // Check if this is an array or not and handle accordingly.
+    if ((pEntry->Flags & MT_PROP_FLAG_IS_ARRAY) != 0)
+    {
+        // Check if the property uses pointers for accessing the value.
+        if ((pEntry->Flags & MT_PROP_FLAG_USE_FUNCTION_POINTERS) != 0)
+        {
+            // Is this used for non-bool values?
+            if (pEntry->PropertyType != MT_PROP_TYPE_BOOL)
+                DebugBreak();
+
+            // Use the set field value callback.
+            pEntry->pSetFieldValue(pEntry->pOwnerObject, (__int64)pEntry->pUnkFunc3);
+        }
+        else
+        {
+            // Set the value directly.
+            *((T*)pEntry->pFieldValue + (int)pEntry->pUnkFunc3) = value;
+        }
+    }
+    else
+    {
+        // Check if the property uses pointers for accessing the value.
+        if ((pEntry->Flags & MT_PROP_FLAG_USE_FUNCTION_POINTERS) != 0)
+        {
+            // Use the set field value callback.
+            pEntry->pSetFieldValue(pEntry->pOwnerObject, (__int64)value);
+        }
+        else
+        {
+            // Set the value directly.
+            *(T*)pEntry->pFieldValue = value;
+        }
+    }
+}
+
+void SetVectorValue(MtPropertyListEntry *pEntry, float *pValue, int count)
+{
+    // Check if this is an array or not and handle accordingly.
+    if ((pEntry->Flags & MT_PROP_FLAG_IS_ARRAY) != 0)
+    {
+        // Check if the property uses pointers for accessing the value.
+        if ((pEntry->Flags & MT_PROP_FLAG_USE_FUNCTION_POINTERS) != 0)
+        {
+            // Use the set field value callback.
+            DebugBreak();
+            pEntry->pSetFieldValue(pEntry->pOwnerObject, (__int64)pEntry->pUnkFunc3);
+        }
+        else
+        {
+            // Set the value directly.
+            for (int i = 0; i < count; i++)
+                *((float*)pEntry->pFieldValue + (int)pEntry->pUnkFunc3 + i) = pValue[i];
+        }
+    }
+    else
+    {
+        // Check if the property uses pointers for accessing the value.
+        if ((pEntry->Flags & MT_PROP_FLAG_USE_FUNCTION_POINTERS) != 0)
+        {
+            // Use the set field value callback.
+            pEntry->pSetFieldValue(pEntry->pOwnerObject, (__int64)pValue);
+        }
+        else
+        {
+            // Set the value directly.
+            for (int i = 0; i < count; i++)
+                *((float*)pEntry->pFieldValue + i) = pValue[i];
+        }
+    }
+}
+
 void sSnatcherToolImpl::DrawSection(MtPropertyListEntry *pEntry)
 {
     // Loop and draw all the menu options.
@@ -40,6 +115,7 @@ void sSnatcherToolImpl::DrawSection(MtPropertyListEntry *pEntry)
         switch (pEntry->PropertyType)
         {
         case MT_PROP_TYPE_SUB_SECTION_START:
+        case MT_PROP_TYPE_SUB_SECTION_START2:
         {
             // Check if we need to close the child group for a previously open section.
             if (inSection == true)
@@ -65,16 +141,18 @@ void sSnatcherToolImpl::DrawSection(MtPropertyListEntry *pEntry)
             {
                 // The header is closed, skip all inner elements.
                 pEntry = pEntry->pBLink;
-                while (pEntry != nullptr && pEntry->PropertyType != MT_PROP_TYPE_SUB_SECTION_END && pEntry->PropertyType != MT_PROP_TYPE_SUB_SECTION_START)
+                while (pEntry != nullptr && pEntry->PropertyType != MT_PROP_TYPE_SUB_SECTION_END && pEntry->PropertyType != MT_PROP_TYPE_SUB_SECTION_END2 && 
+                    pEntry->PropertyType != MT_PROP_TYPE_SUB_SECTION_START && pEntry->PropertyType != MT_PROP_TYPE_SUB_SECTION_START2)
                     pEntry = pEntry->pBLink;
 
                 // If we hit a start section element don't advance the link pointer.
-                if (pEntry != nullptr && pEntry->PropertyType == MT_PROP_TYPE_SUB_SECTION_START)
+                if (pEntry != nullptr && (pEntry->PropertyType == MT_PROP_TYPE_SUB_SECTION_START || pEntry->PropertyType == MT_PROP_TYPE_SUB_SECTION_START2))
                     continue;
             }
             break;
         }
         case MT_PROP_TYPE_SUB_SECTION_END:
+        case MT_PROP_TYPE_SUB_SECTION_END2:
         {
             // If the section header is open end the section.
             if (inSection == true)
@@ -255,35 +333,8 @@ void sSnatcherToolImpl::DrawSection(MtPropertyListEntry *pEntry)
             ImGui::PushID(pEntry);
             if (ImGui::Checkbox("", &value) == true)
             {
-                // Check if this is an array or not and handle accordingly.
-                if ((pEntry->Flags & MT_PROP_FLAG_IS_ARRAY) != 0)
-                {
-                    // Check if the property uses pointers for accessing the value.
-                    if ((pEntry->Flags & MT_PROP_FLAG_USE_FUNCTION_POINTERS) != 0)
-                    {
-                        // Use the set field value callback.
-                        pEntry->pSetFieldValue(pEntry->pOwnerObject, (__int64)pEntry->pUnkFunc3);
-                    }
-                    else
-                    {
-                        // Set the value directly.
-                        *((bool*)pEntry->pFieldValue + (int)pEntry->pUnkFunc3) = value;
-                    }
-                }
-                else
-                {
-                    // Check if the property uses pointers for accessing the value.
-                    if ((pEntry->Flags & MT_PROP_FLAG_USE_FUNCTION_POINTERS) != 0)
-                    {
-                        // Use the set field value callback.
-                        pEntry->pSetFieldValue(pEntry->pOwnerObject, (__int64)value);
-                    }
-                    else
-                    {
-                        // Set the value directly.
-                        *(bool*)pEntry->pFieldValue = value;
-                    }
-                }
+                // Update the field value.
+                SetFieldValue<bool>(pEntry, value);
             }
             ImGui::PopID();
             break;
@@ -337,7 +388,21 @@ void sSnatcherToolImpl::DrawSection(MtPropertyListEntry *pEntry)
             ImGui::PushID(pEntry);
             if (ImGui::InputScalar("", dataType, &value) == true)
             {
-                
+                // Check the field type and update accordingly.
+                switch (pEntry->PropertyType)
+                {
+                case MT_PROP_TYPE_BYTE: SetFieldValue<BYTE>(pEntry, (BYTE)value); break;
+                case MT_PROP_TYPE_WORD: SetFieldValue<WORD>(pEntry, (WORD)value); break;
+                case MT_PROP_TYPE_DWORD: SetFieldValue<DWORD>(pEntry, (DWORD)value); break;
+                case MT_PROP_TYPE_QWORD: SetFieldValue<__int64>(pEntry, value); break;
+                case MT_PROP_TYPE_SBYTE: SetFieldValue<INT8>(pEntry, (INT8)value); break;
+                case MT_PROP_TYPE_SWORD: SetFieldValue<INT16>(pEntry, (INT16)value); break;
+                case MT_PROP_TYPE_SINT: SetFieldValue<INT32>(pEntry, (INT32)value); break;
+                case MT_PROP_TYPE_LONGLONG: SetFieldValue<INT64>(pEntry, (INT64)value); break;
+                case MT_PROP_TYPE_FLOAT: SetFieldValue<float>(pEntry, (float)value); break;
+                case MT_PROP_TYPE_DOUBLE: SetFieldValue<double>(pEntry, (double)value); break;
+                default: DebugBreak(); break;
+                }
             }
             ImGui::PopID();
             break;
@@ -361,11 +426,106 @@ void sSnatcherToolImpl::DrawSection(MtPropertyListEntry *pEntry)
             ImGui::Text(pStringValue);
             break;
         }
+        //case 0x10:
+        case 0x22:  // Vector2/POINT?
+        case MT_PROP_TYPE_VECTOR3:
+        case 0x23:  // 3 floats?
+        case MT_PROP_TYPE_VECTOR4:
+        case MT_PROP_TYPE_QUATERNION:
+        case 0x24:  // 4 floats?
+        {
+            // Draw the field name.
+            ImGui::Text(MtPropertyListEntry::GetDisplayName(pEntry->pPropertyName));
+            if (ImGui::IsItemHovered() == true)
+            {
+                // Display the tool tip dialog.
+                ImGui::BeginTooltip();
+                ImGui::Text(pEntry->pPropertyName);
+                ImGui::EndTooltip();
+            }
+            ImGui::SameLine(FIELD_NAME_WIDTH);
+
+            // Get the field value.
+            Vector4 vector;
+            pEntry->GetValueVector(&vector);
+
+            // Vector input:
+            ImGui::PushID(pEntry);
+            bool result;
+            switch (pEntry->PropertyType)
+            {
+            case 0x10:
+            case 0x22: result = ImGui::InputFloat2("", (float*)&vector); break;
+            case MT_PROP_TYPE_VECTOR3:
+            case 0x23: result = ImGui::InputFloat3("", (float*)&vector); break;
+            case MT_PROP_TYPE_VECTOR4:
+            case MT_PROP_TYPE_QUATERNION:
+            case 0x24: result = ImGui::InputFloat4("", (float*)&vector); break;
+            }
+            ImGui::PopID();
+
+            // Check if we need to update the field value.
+            if (result == true)
+            {
+                // Check the field type and handle accordingly.
+                switch (pEntry->PropertyType)
+                {
+                case 0x10:
+                case 0x22: SetVectorValue(pEntry, (float*)&vector, 2); break;
+                case MT_PROP_TYPE_VECTOR3:
+                case 0x23: SetVectorValue(pEntry, (float*)&vector, 3); break;
+                case MT_PROP_TYPE_VECTOR4:
+                case MT_PROP_TYPE_QUATERNION:
+                case 0x24: SetVectorValue(pEntry, (float*)&vector, 4); break;
+                }
+            }
+            break;
+        }
+        case MT_PROP_TYPE_ACTION:
+        {
+            // Draw the action button:
+            ImGui::PushID(pEntry);
+            if (ImGui::Button(MtPropertyListEntry::GetDisplayName(pEntry->pPropertyName)) == true)
+            {
+                // If the action callback is valid call it.
+                if (pEntry->pFieldValue != nullptr)
+                    pEntry->pFieldValue(pEntry->pOwnerObject, 0);
+            }
+            ImGui::PopID();
+            break;
+        }
+        case MT_PROP_TYPE_CRESOURCE:
+        {
+            // Draw the field name.
+            ImGui::Text(MtPropertyListEntry::GetDisplayName(pEntry->pPropertyName));
+            if (ImGui::IsItemHovered() == true)
+            {
+                // Display the tool tip dialog.
+                ImGui::BeginTooltip();
+                ImGui::Text(pEntry->pPropertyName);
+                ImGui::EndTooltip();
+            }
+            ImGui::SameLine(FIELD_NAME_WIDTH);
+
+            // Display the field value:
+            cResource *pResource = (cResource*)pEntry->GetValueMtObject();
+            ImGui::Text("%s", pResource != nullptr ? pResource->mPath : "None");
+            break;
+        }
         default:
         {
             // If the property has a name draw it.
             if (pEntry->pPropertyName != nullptr)
                 ImGui::Text(pEntry->pPropertyName);
+
+            // Handle tooltip:
+            if (ImGui::IsItemHovered() == true)
+            {
+                // Display the tool tip dialog.
+                ImGui::BeginTooltip();
+                ImGui::Text("Unsupported field type: %d", pEntry->PropertyType);
+                ImGui::EndTooltip();
+            }
         }
         }
 
@@ -389,6 +549,24 @@ void sSnatcherToolImpl::Draw()
     if (this->sysMenuOpen == false)
         return;
 
+    // Check if the loaded area has changed since it was last opened.
+    sAreaManager *pAreaManager = sAreaManager::Instance();
+    if (*(DWORD*)((BYTE*)pAreaManager + 0x40) != this->lastAreaId)
+    {
+        // Pop all child menus until we reach the root menu entry.
+        while (this->sysMenuPropertyList.size() > 1)
+        {
+            this->sysMenuPropertyList.pop_back();
+            this->sysMenuNavList.pop_back();
+        }
+
+        // Set the menu index to the root.
+        this->sysMenuIndex = 0;
+
+        // Update the last area id.
+        this->lastAreaId = *(DWORD*)((BYTE*)pAreaManager + 0x40);
+    }
+
     // Setup the window title.
     std::string menuTitle = this->sysMenuNavList[0];
     for (int i = 1; i < this->sysMenuNavList.size(); i++)
@@ -397,12 +575,15 @@ void sSnatcherToolImpl::Draw()
     // Add the menu id to the title string.
     menuTitle += "###sysMenu";
 
+    // If the menu is open set the size and position.
+    if (this->sysMenuOpen == true)
+    {
+        ImGui::SetNextWindowSize(ImVec2(700.0f, 0.0f), ImGuiCond_Once);
+    }
+
     // Draw the sysmenu window.
     if (ImGui::Begin(menuTitle.c_str(), &this->sysMenuOpen, ImGuiWindowFlags_NoSavedSettings))
     {
-        // Set window position and size.
-        ImGui::SetWindowSize(ImVec2(700.0f, 0.0f), ImGuiCond_Appearing);
-
         // Check if we need to disable the nav back button.
         bool popItemFlag = this->sysMenuIndex == 0;
         if (this->sysMenuIndex == 0)
@@ -450,6 +631,10 @@ __int64 OpenDebugMenu(WCHAR **argv, int argc)
         pSnatcherToolImpl->sysMenuNavList.push_back("SysMenu");
         pSnatcherToolImpl->sysMenuPropertyList.push_back(pSysMenuRoot);
         pSnatcherToolImpl->sysMenuIndex = 0;
+
+        // Set the last area id loaded.
+        sAreaManager *pAreaManager = sAreaManager::Instance();
+        pSnatcherToolImpl->lastAreaId = *(DWORD*)((BYTE*)pAreaManager + 0x40);
     }
 
     // Display the debug menu.

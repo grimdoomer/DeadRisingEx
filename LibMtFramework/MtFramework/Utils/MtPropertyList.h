@@ -24,8 +24,11 @@ struct MtObject;
 #define MT_PROP_TYPE_VECTOR3        0x14
 #define MT_PROP_TYPE_VECTOR4        0x15
 #define MT_PROP_TYPE_QUATERNION     0x16
-// function callback 0x18?
+
+#define MT_PROP_TYPE_ACTION         0x18
 #define MT_PROP_TYPE_SUB_SECTION_START  0x19
+#define MT_PROP_TYPE_SUB_SECTION_START2 0x1A
+#define MT_PROP_TYPE_SUB_SECTION_END2   0x1B
 
 #define MT_PROP_TYPE_SUB_SECTION_END    0x1F
 #define MT_PROP_TYPE_STRING_PTR	    0x20
@@ -34,10 +37,12 @@ struct MtObject;
 // 0x140621E1C (3 floats) 0x23
 // vector4 0x24?
 
+#define MT_PROP_TYPE_CRESOURCE      0x36
+
 #define MT_PROP_FLAG_READ_ONLY      1       // Field is read only
 // clickable 0x2?
 // getter is function callback 0x8?
-#define MT_PROP_FLAG_IS_ARRAY               0x20    // Property is an array (valid for types 1 and 2), also used to pass a second parameter to getter callback (array index?)
+#define MT_PROP_FLAG_IS_ARRAY               0x20    // Property is an array, array index field is passed to getter callback if MT_PROP_FLAG_USE_FUNCTION_POINTERS is used
 #define MT_PROP_FLAG_USE_FUNCTION_POINTERS  0x80    // pFieldValue and pArrayLength are function pointers
 
 typedef unsigned long long(*MtPropertyEntry_GetValue)(void *pOwner, DWORD arrayIndex);

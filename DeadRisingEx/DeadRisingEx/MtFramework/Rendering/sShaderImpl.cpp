@@ -22,7 +22,9 @@ const ConsoleCommandInfo g_sShaderCommands[g_sShaderCommandsLength] =
 void sShaderImpl::RegisterTypeInfo()
 {
     // Register commands.
+#if _DEBUG
     ImGuiConsole::Instance()->RegisterCommands(g_sShaderCommands, g_sShaderCommandsLength);
+#endif
 }
 
 __int64 PrintShaderParameters(WCHAR **argv, int argc)

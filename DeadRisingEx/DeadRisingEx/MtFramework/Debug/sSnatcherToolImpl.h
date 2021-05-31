@@ -16,6 +16,8 @@ protected:
     std::vector<std::string>    sysMenuNavList;
     std::vector<MtPropertyList*>    sysMenuPropertyList;
 
+    DWORD       lastAreaId;     // Last area id the sysmenu was opened at
+
     void DrawSection(MtPropertyListEntry *pEntry);
 
 public:

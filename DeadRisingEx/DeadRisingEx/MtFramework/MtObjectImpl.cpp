@@ -17,7 +17,9 @@ const ConsoleCommandInfo g_MtObjectCommands[g_MtObjectCommandsLength] =
 void MtObjectImpl::RegisterTypeInfo()
 {
     // Register commands:
+#if _DEBUG
     ImGuiConsole::Instance()->RegisterCommands(g_MtObjectCommands, g_MtObjectCommandsLength);
+#endif
 }
 
 std::string FixFieldName(const char *psFieldName)

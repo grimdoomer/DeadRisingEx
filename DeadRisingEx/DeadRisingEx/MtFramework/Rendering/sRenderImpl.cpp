@@ -49,7 +49,9 @@ const ConsoleCommandInfo g_sRenderCommands[g_sRenderCommandsLength] =
 void sRenderImpl::RegisterTypeInfo()
 {
     // Register commands:
+#if _DEBUG
     ImGuiConsole::Instance()->RegisterCommands(g_sRenderCommands, g_sRenderCommandsLength);
+#endif
 }
 
 bool sRenderImpl::InstallHooks()
