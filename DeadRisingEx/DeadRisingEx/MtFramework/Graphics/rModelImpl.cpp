@@ -7,8 +7,8 @@
 void rModelImpl::InitializeTypeInfo()
 {
     // Register type info:
-    RegisterTypeInfo(&JointTypeInfo);
+    /*RegisterTypeInfo(&JointTypeInfo);
     RegisterTypeInfo(&PrimitiveTypeInfo);
     RegisterTypeInfo(&MaterialTypeInfo);
-    RegisterTypeInfo(&rModelTypeInfo);
+    RegisterTypeInfo(&rModelTypeInfo);*/
 }

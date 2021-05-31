@@ -9,7 +9,7 @@ __int64 PrintDebugOptions(WCHAR **argv, int argc);
 
 // Table of commands.
 const int g_MtObjectCommandsLength = 1;
-const CommandEntry g_MtObjectCommands[g_MtObjectCommandsLength] =
+const ConsoleCommandInfo g_MtObjectCommands[g_MtObjectCommandsLength] =
 {
     { L"print_dbg_options", L"Prints the debug options for the specified object type", PrintDebugOptions },
 };
@@ -17,7 +17,9 @@ const CommandEntry g_MtObjectCommands[g_MtObjectCommandsLength] =
 void MtObjectImpl::RegisterTypeInfo()
 {
     // Register commands:
-    RegisterCommands(g_MtObjectCommands, g_MtObjectCommandsLength);
+#if _DEBUG
+    ImGuiConsole::Instance()->RegisterCommands(g_MtObjectCommands, g_MtObjectCommandsLength);
+#endif
 }
 
 std::string FixFieldName(const char *psFieldName)
@@ -47,7 +49,7 @@ std::string FixFieldName(const char *psFieldName)
                 sNewName += psFieldName[i];
             }
             else if (psFieldName[i] != '-')
-                sNewName += tolower(psFieldName[i]);
+                sNewName += psFieldName[i];
         }
     }
 
@@ -65,37 +67,37 @@ void PrintPropertyListReversed(MtPropertyListEntry *pEntry, void *pBaseAddress)
     //{
     //    // If there is a section header name print it, else just skip a line.
     //    if (pEntry->pPropertyName[0] == 0)
-    //        wprintf(L"\n");
+    //        ImGuiConsole::Instance()->ConsolePrint(L"\n");
     //    else
-    //        wprintf(L"[%S]\n", pEntry->pPropertyName);
+    //        ImGuiConsole::Instance()->ConsolePrint(L"[%S]\n", pEntry->pPropertyName);
 
     //    return;
     //}
 
     // Check if we know the property type or not.
     std::string sFieldName = FixFieldName(pEntry->pPropertyName);
-    DWORD address = (BYTE*)pEntry->pGetter - (BYTE*)pBaseAddress;
+    DWORD address = (BYTE*)pEntry->pFieldValue - (BYTE*)pBaseAddress;
     if (pEntry->PropertyType < PROPERTY_TYPE_COUNT && MtPropertyTypeNames[pEntry->PropertyType] != nullptr)
-        //wprintf(L"   %S %S 0x%04x ", MtPropertyTypeNames[pEntry->PropertyType], pEntry->pPropertyName, pEntry->Flags);
-        wprintf(L"/* 0x%02X */ %S \t%S;", address, MtPropertyTypeNames[pEntry->PropertyType], sFieldName.c_str());
+        //ImGuiConsole::Instance()->ConsolePrint(L"   %S %S 0x%04x ", MtPropertyTypeNames[pEntry->PropertyType], pEntry->pPropertyName, pEntry->Flags);
+        ImGuiConsole::Instance()->ConsolePrint(L"/* 0x%02X */ %S \t%S;", address, MtPropertyTypeNames[pEntry->PropertyType], sFieldName.c_str());
     else
-        wprintf(L"   0x%04x %S 0x%04x ", pEntry->PropertyType, pEntry->pPropertyName, pEntry->Flags);
+        ImGuiConsole::Instance()->ConsolePrint(L"   0x%04x %S 0x%04x ", pEntry->PropertyType, pEntry->pPropertyName, pEntry->Flags);
 
     /*
     // Print function addresses.
     if (pEntry->pGetter)
-        wprintf(L"Get: %p ", pEntry->pGetter);
+        ImGuiConsole::Instance()->ConsolePrint(L"Get: %p ", pEntry->pGetter);
     if (pEntry->pGetArrayLength)
-        wprintf(L"ArrayLength: %p ", pEntry->pGetArrayLength);
+        ImGuiConsole::Instance()->ConsolePrint(L"ArrayLength: %p ", pEntry->pGetArrayLength);
     if (pEntry->pUnkFunc1)
-        wprintf(L"Func1: %p ", pEntry->pUnkFunc1);
+        ImGuiConsole::Instance()->ConsolePrint(L"Func1: %p ", pEntry->pUnkFunc1);
     if (pEntry->pUnkFunc2)
-        wprintf(L"Func2: %p ", pEntry->pUnkFunc2);
+        ImGuiConsole::Instance()->ConsolePrint(L"Func2: %p ", pEntry->pUnkFunc2);
     if (pEntry->pUnkFunc3)
-        wprintf(L"Func3: %p ", pEntry->pUnkFunc3);
+        ImGuiConsole::Instance()->ConsolePrint(L"Func3: %p ", pEntry->pUnkFunc3);
         */
 
-    wprintf(L"\n");
+    ImGuiConsole::Instance()->ConsolePrint(L"\n");
 }
 
 __int64 PrintDebugOptions(WCHAR **argv, int argc)
@@ -104,7 +106,7 @@ __int64 PrintDebugOptions(WCHAR **argv, int argc)
     if (argc < 1)
     {
         // Invalid syntax.
-        wprintf(L"Invalid command syntax!\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"Invalid command syntax!\n");
         return 0;
     }
 
@@ -119,7 +121,7 @@ __int64 PrintDebugOptions(WCHAR **argv, int argc)
     if (pObjectDTI == nullptr)
     {
         // Failed to find DTI info for the specified object.
-        wprintf(L"Failed to find DTI info for type '%s'\n", argv[0]);
+        ImGuiConsole::Instance()->ConsolePrint(L"Failed to find DTI info for type '%s'\n", argv[0]);
         return 0;
     }
 
@@ -128,7 +130,7 @@ __int64 PrintDebugOptions(WCHAR **argv, int argc)
     if (pObjectInstance == nullptr)
     {
         // Failed to create an instance of the object.
-        wprintf(L"Failed to create an instance of '%s'\n", argv[0]);
+        ImGuiConsole::Instance()->ConsolePrint(L"Failed to create an instance of '%s'\n", argv[0]);
         return 0;
     }
 
@@ -137,7 +139,7 @@ __int64 PrintDebugOptions(WCHAR **argv, int argc)
     if (pPropertyList == nullptr)
     {
         // Failed to allocate memory for the property list.
-        wprintf(L"Failed to create MtPropertyList\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"Failed to create MtPropertyList\n");
         return 0;
     }
 

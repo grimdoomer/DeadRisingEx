@@ -21,8 +21,6 @@ public:
 
     bool LoadConfigFile(std::string sConfigFile);
 
-    bool EnableConsole;             // Determines if the debug console window should be opened or not
-
     bool DebugLog;                  // Determines if debug output should be written to a log file or not
 
     bool RecursiveGrenade;          // Enables the recursive grenade mod

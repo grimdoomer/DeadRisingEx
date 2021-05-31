@@ -6,7 +6,7 @@
 #include <MtFramework/Memory/MtHeapAllocator.h>
 
 inline static DWORD(__stdcall *uOm23_OnExplode)(uOm23 *thisptr, DWORD unk) =
-    GetModuleAddress<DWORD(__stdcall*)(uOm23*, DWORD)>(0x14006E2C0);
+    (DWORD(__stdcall*)(uOm23*, DWORD))GetModuleAddress(0x14006E2C0);
 
 struct uOmRecursiveGrenade;
 
@@ -35,7 +35,7 @@ struct uOmRecursiveGrenade : public uOm23
         if (pObject == nullptr)
         {
             // Failed to allocate memory for object.
-            wprintf(L"Failed to allocate memory for uOmRecursiveGrenade!\n");
+            ImGuiConsole::Instance()->ConsolePrint(L"Failed to allocate memory for uOmRecursiveGrenade!\n");
             return nullptr;
         }
 

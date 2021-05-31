@@ -27,8 +27,12 @@
     <ClInclude Include="MtFramework\Area\sAreaHit.h" />
     <ClInclude Include="MtFramework\Area\sAreaManager.h" />
     <ClInclude Include="MtFramework\Config\MtRegistry.h" />
+    <ClInclude Include="MtFramework\Debug\sTool.h" />
     <ClInclude Include="MtFramework\Debug\sToolBase.h" />
+    <ClInclude Include="MtFramework\Game\Player\uCockpit.h" />
     <ClInclude Include="MtFramework\Game\sMain.h" />
+    <ClInclude Include="MtFramework\Game\sSnatcherPad.h" />
+    <ClInclude Include="MtFramework\Game\sSnatcherTool.h" />
     <ClInclude Include="MtFramework\Game\Task\cGametask.h" />
     <ClInclude Include="MtFramework\Game\Task\cGametaskMain.h" />
     <ClInclude Include="MtFramework\Game\Task\cGametaskTitle.h" />
@@ -68,6 +72,7 @@
     <ClInclude Include="MtFramework\Utils\MtArray.h" />
     <ClInclude Include="MtFramework\Utils\MtPropertyList.h" />
     <ClInclude Include="MtFramework\Utils\Utilities.h" />
+    <ClInclude Include="MtFramework\Utils\VTable.h" />
     <ClInclude Include="MtFramework\Utils\Zlib.h" />
   </ItemGroup>
   <ItemGroup>

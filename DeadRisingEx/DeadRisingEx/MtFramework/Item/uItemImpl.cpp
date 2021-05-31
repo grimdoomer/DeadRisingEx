@@ -15,18 +15,18 @@
 #include "DeadRisingEx/MtFramework/Player/uPlayerImpl.h"
 
 bool(__stdcall *sUnit_Something)(void *thisptr, int unk, uItem *pItem) =
-    GetModuleAddress<bool(__stdcall*)(void*, int, uItem*)>(0x1406300B0);
+    (bool(__stdcall*)(void*, int, uItem*))GetModuleAddress(0x1406300B0);
 
 void(__stdcall *CopyMtString)(void *thisptr, MtString **ppString) =
-    GetModuleAddress<void(__stdcall*)(void*, MtString**)>(0x1400CCE80);
+    (void(__stdcall*)(void*, MtString**))GetModuleAddress(0x1400CCE80);
 
 void(__stdcall *uCoord_SetRotation)(void *thisptr, Vector4 *pRotation) =
-    GetModuleAddress<void(__stdcall*)(void*, Vector4*)>(0x14063EB90);
+    (void(__stdcall*)(void*, Vector4*))GetModuleAddress(0x14063EB90);
 
 bool(__stdcall *sUnit_AddObject)(void *thisptr, DWORD Unk, void *pObject) =
-    GetModuleAddress<bool(__stdcall*)(void*, DWORD, void*)>(0x1406300B0);
+    (bool(__stdcall*)(void*, DWORD, void*))GetModuleAddress(0x1406300B0);
 
-MtDTI *g_uSnatcherModelDTI = GetModuleAddress<MtDTI*>(0x141949C20);
+MtDTI *g_uSnatcherModelDTI = (MtDTI*)GetModuleAddress(0x141949C20);
 
 std::hash<std::string> stringHasher;
 std::map<size_t, const char*> mObjectArchiveLookupTable;
@@ -37,7 +37,7 @@ __int64 SpawnObject(WCHAR **argv, int argc);
 
 // Table of commands for uPlayer objects.
 const int g_uItemCommandsLength = 2;
-const CommandEntry g_uItemCommands[g_uItemCommandsLength] =
+const ConsoleCommandInfo g_uItemCommands[g_uItemCommandsLength] =
 {
     { L"spawn_item", L"Spawns an item near the player", SpawnItem },
     { L"spawn_object", L"Spawns an object by class name near the player", SpawnObject },
@@ -46,7 +46,7 @@ const CommandEntry g_uItemCommands[g_uItemCommandsLength] =
 void uItemImpl::RegisterTypeInfo()
 {
     // Register commands:
-    RegisterCommands(g_uItemCommands, g_uItemCommandsLength);
+    ImGuiConsole::Instance()->RegisterCommands(g_uItemCommands, g_uItemCommandsLength);
 
     // Loop through all of the object names and build out object archive lookup table.
     for (int i = 0; i < OBJECT_COUNT; i++)
@@ -66,13 +66,13 @@ __int64 SpawnItem(WCHAR **argv, int argc)
     if (argc < 1)
     {
         // Invalid syntax.
-        wprintf(L"Invalid command syntax!\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"Invalid command syntax!\n");
         return 0;
     }
 
     if (uPlayerInstance == nullptr)
     {
-        wprintf(L"Player instance not set!\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"Player instance not set!\n");
         return 0;
     }
 
@@ -85,7 +85,7 @@ __int64 SpawnItem(WCHAR **argv, int argc)
     if (itemId >= ITEM_COUNT)
     {
         // Item id is invalid.
-        wprintf(L"Item id is invalid, should be [0, 313]\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"Item id is invalid, should be [0, 313]\n");
         return 0;
     }
 
@@ -94,7 +94,7 @@ __int64 SpawnItem(WCHAR **argv, int argc)
     if (lstrlenA(pItemInfo->ArchivePath) == 0)
     {
         // Item is invalid.
-        wprintf(L"Item %d has no archive associated with it!\n", itemId);
+        ImGuiConsole::Instance()->ConsolePrint(L"Item %d has no archive associated with it!\n", itemId);
         return 0;
     }
 
@@ -102,7 +102,7 @@ __int64 SpawnItem(WCHAR **argv, int argc)
     if (uItem::ItemProperties[itemId] == nullptr)
     {
         // Item does not have item properties and may crash us trying to spawn it.
-        wprintf(L"Item %d does not have an item properties structure!\n", itemId);
+        ImGuiConsole::Instance()->ConsolePrint(L"Item %d does not have an item properties structure!\n", itemId);
         return 0;
     }
 
@@ -119,7 +119,7 @@ __int64 SpawnItem(WCHAR **argv, int argc)
     if (pResource == nullptr)
     {
         // Failed to force load resource.
-        wprintf(L"Failed to force load object '%S'!\n", sItemPath.c_str());
+        ImGuiConsole::Instance()->ConsolePrint(L"Failed to force load object '%S'!\n", sItemPath.c_str());
         return 0;
     }
     
@@ -135,7 +135,7 @@ __int64 SpawnItem(WCHAR **argv, int argc)
     if (pItemDTI == nullptr)
     {
         // Failed to find type info for the item class name.
-        wprintf(L"Failed to find type info for object '%S'\n", sItemClassName);
+        ImGuiConsole::Instance()->ConsolePrint(L"Failed to find type info for object '%S'\n", sItemClassName);
         return 0;
     }
 
@@ -144,7 +144,7 @@ __int64 SpawnItem(WCHAR **argv, int argc)
     if (pItem == nullptr)
     {
         // Failed to create item instance.
-        wprintf(L"Failed to create item instance for item '%S'\n", sItemClassName);
+        ImGuiConsole::Instance()->ConsolePrint(L"Failed to create item instance for item '%S'\n", sItemClassName);
         return 0;
     }
 
@@ -152,7 +152,7 @@ __int64 SpawnItem(WCHAR **argv, int argc)
     if (pItem->SetupItemProperties() == false)
     {
         // Failed to setup properties for the item.
-        wprintf(L"Failed to setup item properties\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"Failed to setup item properties\n");
         return 0;
     }
 
@@ -162,7 +162,7 @@ __int64 SpawnItem(WCHAR **argv, int argc)
     // Call some sUnit function to add the item to a list?
     if (sUnit_Something(*g_sUnitInstance, 9, pItem) == false)
     {
-        wprintf(L"sUnit function failed!\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"sUnit function failed!\n");
         return 0;
     }
 
@@ -188,13 +188,13 @@ __int64 SpawnObject(WCHAR **argv, int argc)
     if (argc < 1)
     {
         // Invalid syntax.
-        wprintf(L"Invalid command syntax!\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"Invalid command syntax!\n");
         return 0;
     }
 
     if (uPlayerInstance == nullptr)
     {
-        wprintf(L"Player instance not set!\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"Player instance not set!\n");
         return 0;
     }
 
@@ -213,7 +213,7 @@ __int64 SpawnObject(WCHAR **argv, int argc)
         if (pArchive == nullptr)
         {
             // Failed to force load resource.
-            wprintf(L"Failed to force load object '%S'!\n", sArchivePath.c_str());
+            ImGuiConsole::Instance()->ConsolePrint(L"Failed to force load object '%S'!\n", sArchivePath.c_str());
             return 0;
         }
     }
@@ -221,7 +221,7 @@ __int64 SpawnObject(WCHAR **argv, int argc)
     {
         // Check if we have an entry for this object in the object archive lookup table.
         size_t hashcode = stringHasher(sObjectClassName);
-        wprintf(L"hashcode = %p\n", hashcode);
+        ImGuiConsole::Instance()->ConsolePrint(L"hashcode = %p\n", hashcode);
         if (mObjectArchiveLookupTable.count(hashcode) > 0 && mObjectArchiveLookupTable[hashcode] != nullptr)
         {
             // Load the object archive so we can load objects not part of this area.
@@ -229,14 +229,14 @@ __int64 SpawnObject(WCHAR **argv, int argc)
             if (pArchive == nullptr)
             {
                 // Failed to force load resource.
-                wprintf(L"Failed to force load object '%S'!\n", mObjectArchiveLookupTable[hashcode]);
+                ImGuiConsole::Instance()->ConsolePrint(L"Failed to force load object '%S'!\n", mObjectArchiveLookupTable[hashcode]);
                 return 0;
             }
         }
         else
         {
             // No archive path for this object.
-            wprintf(L"No known archive path for '%S'\n", sObjectClassName.c_str());
+            ImGuiConsole::Instance()->ConsolePrint(L"No known archive path for '%S'\n", sObjectClassName.c_str());
             return 0;
         }
     }
@@ -246,7 +246,7 @@ __int64 SpawnObject(WCHAR **argv, int argc)
     if (pObjectDTI == nullptr)
     {
         // No DTI info found for the object type.
-        wprintf(L"No DTI info found for '%s'\n", argv[0]);
+        ImGuiConsole::Instance()->ConsolePrint(L"No DTI info found for '%s'\n", argv[0]);
         return 0;
     }
 
@@ -255,7 +255,7 @@ __int64 SpawnObject(WCHAR **argv, int argc)
     if (pObject == nullptr)
     {
         // Failed to create the object.
-        wprintf(L"Failed to create object type '%s'\n", argv[0]);
+        ImGuiConsole::Instance()->ConsolePrint(L"Failed to create object type '%s'\n", argv[0]);
         return 0;
     }
 
@@ -283,7 +283,7 @@ __int64 SpawnObject(WCHAR **argv, int argc)
     if (sUnit_AddObject(*g_sUnitInstance, moveLine, pObject) == false)
     {
         // Failed to add object to sUnit.
-        wprintf(L"sUnit_AddObject failed\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"sUnit_AddObject failed\n");
         return 0;
     }
 

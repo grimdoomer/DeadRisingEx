@@ -19,11 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DeadRisingEx\Debugger\CommandManager.cpp" />
-    <ClCompile Include="DeadRisingEx\Debugger\TypeInfo.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Archive\sResourceImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Debug\sSnatcherToolImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Game\sMainImpl.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Game\sSnatcherPadImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Game\sSnatcherMainImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Game\Task\cGametaskTitleImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Graphics\rModelImpl.cpp" />
@@ -31,6 +30,13 @@
     <ClCompile Include="DeadRisingEx\MtFramework\Object\Model\sSMManagerImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Object\Npc\uNpcMarkerImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Object\uPhotoImpl.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\imgui.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\ImGuiConsole.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\ImGuiRenderer.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Rendering\sRenderImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Rendering\sShaderImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Item\Items\uOm08Impl.cpp" />
@@ -45,14 +51,13 @@
     <ClCompile Include="DeadRisingEx\MtFramework\Archive\ArchiveOverlay.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DeadRisingEx\Debugger\CommandManager.h" />
-    <ClInclude Include="DeadRisingEx\Debugger\TypeInfo.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Archive\ArchiveOverlay.h" />
     <ClInclude Include="DeadRisingEx.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Archive\cResourceImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Archive\sResourceImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Debug\sSnatcherToolImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Game\sMainImpl.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Game\sSnatcherPadImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Game\sSnatcherMainImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Game\Task\cGametaskTitleImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Graphics\rModelImpl.h" />
@@ -60,6 +65,14 @@
     <ClInclude Include="DeadRisingEx\MtFramework\Object\Model\sSMManagerImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Object\Npc\uNpcMarkerImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Object\uPhotoImpl.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\imconfig.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\imgui.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\ImGuiConsole.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\ImGuiRenderer.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\imgui_internal.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\imstb_textedit.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\imstb_truetype.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Rendering\renderdoc_app.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Rendering\sRenderImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Rendering\sShaderImpl.h" />
@@ -80,6 +93,9 @@
     <MASM Include="DeadRisingEx\MtFramework\Rendering\sRenderHooks.asm">
       <FileType>Document</FileType>
     </MASM>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="DeadRisingEx\MtFramework\Rendering\ImGui\LICENSE.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

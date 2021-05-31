@@ -3,7 +3,7 @@
 #include <MtFramework/Object/Model/sSMManager.h>
 #include <detours.h>
 
-BOOL *pGlobalLockStatus = GetModuleAddress<BOOL*>(0x141CF2A50);
+BOOL *pGlobalLockStatus = (BOOL*)GetModuleAddress(0x141CF2A50);
 
 void __stdcall Hook_sSMManager_AddModel(sSMManager *thisptr, uSnatcherModel *pModel);
 
@@ -31,7 +31,7 @@ void __stdcall Hook_sSMManager_AddModel(sSMManager *thisptr, uSnatcherModel *pMo
         (*pdwModelCount)++;
 
         if (*pdwModelCount == 2048 - 15)
-            wprintf(L"sSMManager->ModelCount hit threshold\n");
+            ImGuiConsole::Instance()->ConsolePrint(L"sSMManager->ModelCount hit threshold\n");
     }
     else
     {
@@ -39,7 +39,7 @@ void __stdcall Hook_sSMManager_AddModel(sSMManager *thisptr, uSnatcherModel *pMo
         // we can add the model to a list that will be destroyed on the next area load?
 
         // Model list is full, do nothing and report an error.
-        wprintf(L"sSMManager::AddModel(): model list is full!\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"sSMManager::AddModel(): model list is full!\n");
     }
 
     // Check if we need to release the list lock.

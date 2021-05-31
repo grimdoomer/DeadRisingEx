@@ -3,19 +3,23 @@
 */
 
 #include "sRenderImpl.h"
+#include <Misc/AsmHelpers.h>
+#include <MtFramework/Game/sMain.h>
 #include <MtFramework/Rendering/sRender.h>
 #include <MtFramework/Rendering/sPrim.h>
+#include <MtFramework/Rendering/sShader.h>
 #include <stdio.h>
 #include <string>
 #include <detours.h>
 #include "DeadRisingEx/Utilities/GuardedBuffer.h"
 #include "renderdoc_app.h"
 #include <assert.h>
+#include "DeadRisingEx/MtFramework/Rendering/ImGui/ImGuiRenderer.h"
 
 void *g_sRenderSingletonInst = (void*)0x141CF3268;
 
-void *sRender_DrawFrame_Hook_Start_address = GetModuleAddress<void*>(0x140662362);
-void *sRender_DrawFrame_Hook_End_address = GetModuleAddress<void*>(0x140663181);
+void *sRender_DrawFrame_Hook_Start_address = (void*)GetModuleAddress(0x140662362);
+void *sRender_DrawFrame_Hook_End_address = (void*)GetModuleAddress(0x140663181);
 
 bool g_CaptureFrame = false;
 bool g_CaptureStarted = false;
@@ -26,6 +30,9 @@ __int64 PrintVertexDeclarations(WCHAR **argv, int argc);
 __int64 CaptureFrame(WCHAR **argv, int argc);
 
 sRender * __stdcall Hook_sRender_ctor(sRender *thisptr, DWORD interval, DWORD dwUnused1, DWORD dwGraphicsMemSize, DWORD dwUnused2);
+void __stdcall Hook_sRender_Present(sRender *thisptr);
+void __stdcall Hook_sRender_SystemCleanup(sRender *thisptr);
+
 sPrim * __stdcall Hook_sPrim_ctor(sPrim *thisptr, DWORD entryCount);
 //void __cdecl Hook_sRender_DrawFrame(sRender *thisptr);
 sRender::Buffer * __stdcall Hook_sRender__Buffer_ctor(sRender::Buffer *thisptr, ID3D11DeviceContext *pDeviceContext, DWORD dwBufferSize, DWORD dwBufferType);
@@ -33,7 +40,7 @@ void * __stdcall Hook_sRender__Buffer_MapForWrite(sRender::Buffer *thisptr, DWOR
 
 // Table of commands for sRender objects.
 const int g_sRenderCommandsLength = 2;
-const CommandEntry g_sRenderCommands[g_sRenderCommandsLength] =
+const ConsoleCommandInfo g_sRenderCommands[g_sRenderCommandsLength] =
 {
     { L"list_vertex_decls", L"Lists all sRender vertex declarations", PrintVertexDeclarations },
     { L"capture_frame", L"If renderdoc is attached captures a frame from sRender only", CaptureFrame }
@@ -42,15 +49,21 @@ const CommandEntry g_sRenderCommands[g_sRenderCommandsLength] =
 void sRenderImpl::RegisterTypeInfo()
 {
     // Register commands:
-    RegisterCommands(g_sRenderCommands, g_sRenderCommandsLength);
+#if _DEBUG
+    ImGuiConsole::Instance()->RegisterCommands(g_sRenderCommands, g_sRenderCommandsLength);
+#endif
 }
 
 bool sRenderImpl::InstallHooks()
 {
+    // Hook sRender functions needed for the imgui renderer.
+    DetourAttach((void**)&sRender::_ctor, Hook_sRender_ctor);
+    DetourAttach((void**)&sRender::_Present, Hook_sRender_Present);
+    DetourAttach((void**)&sRender::_SystemCleanup, Hook_sRender_SystemCleanup);
+
     // Check if dynamic graphics memory is enabled and hook needed functions if so.
     if (ModConfig::Instance()->DynamicGraphicsMemory == true)
     {
-        DetourAttach((void**)&sRender::_ctor, Hook_sRender_ctor);
         DetourAttach((void**)&sPrim::_ctor, Hook_sPrim_ctor);
         DetourAttach((void**)&sRender::Buffer::_ctor, Hook_sRender__Buffer_ctor);
         DetourAttach((void**)&sRender::Buffer::_MapForWrite, Hook_sRender__Buffer_MapForWrite);
@@ -70,9 +83,9 @@ bool sRenderImpl::InstallHooks()
     //        // Call the GetAPI function to get renderdoc api info.
     //        int result = pGetAPI(eRENDERDOC_API_Version_1_4_1, (void**)&rdoc_api);
     //        if (result == 1)
-    //            wprintf(L"Renderdoc harness successfully initialized!\n");
+    //            ImGuiConsole::Instance()->ConsolePrint(L"Renderdoc harness successfully initialized!\n");
     //        else
-    //            wprintf(L"Failed to initialize renderdoc harness %d!\n", result);
+    //            ImGuiConsole::Instance()->ConsolePrint(L"Failed to initialize renderdoc harness %d!\n", result);
     //    }
     //}
 
@@ -93,7 +106,7 @@ __int64 PrintVertexDeclarations(WCHAR **argv, int argc)
     DWORD VertexDeclCount = *(DWORD*)(GetModulePointer<__int64>(g_sRenderSingletonInst) + 0x2F460);
     for (int i = 0; i < VertexDeclCount; i++)
     {
-        const char *psTypeName = (const char*)*(__int64*)GetModuleAddress<__int64*>((void*)0x141CF3738);
+        const char *psTypeName = (const char*)*(__int64*)(__int64*)GetModuleAddress((void*)0x141CF3738);
         MtDTI *pDTIInfo = ppDecl[i]->GetDTI();
 
         // Check the name of the DTI type is 'cTrans::VertexDecl'.
@@ -114,19 +127,19 @@ __int64 PrintVertexDeclarations(WCHAR **argv, int argc)
         }
 
         // Print the vertex declaration info.
-        wprintf(L"VertexDecl %d %p:\n", VertexDeclsProcessed++, ppDecl[i]);
-        wprintf(L"\tUnk1: %p\n", ppDecl[i]->Unk1);
-        wprintf(L"\tpElements: %p\n", ppDecl[i]->pElements);
-        wprintf(L"\tmElementNum: %d\n", ppDecl[i]->mElementNum);
-        wprintf(L"\tId: 0x%08x\n", ppDecl[i]->Id);
+        ImGuiConsole::Instance()->ConsolePrint(L"VertexDecl %d %p:\n", VertexDeclsProcessed++, ppDecl[i]);
+        ImGuiConsole::Instance()->ConsolePrint(L"\tUnk1: %p\n", ppDecl[i]->Unk1);
+        ImGuiConsole::Instance()->ConsolePrint(L"\tpElements: %p\n", ppDecl[i]->pElements);
+        ImGuiConsole::Instance()->ConsolePrint(L"\tmElementNum: %d\n", ppDecl[i]->mElementNum);
+        ImGuiConsole::Instance()->ConsolePrint(L"\tId: 0x%08x\n", ppDecl[i]->Id);
 
         // Loop and print each vertex element.
         for (int x = 0; x < ppDecl[i]->mElementNum; x++)
         {
-            wprintf(L"\t\tElem %d: Slot=%d Offset=%d Format=%S SemanticName=%S SemanticIndex=%d\n", x, ppDecl[i]->pElements[x].Slot, ppDecl[i]->pElements[x].Offset,
+            ImGuiConsole::Instance()->ConsolePrint(L"\t\tElem %d: Slot=%d Offset=%d Format=%S SemanticName=%S SemanticIndex=%d\n", x, ppDecl[i]->pElements[x].Slot, ppDecl[i]->pElements[x].Offset,
                 FormatName[ppDecl[i]->pElements[x].Format], SemanticNames[ppDecl[i]->pElements[x].SemanticNameIndex], ppDecl[i]->pElements[x].SemanticIndex);
         }
-        wprintf(L"\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"\n");
     }
 
     // Release the list lock.
@@ -143,8 +156,72 @@ __int64 CaptureFrame(WCHAR **argv, int argc)
 
 sRender * __stdcall Hook_sRender_ctor(sRender *thisptr, DWORD interval, DWORD dwUnused1, DWORD dwGraphicsMemSize, DWORD dwUnused2)
 {
-    // Adjust the graphics memory size to avoid crashes.
-    return sRender::_ctor(thisptr, interval, dwUnused1, 60 * 1024 * 1024, dwUnused2);
+    // If we are running in dynamic graphics mode adjust the graphics memory size to avoid crashes.
+    sRender *psRender = nullptr;
+    if (ModConfig::Instance()->DynamicGraphicsMemory == true)
+        psRender = sRender::_ctor(thisptr, interval, dwUnused1, 60 * 1024 * 1024, dwUnused2);
+    else
+        psRender = sRender::_ctor(thisptr, interval, dwUnused1, dwGraphicsMemSize, dwUnused2);
+
+    // Initialize the imgui renderer.
+    if (ImGuiRenderer::Instance()->Initialize() == false)
+    {
+        // Failed to initialize the imgui renderer.
+        DbgPrint("### ERROR: Failed to initialize ImGuiRenderer!\n");
+        DebugBreak();
+    }
+
+    // Call the first begin frame here.
+    //ImGuiRenderer::Instance()->BeginFrame();
+
+    // Return the sRender instnace.
+    return psRender;
+}
+
+void __stdcall Hook_sRender_Present(sRender *thisptr)
+{
+    // Get all the variables we need for this function.
+    BOOL VSync = *(BOOL*)((BYTE*)sRender::Instance() + 0x8404);
+    IDXGISwapChain *pSwapChain = *(IDXGISwapChain**)((BYTE*)sRender::Instance() + 0x8618);
+    bool *ShouldPostQuitMessage = (bool*)((BYTE*)sRender::Instance() + 0x8585);
+    ID3D11DeviceContext **MainThreadDeferredContexts = (ID3D11DeviceContext**)((BYTE*)sRender::Instance() + 0x85E0);
+
+    // Wait for the next frame to render.
+    thisptr->RenderFrame();
+
+    // Render the imgui frame.
+    ImGuiRenderer::Instance()->SystemUpdate();
+
+    // Present the final image.
+    pSwapChain->Present(VSync == FALSE ? 0 : 1, 0);
+
+    // Check if we should post a quit message (I don't think this is ever triggered).
+    if (*ShouldPostQuitMessage != false)
+    {
+        // Flag sMain to quit and post the quit message to the main thread.
+        *ShouldPostQuitMessage = false;
+        sMain::Instance()->ShouldQuit = TRUE;
+        SendMessageA(*sMain::GameWindowHandle, 2, NULL, NULL);
+    }
+
+    // Call some sShader function.
+    ThisPtrCall((void*)0x140693E30, sShader::Instance());
+
+    // Swap the deferred context pointers.
+    ID3D11DeviceContext *pOld = MainThreadDeferredContexts[1];
+    MainThreadDeferredContexts[1] = MainThreadDeferredContexts[0];
+    MainThreadDeferredContexts[0] = pOld;
+
+    ThisPtrCall((void*)0x140661B70, sRender::Instance());
+}
+
+void __stdcall Hook_sRender_SystemCleanup(sRender *thisptr)
+{
+    // Cleanup the imgui renderer.
+    ImGuiRenderer::Instance()->SystemCleanup();
+
+    // Call the trampoline.
+    sRender::_SystemCleanup(thisptr);
 }
 
 sPrim * __stdcall Hook_sPrim_ctor(sPrim *thisptr, DWORD entryCount)
@@ -173,7 +250,7 @@ sPrim * __stdcall Hook_sPrim_ctor(sPrim *thisptr, DWORD entryCount)
 //        {
 //            // Renderdoc is not currently loaded.
 //            g_CaptureFrame = false;
-//            wprintf(L"Renderdoc harness is not loaded!\n");
+//            ImGuiConsole::Instance()->ConsolePrint(L"Renderdoc harness is not loaded!\n");
 //        }
 //    }
 //
@@ -185,7 +262,7 @@ sPrim * __stdcall Hook_sPrim_ctor(sPrim *thisptr, DWORD entryCount)
 //    {
 //        // End the frame capture.
 //        rdoc_api->EndFrameCapture(NULL, NULL);
-//        wprintf(L"Frame captured\n");
+//        ImGuiConsole::Instance()->ConsolePrint(L"Frame captured\n");
 //
 //        // Reset the capture frame flag.
 //        g_CaptureFrame = false;
@@ -212,7 +289,7 @@ sRender::Buffer * __stdcall Hook_sRender__Buffer_ctor(sRender::Buffer *thisptr, 
     if (pDeviceContext == nullptr)
     {
         // Fatal error: device context is null.
-        wprintf(L"FATAL: sRender::Buffer::Buffer() was passed a null d3d device context!\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"FATAL: sRender::Buffer::Buffer() was passed a null d3d device context!\n");
         assert(pDeviceContext);
     }
 
@@ -231,7 +308,7 @@ sRender::Buffer * __stdcall Hook_sRender__Buffer_ctor(sRender::Buffer *thisptr, 
     if (hr != S_OK)
     {
         // Failed to create buffer.
-        wprintf(L"FATAL: sRender::Buffer::Buffer() failed to create ID3D11Buffer hr=0x%08x!\n", hr);
+        ImGuiConsole::Instance()->ConsolePrint(L"FATAL: sRender::Buffer::Buffer() failed to create ID3D11Buffer hr=0x%08x!\n", hr);
         assert(hr == S_OK);
     }
 
@@ -249,7 +326,7 @@ void * __stdcall Hook_sRender__Buffer_MapForWrite(sRender::Buffer *thisptr, DWOR
 
     // Calculate the new buffer size needed and round up to the nearest megabyte.
     DWORD newBufferSize = ((thisptr->CurrentPosition + dwSize) + 0x100000) & ~(0x100000 - 1);
-    wprintf(L"WARNING: sRender::Buffer out of memory, resizing [%s] buffer %.2FMB -> %.2fMB\n", (thisptr->BufferType == BUFFER_TYPE_VERTEX ? L"Vertex" : L"Index"),
+    ImGuiConsole::Instance()->ConsolePrint(L"WARNING: sRender::Buffer out of memory, resizing [%s] buffer %.2FMB -> %.2fMB\n", (thisptr->BufferType == BUFFER_TYPE_VERTEX ? L"Vertex" : L"Index"),
         (float)thisptr->mMaxSize / (float)(1024 * 1024), (float)newBufferSize / (float)(1024 * 1024));
 
     // Setup the buffer descriptor for the new buffer.
@@ -268,7 +345,7 @@ void * __stdcall Hook_sRender__Buffer_MapForWrite(sRender::Buffer *thisptr, DWOR
     if (hr != S_OK)
     {
         // Failed to create buffer.
-        wprintf(L"FATAL: sRender::Buffer::MapForWrite() failed to create new ID3D11Buffer hr=0x%08x!\n", hr);
+        ImGuiConsole::Instance()->ConsolePrint(L"FATAL: sRender::Buffer::MapForWrite() failed to create new ID3D11Buffer hr=0x%08x!\n", hr);
         assert(hr == S_OK);
     }
 
@@ -300,7 +377,7 @@ void * __stdcall Hook_sRender__Buffer_MapForWrite(sRender::Buffer *thisptr, DWOR
     if (hr != S_OK || mappedResource.pData == nullptr)
     {
         // Failed to map the buffer for writing.
-        wprintf(L"FATAL: sRender::Buffer::MapForWrite() failed to map buffer for writing!\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"FATAL: sRender::Buffer::MapForWrite() failed to map buffer for writing!\n");
         assert(mappedResource.pData);
     }
 
@@ -330,7 +407,7 @@ __int64 sRender_CaptureFrame_Start()
         {
             // Renderdoc is not currently loaded.
             g_CaptureFrame = false;
-            wprintf(L"Renderdoc harness is not loaded!\n");
+            ImGuiConsole::Instance()->ConsolePrint(L"Renderdoc harness is not loaded!\n");
         }
     }
 
@@ -345,7 +422,7 @@ __int64 sRender_CaptureFrame_End()
     {
         // End the frame capture.
         rdoc_api->EndFrameCapture(NULL, NULL);
-        wprintf(L"Frame captured\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"Frame captured\n");
 
         // Reset the capture frame flag.
         g_CaptureFrame = false;

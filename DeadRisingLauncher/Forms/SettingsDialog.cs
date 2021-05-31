@@ -61,7 +61,6 @@ namespace DeadRisingLauncher
             }
 
             // Setup the game settings tab.
-            this.chkEnableDebugger.Checked = this.configData.EnableConsoleWindow;
             this.chkDebugLog.Checked = this.configData.DebugLog;
             this.chkRecursiveGrenade.Checked = this.configData.RecursiveGrenade;
 
@@ -127,7 +126,6 @@ namespace DeadRisingLauncher
             this.configData.ModFileLoadOrder = modFiles.ToArray();
 
             // Update game settings.
-            this.configData.EnableConsoleWindow = this.chkEnableDebugger.Checked;
             this.configData.DebugLog = this.chkDebugLog.Checked;
             this.configData.RecursiveGrenade = this.chkRecursiveGrenade.Checked;
 

@@ -29,23 +29,23 @@ struct MtDataReader
     */
 
     inline static MtDataReader * (__stdcall *_ctor)(MtDataReader *thisptr) =
-        GetModuleAddress<MtDataReader*(__stdcall*)(MtDataReader*)>(0x14062C1F0);
+        (MtDataReader*(__stdcall*)(MtDataReader*))GetModuleAddress(0x14062C1F0);
 
     inline static MtDataReader * (__stdcall *_dtor)(MtDataReader *thisptr, bool bFreeMemory) =
-        GetModuleAddress<MtDataReader*(__stdcall*)(MtDataReader*, bool)>(0x14062C260);
+        (MtDataReader*(__stdcall*)(MtDataReader*, bool))GetModuleAddress(0x14062C260);
 
     inline static WORD(__stdcall *_ReadUInt16)(MtDataReader *thisptr) =
-        GetModuleAddress<WORD(__stdcall*)(MtDataReader*)>(0x14062C4A0);
+        (WORD(__stdcall*)(MtDataReader*))GetModuleAddress(0x14062C4A0);
 
     inline static DWORD(__stdcall *_ReadUInt32)(MtDataReader *thisptr) =
-        GetModuleAddress<DWORD(__stdcall*)(MtDataReader*)>(0x14062C5F0);
+        (DWORD(__stdcall*)(MtDataReader*))GetModuleAddress(0x14062C5F0);
 
     inline static ULONGLONG(__stdcall *_ReadUInt64)(MtDataReader *thisptr) =
-        GetModuleAddress<ULONGLONG(__stdcall*)(MtDataReader*)>(0x14062C630);
+        (ULONGLONG(__stdcall*)(MtDataReader*))GetModuleAddress(0x14062C630);
 
     inline static float(__stdcall *_ReadFloat)(MtDataReader *thisptr) =
-        GetModuleAddress<float(__stdcall*)(MtDataReader*)>(0x14062C400);
+        (float(__stdcall*)(MtDataReader*))GetModuleAddress(0x14062C400);
 
     inline static double(__stdcall *_ReadDouble)(MtDataReader *thisptr) =
-        GetModuleAddress<double(__stdcall*)(MtDataReader*)>(0x14062C450);
+        (double(__stdcall*)(MtDataReader*))GetModuleAddress(0x14062C450);
 };

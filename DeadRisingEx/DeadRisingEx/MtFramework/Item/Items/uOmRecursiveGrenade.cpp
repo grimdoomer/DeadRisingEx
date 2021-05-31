@@ -4,11 +4,11 @@
 #include "DeadRisingEx/MtFramework/Item/uItemImpl.h"
 #include "DeadRisingEx/MtFramework/Player/uPlayerImpl.h"
 
-void **g_sMainInstance = GetModuleAddress<void**>(0x141CF2AA0);
+void **g_sMainInstance = (void**)GetModuleAddress(0x141CF2AA0);
 
-float(__stdcall *GetRandomFloat)(void *pThing) = GetModuleAddress<float(__stdcall*)(void*)>(0x14000ADA0);
+float(__stdcall *GetRandomFloat)(void *pThing) = (float(__stdcall*)(void*))GetModuleAddress(0x14000ADA0);
 
-void(__stdcall *CalculateMatrix)(void *pMatrix, void *pVector) = GetModuleAddress<void(__stdcall*)(void*, void*)>(0x14061B880);
+void(__stdcall *CalculateMatrix)(void *pMatrix, void *pVector) = (void(__stdcall*)(void*, void*))GetModuleAddress(0x14061B880);
 
 float velocity = 3.0f;
 Vector3 UnkVec = { 0.0f, 0.0f, 0.0f };
@@ -19,7 +19,7 @@ void uOmRecursiveGrenade::SpawnGrenades()
 
     // Pick a random number of grenades to spawn.
     int grenadeCount = (int)(GetRandomFloat(pThing) * 15.0f) % 5;
-    //wprintf(L"Spawning %d grenades\n", grenadeCount);
+    //ImGuiConsole::Instance()->ConsolePrint(L"Spawning %d grenades\n", grenadeCount);
 
     // Loop and spawn grenades.
     for (int i = 0; i < grenadeCount; i++)
@@ -32,21 +32,21 @@ void uOmRecursiveGrenade::SpawnGrenades()
         position.x += GetRandomFloat(pThing) * 350.0f * (round(GetRandomFloat(pThing)) == 1 ? 1.0f : -1.0f);
         position.y += 50.0f;
         position.z += GetRandomFloat(pThing) * 350.0f * (round(GetRandomFloat(pThing)) == 1 ? 1.0f : -1.0f);
-        //wprintf(L"Grenade #%d: %f %f %f\n", i, position.x, position.y, position.z);
+        //ImGuiConsole::Instance()->ConsolePrint(L"Grenade #%d: %f %f %f\n", i, position.x, position.y, position.z);
 
         // Create a new grenade object.
         uOmRecursiveGrenade *pGrenade = uOmRecursiveGrenade::CreateInstance();
         if (pGrenade == nullptr)
         {
             // Failed to spawn the grenage.
-            wprintf(L"Failed to spawn new grenade!\n");
+            ImGuiConsole::Instance()->ConsolePrint(L"Failed to spawn new grenade!\n");
             return;
         }
 
         if (pGrenade->SetupItemProperties() == false)
         {
             // Failed to setup properties for the item.
-            wprintf(L"Failed to setup item properties\n");
+            ImGuiConsole::Instance()->ConsolePrint(L"Failed to setup item properties\n");
             return;
         }
 
@@ -73,7 +73,7 @@ void uOmRecursiveGrenade::SpawnGrenades()
         // Call some sUnit function to add the item to a list?
         if (sUnit_AddObject(*g_sUnitInstance, 9, pGrenade) == false)
         {
-            wprintf(L"sUnit function failed!\n");
+            ImGuiConsole::Instance()->ConsolePrint(L"sUnit function failed!\n");
             return;
         }
 
@@ -85,7 +85,7 @@ void uOmRecursiveGrenade::SpawnGrenades()
         //if (pGrenade == nullptr)
         //{
         //    // Failed to spawn the grenage.
-        //    wprintf(L"Failed to spawn new grenade!\n");
+        //    ImGuiConsole::Instance()->ConsolePrint(L"Failed to spawn new grenade!\n");
         //    return;
         //}
     }

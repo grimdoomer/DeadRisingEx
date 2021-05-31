@@ -13,7 +13,7 @@ __int64 PrintShaderTechniques(WCHAR **argv, int argc);
 
 // Table of commands for sShader objects.
 const int g_sShaderCommandsLength = 2;
-const CommandEntry g_sShaderCommands[g_sShaderCommandsLength] =
+const ConsoleCommandInfo g_sShaderCommands[g_sShaderCommandsLength] =
 {
     { L"sShader.PrintShaderParameters", L"Lists all sShader parameter descriptors", PrintShaderParameters },
     { L"sShader.PrintShaderTechniques", L"Lists all sShader techniques", PrintShaderTechniques }
@@ -22,7 +22,9 @@ const CommandEntry g_sShaderCommands[g_sShaderCommandsLength] =
 void sShaderImpl::RegisterTypeInfo()
 {
     // Register commands.
-    RegisterCommands(g_sShaderCommands, g_sShaderCommandsLength);
+#if _DEBUG
+    ImGuiConsole::Instance()->RegisterCommands(g_sShaderCommands, g_sShaderCommandsLength);
+#endif
 }
 
 __int64 PrintShaderParameters(WCHAR **argv, int argc)
@@ -38,25 +40,25 @@ __int64 PrintShaderParameters(WCHAR **argv, int argc)
     for (int i = 0; i < ParameterCount; i++)
     {
         //// Print the parameter description.
-        //wprintf(L"Parameter %d\n", i);
-        //wprintf(L"\tName: %S\n", pParameter[i].mName);
-        //wprintf(L"\tID: 0x%08x\tType: %d\tRegCount: %d\tIndex: %d\n", pParameter[i].mID, pParameter[i].Type, pParameter[i].RegCount, pParameter[i].SomethingIndex);
+        //ImGuiConsole::Instance()->ConsolePrint(L"Parameter %d\n", i);
+        //ImGuiConsole::Instance()->ConsolePrint(L"\tName: %S\n", pParameter[i].mName);
+        //ImGuiConsole::Instance()->ConsolePrint(L"\tID: 0x%08x\tType: %d\tRegCount: %d\tIndex: %d\n", pParameter[i].mID, pParameter[i].Type, pParameter[i].RegCount, pParameter[i].SomethingIndex);
         //
         //// Check the value type and print accordingly.
         //switch (pParameter[i].Type)
         //{
-        //case 0: wprintf(L"\tValue: %d\n", pParameter[i].SomethingIndex); break;
-        //case 1: wprintf(L"\tValue: %s\n", pParameter[i].IntValue == 0 ? L"False" : L"True"); break;
-        //case 2: wprintf(L"\tValue: %d\n", pParameter[i].IntValue); break;
-        //case 3: wprintf(L"\tValue: %f\n", (float)pParameter[i].IntValue); break;
-        //case 4: wprintf(L"\tValue: %p\n", pParameter[i].pValue); break;
+        //case 0: ImGuiConsole::Instance()->ConsolePrint(L"\tValue: %d\n", pParameter[i].SomethingIndex); break;
+        //case 1: ImGuiConsole::Instance()->ConsolePrint(L"\tValue: %s\n", pParameter[i].IntValue == 0 ? L"False" : L"True"); break;
+        //case 2: ImGuiConsole::Instance()->ConsolePrint(L"\tValue: %d\n", pParameter[i].IntValue); break;
+        //case 3: ImGuiConsole::Instance()->ConsolePrint(L"\tValue: %f\n", (float)pParameter[i].IntValue); break;
+        //case 4: ImGuiConsole::Instance()->ConsolePrint(L"\tValue: %p\n", pParameter[i].pValue); break;
         //}
 
-        //wprintf(L"\n");
+        //ImGuiConsole::Instance()->ConsolePrint(L"\n");
         if (pParameter[i].mName == nullptr)
-            wprintf(L"ShaderParameter_%08x = 0x%08x,\n", pParameter[i].mID, pParameter[i].mID);
+            ImGuiConsole::Instance()->ConsolePrint(L"ShaderParameter_%08x = 0x%08x,\n", pParameter[i].mID, pParameter[i].mID);
         else
-            wprintf(L"%S = 0x%08x,\n", pParameter[i].mName, pParameter[i].mID);
+            ImGuiConsole::Instance()->ConsolePrint(L"%S = 0x%08x,\n", pParameter[i].mName, pParameter[i].mID);
     }
 
     // Release the list lock.
@@ -77,12 +79,12 @@ __int64 PrintShaderTechniques(WCHAR **argv, int argc)
     for (int i = 0; i < TechniqueCount; i++)
     {
         // Print the technique description.
-        //wprintf(L"Technique %d:\tID=0x%08x Name=%S\n", i, pTechniques[i].mID, pTechniques[i].mName);
+        //ImGuiConsole::Instance()->ConsolePrint(L"Technique %d:\tID=0x%08x Name=%S\n", i, pTechniques[i].mID, pTechniques[i].mName);
 
         if (pTechniques[i].mName == nullptr)
-            wprintf(L"ShaderTechnique_%08x = 0x%08x,\n", pTechniques[i].mID, pTechniques[i].mID);
+            ImGuiConsole::Instance()->ConsolePrint(L"ShaderTechnique_%08x = 0x%08x,\n", pTechniques[i].mID, pTechniques[i].mID);
         else
-            wprintf(L"%S = 0x%08x,\n", pTechniques[i].mName, pTechniques[i].mID);
+            ImGuiConsole::Instance()->ConsolePrint(L"%S = 0x%08x,\n", pTechniques[i].mName, pTechniques[i].mID);
     }
 
     // Release the list lock.

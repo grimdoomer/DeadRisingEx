@@ -2,13 +2,14 @@
 #pragma once
 #include "MtFramework/MtObject.h"
 #include "sMain.h"
+#include "sSnatcherTool.h"
 
 // sizeof = 0x21110
 struct sSnatcherMain : public sMain
 {
     /* 0x20248 */
     /* 0x20250 */ void  *mpRender;
-    /* 0x20258 */ void  *mpSnatcherTool;
+    /* 0x20258 */ sSnatcherTool *mpSnatcherTool;
     /* 0x20260 */ void  *mpUnit;
     /* 0x20268 */ void  *mpResource;
     /* 0x20270 */ void  *mpCamera;
@@ -48,11 +49,13 @@ struct sSnatcherMain : public sMain
 
     /* 0x20398 */ void  *mpModelLayout;
     /* 0x203A0 */ void  *mpEffectVFR;
+    /* 0x203AC */ //DWORD camera/ui flags 0x8000000 = don't draw watch ui?
+    /* 0x203B0 */ // DWORD state flags
 
     /* 0x20DC0 */ void  *pGametaskMain;
 
     IMPLEMENT_SINGLETON(sSnatcherMain, 0x141944DD8);
 
     inline static void(__stdcall *_InitializeAllocators)(sSnatcherMain *thisptr) =
-        GetModuleAddress<void(__stdcall*)(sSnatcherMain*)>(0x1400AB750);
+        (void(__stdcall*)(sSnatcherMain*))GetModuleAddress(0x1400AB750);
 };

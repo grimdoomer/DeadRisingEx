@@ -4,6 +4,11 @@
 #include "MtFramework/System/cSystem.h"
 #include <dinput.h>
 
+enum InputButtonId
+{
+    CheckWatch = 19,
+};
+
 // sizeof = 0x1BCD8
 struct sPad : public cSystem
 {
@@ -122,17 +127,49 @@ struct sPad : public cSystem
     /* 0x19E60 */ // some kind of buffer 0x1010 in size
     /* 0x1AE70 */ // 0x400 bytes big
     /* 0x1B270 */ // BOOL
-    /* 0x1B271 */ BOOL      mXInput;
+    /* 0x1B271 */ bool      mXInput;
 
     /* 0x1B278 */ IDirectInputA         *pInputInterface;
-    /* 0x1B280 */ // 0x200 bytes
+    /* 0x1B280 */ // void *[64]
     /* 0x1B480 */ IDirectInputDeviceA   *pKeyboardDevice;
     /* 0x1B488 */ IDirectInputDeviceA   *pMouseDevice;
 
-    /* 0x1B4D8 */ // 0x400 bytes
-    /* 0x1B8D8 */ // 0x400 bytes
+    /* 0x1B4A0 */ DIMOUSESTATE          MouseState;
+
+    /* 0x1B4D8 */ //BYTE KeyboardState 0x400 bytes
+    /* 0x1B8D8 */ //BYTE previous keyboard state? 0x400 bytes
 
     IMPLEMENT_MYDTI(sPad, 0x141CF3198, 0x1400AF010, 0x140656BE0);
 
     IMPLEMENT_SINGLETON(sPad, 0x141CF3190);
+
+    inline static void(__stdcall *_SystemUpdate)(sPad *thisptr) =
+        (void(__stdcall*)(sPad*))GetModuleAddress(0x140655C50);
+
+    inline static DWORD(__stdcall *_GetLastInputSocketNumber)(sPad *thisptr) =
+        (DWORD(__stdcall*)(sPad*))GetModuleAddress(0x140652610);
+
+    inline static bool(__stdcall *_GetButtonPressed)(InputButtonId buttonId) =
+        (bool(__stdcall*)(InputButtonId))GetModuleAddress(0x1400291A0);
+
+    /*
+        Description: Gets the socket number for the last device to register input
+
+        Returns: 0 if the keyboard was the last device, or the socket number of the game pad that last registered input
+    */
+    DWORD GetLastInputSocketNumber()
+    {
+        return _GetLastInputSocketNumber(this);
+    }
+
+    /*
+        Description: Returns a value indicating if the specified button was pressed this frame
+
+        Parameters:
+            buttonId: Button id to query
+    */
+    static bool GetButtonPressed(InputButtonId buttonId)
+    {
+        return _GetButtonPressed(buttonId);
+    }
 };

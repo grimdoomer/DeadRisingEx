@@ -19,7 +19,7 @@ __int64 LoadArchive(WCHAR **argv, int argc);
 
 // Table of commands for sResource objects.
 const int g_sResourceCommandsLength = 3;
-const CommandEntry g_sResourceCommands[g_sResourceCommandsLength] =
+const ConsoleCommandInfo g_sResourceCommands[g_sResourceCommandsLength] =
 {
     { L"list_resources", L"Lists all loaded resources", PrintLoadedResources },
     { L"GetResourceByIndex", L"Gets the resource at the specified index", GetResourceByIndex },
@@ -30,10 +30,10 @@ const CommandEntry g_sResourceCommands[g_sResourceCommandsLength] =
 void sResourceImpl::InitializeTypeInfo()
 {
     // Register types:
-    RegisterTypeInfo(&cResourceTypeInfo);
+    //RegisterTypeInfo(&cResourceTypeInfo);
 
     // Register commands:
-    RegisterCommands(g_sResourceCommands, g_sResourceCommandsLength);
+    ImGuiConsole::Instance()->RegisterCommands(g_sResourceCommands, g_sResourceCommandsLength);
 }
 
 __int64 PrintLoadedResources(WCHAR **argv, int argc)
@@ -81,18 +81,18 @@ __int64 PrintLoadedResources(WCHAR **argv, int argc)
             if (bFilterFront == true && sFileName.find(sFilter, 0) == 0)
             {
                 // Print the name of the object.
-                wprintf(L"Resource %d: %S\n", i, p_sResource->pResourceEntries[i]->mPath);
+                ImGuiConsole::Instance()->ConsolePrint(L"Resource %d: %S\n", i, p_sResource->pResourceEntries[i]->mPath);
             }
             else if (bFilterFront == false && sFileName.rfind(sFilter) == sFileName.size() - sFilter.size())
             {
                 // Print the name of the object.
-                wprintf(L"Resource %d: %S\n", i, p_sResource->pResourceEntries[i]->mPath);
+                ImGuiConsole::Instance()->ConsolePrint(L"Resource %d: %S\n", i, p_sResource->pResourceEntries[i]->mPath);
             }
         }
         else
         {
             // Print the name of the object.
-            wprintf(L"Resource %d: %S\n", i, p_sResource->pResourceEntries[i]->mPath);
+            ImGuiConsole::Instance()->ConsolePrint(L"Resource %d: %S\n", i, p_sResource->pResourceEntries[i]->mPath);
         }
     }
 
@@ -110,7 +110,7 @@ __int64 GetResourceByIndex(WCHAR **argv, int argc)
     if (argc != 1)
     {
         // Invalid command syntax.
-        wprintf(L"Invalid command syntax\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"Invalid command syntax\n");
         return 0;
     }
 
@@ -119,7 +119,7 @@ __int64 GetResourceByIndex(WCHAR **argv, int argc)
     if (index < 0 || index >= 8192)
     {
         // Index is out of range.
-        wprintf(L"Index is out of range, must be [0, 8191]\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"Index is out of range, must be [0, 8191]\n");
         return 0;
     }
 
@@ -153,7 +153,7 @@ __int64 GetResourceByIndex(WCHAR **argv, int argc)
 //    if (argc != 1)
 //    {
 //        // Invalid command syntax.
-//        wprintf(L"Invalid command syntax\n");
+//        ImGuiConsole::Instance()->ConsolePrint(L"Invalid command syntax\n");
 //        return 0;
 //    }
 //
@@ -162,7 +162,7 @@ __int64 GetResourceByIndex(WCHAR **argv, int argc)
 //
 //    // Calculate the resource id.
 //    ULONGLONG resourceId = sResource::Instance()->CalculateResourceId(*g_rTextureDTI, (char*)sFileName.c_str());
-//    wprintf(L"0x%016llx\n", resourceId);
+//    ImGuiConsole::Instance()->ConsolePrint(L"0x%016llx\n", resourceId);
 //
 //    return 0;
 //}
@@ -173,7 +173,7 @@ __int64 LoadArchive(WCHAR **argv, int argc)
     if (argc != 1)
     {
         // Invalid command syntax.
-        wprintf(L"Invalid command syntax\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"Invalid command syntax\n");
         return 0;
     }
 
@@ -188,7 +188,7 @@ __int64 LoadArchive(WCHAR **argv, int argc)
     if (pResource == nullptr)
     {
         // Failed to force load resource.
-        wprintf(L"Failed to load archive '%S'!\n", sFileName.c_str());
+        ImGuiConsole::Instance()->ConsolePrint(L"Failed to load archive '%S'!\n", sFileName.c_str());
         return 0;
     }
 

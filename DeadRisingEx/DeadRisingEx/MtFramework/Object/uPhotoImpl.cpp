@@ -8,7 +8,7 @@ bool uPhotoImpl::InstallHooks()
     // it is a use after free and causes crashes (or memory corruption). Because the uMotionBlurFilter
     // instance is added to a move line in sUnit it will get cleaned up accordingly there.
     BYTE Nops[7] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
-    PatchBytes(GetModuleAddress<void*>(0x140125852), Nops, sizeof(Nops));
+    PatchBytes((void*)GetModuleAddress(0x140125852), Nops, sizeof(Nops));
 
     return true;
 }

@@ -165,6 +165,21 @@
     <ClInclude Include="MtFramework\Graphics\Sprites\cSprAnm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MtFramework\Utils\VTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Game\Player\uCockpit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Game\sSnatcherPad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Debug\sTool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Game\sSnatcherTool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MtFramework\Utils\Utilities.cpp">

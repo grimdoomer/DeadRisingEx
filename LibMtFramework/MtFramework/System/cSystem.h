@@ -18,13 +18,13 @@ struct cSystem : public MtObject
     */
 
     inline static cSystem * (__stdcall *_ctor)(cSystem *thisptr) =
-        GetModuleAddress<cSystem*(__stdcall*)(cSystem*)>(0x140643CE0);
+        (cSystem*(__stdcall*)(cSystem*))GetModuleAddress(0x140643CE0);
 
     inline static cSystem * (__stdcall *_dtor)(cSystem *thisptr, bool bFreeMemory) =
-        GetModuleAddress<cSystem*(__stdcall*)(cSystem*, bool)>(0x140643D40);
+        (cSystem*(__stdcall*)(cSystem*, bool))GetModuleAddress(0x140643D40);
 
     inline static MtDTI * (__stdcall *_GetDTI)(cSystem *thisptr) =
-        GetModuleAddress<MtDTI*(__stdcall*)(cSystem*)>(0x140643DA0);
+        (MtDTI*(__stdcall*)(cSystem*))GetModuleAddress(0x140643DA0);
 
     IMPLEMENT_MYDTI(cSystem, 0x141CF2A58, 0x1400AF010, 0x140643DB0);
 
@@ -35,7 +35,7 @@ struct cSystem : public MtObject
 
     ~cSystem()
     {
-        ThisPtrCallNoFixup<void, bool>(this->vtable[0], this, false);
+        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
     }
 
     /*
@@ -43,7 +43,7 @@ struct cSystem : public MtObject
     */
     void SystemCleanup()
     {
-        ThisPtrCallNoFixup<void>(this->vtable[5], this);
+        (void)ThisPtrCallNoFixup(this->vtable[5], this);
     }
 
     /*
@@ -51,7 +51,7 @@ struct cSystem : public MtObject
     */
     void SystemUpdate()
     {
-        ThisPtrCallNoFixup<void>(this->vtable[6], this);
+        (void)ThisPtrCallNoFixup(this->vtable[6], this);
     }
 
     /*
@@ -62,7 +62,7 @@ struct cSystem : public MtObject
     */
     void BuildSystemMenu(MtPropertyList *pPropertyList)
     {
-        ThisPtrCallNoFixup<void, MtPropertyList*>(this->vtable[7], this, pPropertyList);
+        (void)ThisPtrCallNoFixup(this->vtable[7], this, pPropertyList);
     }
 };
 static_assert(sizeof(cSystem) == 0x38, "cSystem incorrect struct size");

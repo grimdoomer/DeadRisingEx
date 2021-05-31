@@ -24,7 +24,7 @@ DWORD uOm08_OnItemDestroyed_Hook(uOm08 *thisptr, DWORD unk)
     if (pArchive == nullptr)
     {
         // Failed to force load resource.
-        wprintf(L"Failed to force load grenade archive!\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"Failed to force load grenade archive!\n");
         return 0;
     }
 
@@ -37,14 +37,14 @@ DWORD uOm08_OnItemDestroyed_Hook(uOm08 *thisptr, DWORD unk)
     if (pGrenade == nullptr)
     {
         // Failed to spawn the grenage.
-        wprintf(L"Failed to spawn new grenade!\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"Failed to spawn new grenade!\n");
         return 0;
     }
 
     if (pGrenade->SetupItemProperties() == false)
     {
         // Failed to setup properties for the item.
-        wprintf(L"Failed to setup item properties\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"Failed to setup item properties\n");
         return 0;
     }
 
@@ -54,7 +54,7 @@ DWORD uOm08_OnItemDestroyed_Hook(uOm08 *thisptr, DWORD unk)
     // Call some sUnit function to add the item to a list?
     if (sUnit_AddObject(*g_sUnitInstance, 9, pGrenade) == false)
     {
-        wprintf(L"sUnit function failed!\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"sUnit function failed!\n");
         return 0;
     }
 

@@ -47,10 +47,10 @@ struct sResource
         /* 0x74 */ DWORD                    DecompressedSize;   // Basically the length of the stream (in a decompressed state)
 
         inline static DecompressStream * (__stdcall *_ctor)(DecompressStream *thisptr, DecompressStreamContext *context, DecodeFileRequest *pDecodeReq) =
-            GetModuleAddress<DecompressStream*(__stdcall*)(DecompressStream*, DecompressStreamContext*, DecodeFileRequest*)>(0x14063AB60);
+            (DecompressStream*(__stdcall*)(DecompressStream*, DecompressStreamContext*, DecodeFileRequest*))GetModuleAddress(0x14063AB60);
 
         inline static DecompressStream * (__stdcall *_dtor)(DecompressStream *thisptr, bool bFreeMemory) =
-            GetModuleAddress<DecompressStream*(__stdcall*)(DecompressStream*, bool)>(0x14063B2C0);
+            (DecompressStream*(__stdcall*)(DecompressStream*, bool))GetModuleAddress(0x14063B2C0);
 
         /*
             Parameters:
@@ -64,7 +64,7 @@ struct sResource
 
         ~DecompressStream()
         {
-            ThisPtrCallNoFixup<void, bool>(this->vtable[0], this, false);
+            (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
         }
     };
     static_assert(sizeof(DecompressStream) == 0x78, "sResource::DecompressStream incorrect struct size");
@@ -126,28 +126,28 @@ struct sResource
 
 
     inline static sResource * (__stdcall *_ctor)(sResource *thisptr) = 
-        GetModuleAddress<sResource*(__stdcall*)(sResource*)>(0x14063AC10);
+        (sResource*(__stdcall*)(sResource*))GetModuleAddress(0x14063AC10);
 
     inline static ULONGLONG(__stdcall *_CalculateResourceId)(sResource *thisptr, MtDTI *pObjectType, char *psFileName) =
-        GetModuleAddress<ULONGLONG(__stdcall*)(sResource*, MtDTI*, char*)>(0x14063DCB0);
+        (ULONGLONG(__stdcall*)(sResource*, MtDTI*, char*))GetModuleAddress(0x14063DCB0);
 
     inline static void(__stdcall *_EmplaceResource)(sResource *thisptr, cResource *pResource, int bitIndex) =
-        GetModuleAddress<void(__stdcall*)(sResource*, cResource*, int)>(0x14063E240);
+        (void(__stdcall*)(sResource*, cResource*, int))GetModuleAddress(0x14063E240);
 
     inline static cResource * (__stdcall *_FindResourceById)(sResource *thisptr, ULONGLONG resourceId) =
-        GetModuleAddress<cResource*(__stdcall*)(sResource*, ULONGLONG)>(0x14063BDB0);
+        (cResource*(__stdcall*)(sResource*, ULONGLONG))GetModuleAddress(0x14063BDB0);
 
     inline static cResource * (__stdcall *_LoadResourceFromArchive)(sResource *thisptr, rArchive::DecompressStream *pStream, MtDTI *pDTI, rArchiveFileEntry *pFileEntry) =
-        GetModuleAddress<cResource*(__stdcall*)(sResource*, rArchive::DecompressStream*, MtDTI*, rArchiveFileEntry*)>(0x14063B9E0);
+        (cResource*(__stdcall*)(sResource*, rArchive::DecompressStream*, MtDTI*, rArchiveFileEntry*))GetModuleAddress(0x14063B9E0);
 
     inline static void * (__stdcall *_LoadGameResource)(sResource *thisptr, MtDTI *pObjectType, const char *psFileName, DWORD flags) =
-        GetModuleAddress<void*(__stdcall*)(sResource*, MtDTI*, const char*, DWORD)>(0x14063BC60);
+        (void*(__stdcall*)(sResource*, MtDTI*, const char*, DWORD))GetModuleAddress(0x14063BC60);
 
     inline static cResource * (__stdcall * _LoadGameResourceSynchronous)(sResource *thisptr, MtDTI *pObjectType, char *psFileName, ULONGLONG resourceId, DWORD flags) =
-        GetModuleAddress<cResource*(__stdcall*)(sResource*, MtDTI*, char*, ULONGLONG, DWORD)>(0x14063D520);
+        (cResource*(__stdcall*)(sResource*, MtDTI*, char*, ULONGLONG, DWORD))GetModuleAddress(0x14063D520);
 
     inline static void(__stdcall *_ResourceDecoderProc)(int threadIndex) = 
-        GetModuleAddress<void(__stdcall*)(int)>(0x14063C9B0);
+        (void(__stdcall*)(int))GetModuleAddress(0x14063C9B0);
 
     IMPLEMENT_SINGLETON(sResource, 0x141CF27F8);
 

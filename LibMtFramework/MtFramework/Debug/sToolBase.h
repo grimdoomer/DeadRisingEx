@@ -7,10 +7,20 @@
 // sizeof = 0x2270
 struct sToolBase : public cSystem
 {
+    // sizeof = 0x220
+    struct PageInfo
+    {
+        /* 0x08 */ const char   *pPageName;         // Display name of the page
+
+        /* 0x210 */ DWORD       ElementIndex;       // Index of the element if part of an array, used to display the index in the crumb trail
+
+        /* 0x218 */ // DWORD count for something, draws 2 strings per iteration
+    };
+
     /* 0x38 */ MtPropertyList   DebugOptionList;
-    /* 0x48 */ DWORD            Unk1;       // Number of options?
+    /* 0x48 */ DWORD            Unk1;           // Page count
     /* 0x4C */ DWORD            Unk4;
-    /* 0x50 */ BYTE             Unk2[8704];
+    /* 0x50 */ BYTE             Unk2[8704];     // Array of 0x10 PageInfo's
     /* 0x2250 */ DWORD          Unk3;
     /* 0x2254 */ BOOL           ShowDebugMenu;
     /* 0x2255 */ BYTE           mSysMenuDisp;

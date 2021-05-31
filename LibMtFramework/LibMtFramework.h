@@ -6,6 +6,13 @@
 #include <Windows.h>
 #include "Misc/AsmHelpers.h"
 
+#pragma warning(disable: 4200) // nonstandard extension used: zero-sized array in struct/union
+
+struct Vector2
+{
+    float x, y;
+};
+static_assert(sizeof(Vector2) == 0x8, "Vector2 incorrect struct size");
 
 // I think this needs to be aligned to 16 bytes
 struct Vector3 

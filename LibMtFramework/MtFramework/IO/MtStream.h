@@ -27,10 +27,10 @@ struct MtStream : public MtObject
     */
 
     inline static MtStream * (__stdcall* _dtor)(MtStream *thisptr, bool bFreeMemory) =
-        GetModuleAddress<MtStream*(__stdcall*)(MtStream*, bool)>(0x1400C72B0);
+        (MtStream*(__stdcall*)(MtStream*, bool))GetModuleAddress(0x1400C72B0);
 
     inline static MtDTI * (__stdcall *_GetDTI)(MtStream *thisptr) =
-        GetModuleAddress<MtDTI*(__stdcall*)(MtStream*)>(0x14062CC70);
+        (MtDTI*(__stdcall*)(MtStream*))GetModuleAddress(0x14062CC70);
 
     IMPLEMENT_MYDTI(MtStream, 0x141CF2568, 0x1400AF010, 0x14062CEB0);
 
@@ -39,7 +39,7 @@ struct MtStream : public MtObject
     */
     bool CanRead()
     {
-        return ThisPtrCallNoFixup<bool>(this->vtable[5], this);
+        return (bool)ThisPtrCallNoFixup(this->vtable[5], this);
     }
 
     /*
@@ -47,7 +47,7 @@ struct MtStream : public MtObject
     */
     bool CanWrite()
     {
-        return ThisPtrCallNoFixup<bool>(this->vtable[6], this);
+        return (bool)ThisPtrCallNoFixup(this->vtable[6], this);
     }
 
     //
@@ -57,7 +57,7 @@ struct MtStream : public MtObject
     */
     bool IsAsync()
     {
-        return ThisPtrCallNoFixup<bool>(this->vtable[8], this);
+        return (bool)ThisPtrCallNoFixup(this->vtable[8], this);
     }
 
     /*
@@ -65,7 +65,7 @@ struct MtStream : public MtObject
     */
     DWORD GetCurrentPosition()
     {
-        return ThisPtrCallNoFixup<DWORD>(this->vtable[9], this);
+        return (DWORD)ThisPtrCallNoFixup(this->vtable[9], this);
     }
 
     /*
@@ -73,7 +73,7 @@ struct MtStream : public MtObject
     */
     void Close()
     {
-        ThisPtrCallNoFixup<void>(this->vtable[10], this);
+        (void)ThisPtrCallNoFixup(this->vtable[10], this);
     }
 
     //
@@ -89,7 +89,7 @@ struct MtStream : public MtObject
     */
     DWORD ReadData(void *pBuffer, DWORD dwNumberOfBytes)
     {
-        return ThisPtrCallNoFixup<DWORD, void*, DWORD>(this->vtable[12], this, pBuffer, dwNumberOfBytes);
+        return (DWORD)ThisPtrCallNoFixup(this->vtable[12], this, pBuffer, dwNumberOfBytes);
     }
 
     //
@@ -99,7 +99,7 @@ struct MtStream : public MtObject
     */
     void WaitForCompletion()
     {
-        ThisPtrCallNoFixup<void>(this->vtable[14], this);
+        (void)ThisPtrCallNoFixup(this->vtable[14], this);
     }
 
     /*
@@ -113,7 +113,7 @@ struct MtStream : public MtObject
     */
     DWORD WriteData(void *pBuffer, DWORD dwNumberOfBytes)
     {
-        return ThisPtrCallNoFixup<DWORD, void*, DWORD>(this->vtable[15], this, pBuffer, dwNumberOfBytes);
+        return (DWORD)ThisPtrCallNoFixup(this->vtable[15], this, pBuffer, dwNumberOfBytes);
     }
 
     //
@@ -123,7 +123,7 @@ struct MtStream : public MtObject
     */
     DWORD GetLength()
     {
-        return ThisPtrCallNoFixup<DWORD>(this->vtable[17], this);
+        return (DWORD)ThisPtrCallNoFixup(this->vtable[17], this);
     }
 
     /*
@@ -137,6 +137,6 @@ struct MtStream : public MtObject
     */
     DWORD Seek(DWORD dwOffset, int seekOrigin)
     {
-        return ThisPtrCallNoFixup<DWORD, DWORD, int>(this->vtable[18], this, dwOffset, seekOrigin);
+        return (DWORD)ThisPtrCallNoFixup(this->vtable[18], this, dwOffset, seekOrigin);
     }
 };

@@ -138,28 +138,28 @@ struct uItem : public uSnatcherModel
     */
 
     inline static bool(__stdcall *_HasLowHealth)(uItem *thisptr) =
-        GetModuleAddress<bool(__stdcall*)(uItem*)>(0x14018B1A0);
+        (bool(__stdcall*)(uItem*))GetModuleAddress(0x14018B1A0);
 
     inline static bool(__stdcall *_SetupItemProperties)(uItem *thisptr) =
-        GetModuleAddress<bool(__stdcall*)(uItem*)>(0x14017F550);
+        (bool(__stdcall*)(uItem*))GetModuleAddress(0x14017F550);
 
     inline static void(__stdcall *_GetItemPosition)(uItem *thisptr, Vector4 *pPosition) =
-        GetModuleAddress<void(__stdcall*)(uItem*, Vector4*)>(0x14018AC70);
+        (void(__stdcall*)(uItem*, Vector4*))GetModuleAddress(0x14018AC70);
 
 
 #define ITEM_COUNT 314
 
     inline static ItemInfoEntry *ItemInfoTable =
-        GetModuleAddress<ItemInfoEntry*>(0x14122C1E0);
+        (ItemInfoEntry*)GetModuleAddress(0x14122C1E0);
 
     inline static ItemProperties **ItemProperties =
-        GetModuleAddress<ItemProperties**>(0x141209CA0);
+        (ItemProperties**)GetModuleAddress(0x141209CA0);
 
     inline static ItemCollisionProperties **ItemCollisionProperties =
-        GetModuleAddress<ItemCollisionProperties**>(0x141217360);
+        (ItemCollisionProperties**)GetModuleAddress(0x141217360);
 
     inline static NpcBonusBoxItems *NpcBonusBoxItemsTable =
-        GetModuleAddress<NpcBonusBoxItems*>(0x1411BF4C0);
+        (NpcBonusBoxItems*)GetModuleAddress(0x1411BF4C0);
 
     /*
         Description: Called when the item is destroyed
@@ -171,7 +171,7 @@ struct uItem : public uSnatcherModel
     */
     bool OnItemDestroyed(void *unk)     // TODO: confirm return type and parameter type
     {
-        return ThisPtrCallNoFixup<bool, void*>(this->vtable[74], this, unk);
+        return (bool)ThisPtrCallNoFixup(this->vtable[74], this, unk);
     }
 
     /*

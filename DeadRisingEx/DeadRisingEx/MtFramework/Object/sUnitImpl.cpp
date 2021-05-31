@@ -12,7 +12,7 @@ __int64 ResumeMoveLine(WCHAR **argv, int argc);
 
 // Table of commands.
 const int g_sUnitCommandsLength = 3;
-const CommandEntry g_sUnitCommands[g_sUnitCommandsLength] =
+const ConsoleCommandInfo g_sUnitCommands[g_sUnitCommandsLength] =
 {
     { L"print_move_lines", L"Prints all objects in the sUnit move line lists", PrintMoveLines },
     { L"pause_move_line", L"Pauses the specified move line", PauseMoveLine },
@@ -22,7 +22,7 @@ const CommandEntry g_sUnitCommands[g_sUnitCommandsLength] =
 void sUnitImpl::RegisterTypeInfo()
 {
     // Register commands:
-    RegisterCommands(g_sUnitCommands, g_sUnitCommandsLength);
+    ImGuiConsole::Instance()->RegisterCommands(g_sUnitCommands, g_sUnitCommandsLength);
 }
 
 __int64 PrintMoveLines(WCHAR **argv, int argc)
@@ -42,16 +42,16 @@ __int64 PrintMoveLines(WCHAR **argv, int argc)
         if (index < 0 || index >= ARRAYSIZE(sUnit::MoveLines))
         {
             // Index is invalid.
-            wprintf(L"Index must be [0, 31]\n");
+            ImGuiConsole::Instance()->ConsolePrint(L"Index must be [0, 31]\n");
             return 0;
         }
 
         // Loop through all the items in the move list and print info on each one.
-        wprintf(L"\nMove List %d: %S 0x%08x\n", index, p_sUnit->MoveLines[index].mName, p_sUnit->MoveLines[index].Flags);
+        ImGuiConsole::Instance()->ConsolePrint(L"\nMove List %d: %S 0x%08x\n", index, p_sUnit->MoveLines[index].mName, p_sUnit->MoveLines[index].Flags);
         for (cUnit *pItem = p_sUnit->MoveLines[index].pFLink; pItem != nullptr; pItem = pItem->pFLink)
         {
             // Print item info.
-            wprintf(L"   %S\n", pItem->GetObjectName());
+            ImGuiConsole::Instance()->ConsolePrint(L"   %S\n", pItem->GetObjectName());
         }
     }
     else
@@ -60,11 +60,11 @@ __int64 PrintMoveLines(WCHAR **argv, int argc)
         for (int i = 0; i < ARRAYSIZE(sUnit::MoveLines); i++)
         {
             // Loop through all the items in the move list and print info on each one.
-            wprintf(L"\nMove List %d: %S 0x%08x\n", i, p_sUnit->MoveLines[i].mName, p_sUnit->MoveLines[i].Flags);
+            ImGuiConsole::Instance()->ConsolePrint(L"\nMove List %d: %S 0x%08x\n", i, p_sUnit->MoveLines[i].mName, p_sUnit->MoveLines[i].Flags);
             for (cUnit *pItem = p_sUnit->MoveLines[i].pFLink; pItem != nullptr; pItem = pItem->pFLink)
             {
                 // Print item info.
-                wprintf(L"   %S\n", pItem->GetObjectName());
+                ImGuiConsole::Instance()->ConsolePrint(L"   %S\n", pItem->GetObjectName());
             }
         }
     }
@@ -81,7 +81,7 @@ __int64 PauseMoveLine(WCHAR **argv, int argc)
     if (argc != 1)
     {
         // Print command use.
-        wprintf(L"Invalid parameters: pause_move_line <index>\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"Invalid parameters: pause_move_line <index>\n");
         return 0;
     }
 
@@ -94,7 +94,7 @@ __int64 PauseMoveLine(WCHAR **argv, int argc)
     if (index < 0 || index >= ARRAYSIZE(sUnit::MoveLines))
     {
         // Index is invalid.
-        wprintf(L"Index must be [0, 31]\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"Index must be [0, 31]\n");
         return 0;
     }
 
@@ -111,7 +111,7 @@ __int64 ResumeMoveLine(WCHAR **argv, int argc)
     if (argc != 1)
     {
         // Print command use.
-        wprintf(L"Invalid parameters: resume_move_line <index>\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"Invalid parameters: resume_move_line <index>\n");
         return 0;
     }
 
@@ -124,7 +124,7 @@ __int64 ResumeMoveLine(WCHAR **argv, int argc)
     if (index < 0 || index >= ARRAYSIZE(sUnit::MoveLines))
     {
         // Index is invalid.
-        wprintf(L"Index must be [0, 31]\n");
+        ImGuiConsole::Instance()->ConsolePrint(L"Index must be [0, 31]\n");
         return 0;
     }
 

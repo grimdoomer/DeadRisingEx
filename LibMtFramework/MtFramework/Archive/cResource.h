@@ -34,25 +34,25 @@ struct cResource : public MtObject
     /* 0x58 */ ULONGLONG    mID;
 
     inline static cResource * (__stdcall *_ctor)(cResource *thisptr) =
-        GetModuleAddress<cResource*(__stdcall*)(cResource*)>(0x140630C90);
+        (cResource*(__stdcall*)(cResource*))GetModuleAddress(0x140630C90);
 
     inline static cResource * (__stdcall *_dtor)(cResource *thisptr) =
-        GetModuleAddress<cResource*(__stdcall*)(cResource*)>(0x1402B8640);
+        (cResource*(__stdcall*)(cResource*))GetModuleAddress(0x1402B8640);
 
     inline static void(__stdcall *_RegisterDebugOptions)(cResource *thisptr, MtPropertyList *pPropList) =
-        GetModuleAddress<void(__stdcall*)(cResource*, MtPropertyList*)>(0x140630CC0);
+        (void(__stdcall*)(cResource*, MtPropertyList*))GetModuleAddress(0x140630CC0);
 
     inline static MtDTI * (__stdcall *_GetDTI)(cResource *thisptr) =
-        GetModuleAddress<MtDTI*(__stdcall*)(cResource*)>(0x140631060);
+        (MtDTI*(__stdcall*)(cResource*))GetModuleAddress(0x140631060);
 
     inline static const char * (__stdcall *_GetFileExtension)(cResource *thisptr) =
-        GetModuleAddress<const char*(__stdcall*)(cResource*)>(0x14103B2E0);
+        (const char*(__stdcall*)(cResource*))GetModuleAddress(0x14103B2E0);
 
     inline static void(__stdcall *_IncrementRefCount)(cResource *thisptr) =
-        GetModuleAddress<void(__stdcall*)(cResource*)>(0x140630CB0);
+        (void(__stdcall*)(cResource*))GetModuleAddress(0x140630CB0);
 
     inline static void(__stdcall *_DecrementRefCount)(cResource *thisptr) =
-        GetModuleAddress<void(__stdcall*)(cResource*)>(0x140631150);
+        (void(__stdcall*)(cResource*))GetModuleAddress(0x140631150);
 
     IMPLEMENT_MYDTI(cResource, 0x141CF2698, 0x1400AF010, 0x140631100);
 
@@ -61,7 +61,7 @@ struct cResource : public MtObject
     */
     const char * GetFileExtension()
     {
-        return ThisPtrCallNoFixup<const char*>(this->vtable[6], this);
+        return (const char*)ThisPtrCallNoFixup(this->vtable[6], this);
     }
 
     /*
@@ -74,7 +74,7 @@ struct cResource : public MtObject
     */
     bool LoadResource(MtStream *pStream)
     {
-        return ThisPtrCallNoFixup<bool>(this->vtable[8], this, pStream);
+        return (bool)ThisPtrCallNoFixup(this->vtable[8], this, pStream);
     }
 
     /*
@@ -83,7 +83,7 @@ struct cResource : public MtObject
     */
     void CleanupResources()
     {
-        ThisPtrCallNoFixup<void>(this->vtable[11], this);
+        (void)ThisPtrCallNoFixup(this->vtable[11], this);
     }
 
     /*
