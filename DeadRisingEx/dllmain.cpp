@@ -187,7 +187,9 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         if (ModConfig::Instance()->DebugLog == true)
             DebugLog::Initialize();
 
+#ifdef _DEBUG
         ForcePatchInfinityMode();
+#endif
 
         // Hook debug output to the imgui console.
         DetourAttach((void**)&pOutputDebugStringA, Hook_OutputDebugStringA);
