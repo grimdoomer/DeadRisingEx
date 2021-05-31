@@ -38,5 +38,13 @@ public:
         return pInstance;
     }
 
+    /*
+        Returns true if the sysmenu is visible, false otherwise.
+    */
+    bool IsVisible()
+    {
+        return this->sysMenuOpen;
+    }
+
     void Draw();
 };

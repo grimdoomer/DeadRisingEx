@@ -1,6 +1,7 @@
 
 #include "ImGuiConsole.h"
 #include <MtFramework/Rendering/sRender.h>
+#include "DeadRisingEx/MtFramework/Debug/sSnatcherToolImpl.h"
 #include "DeadRisingEx/Utilities.h"
 #include <varargs.h>
 #include <shellapi.h>
@@ -187,7 +188,7 @@ void ImGuiConsole::Draw()
         ImGui::Separator();
 
         // Give the command line textbox focus if the window is opening.
-        if (ImGui::IsWindowAppearing())
+        if (ImGui::IsWindowAppearing() && sSnatcherToolImpl::Instance()->IsVisible() == false)
             ImGui::SetKeyboardFocusHere(0);
 
         // Command line input:
@@ -208,7 +209,7 @@ void ImGuiConsole::Draw()
         }
 
         // Check if we need to give the command box focus.
-        if (reclaimFocus == true)
+        if (reclaimFocus == true && sSnatcherToolImpl::Instance()->IsVisible() == false)
             ImGui::SetKeyboardFocusHere(-1);
 
         // Check if we should draw the auto complete window.

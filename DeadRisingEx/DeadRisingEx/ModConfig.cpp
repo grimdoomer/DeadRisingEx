@@ -44,7 +44,6 @@ bool ModConfig::LoadConfigFile(std::string sConfigFile)
     sConfigFilePath += "\\" + sConfigFile;
 
     // Load game settings.
-    this->EnableConsole = GetPrivateProfileBool("GameSettings", "EnableConsole", "false", sConfigFilePath.c_str());
     this->DebugLog = GetPrivateProfileBool("GameSettings", "DebugLog", "false", sConfigFilePath.c_str());
     this->RecursiveGrenade = GetPrivateProfileBool("GameSettings", "RecursiveGrenade", "false", sConfigFilePath.c_str());
 

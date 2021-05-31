@@ -21,6 +21,7 @@ struct MtObject;
 #define MT_PROP_TYPE_MTSTRING       0xE
 // COLORARGB 0xf?
 // float POINT/vector2 0x10?
+// RECT 0x12
 #define MT_PROP_TYPE_VECTOR3        0x14
 #define MT_PROP_TYPE_VECTOR4        0x15
 #define MT_PROP_TYPE_QUATERNION     0x16
