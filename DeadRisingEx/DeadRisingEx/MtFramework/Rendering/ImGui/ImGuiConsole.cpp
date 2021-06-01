@@ -354,8 +354,13 @@ int ImGuiConsole::TextEditHandler(ImGuiInputTextCallbackData* data)
     {
     case ImGuiInputTextFlags_CallbackAlways:
     {
-        // The line has been modified so reset the history buffer position.
-        this->HistoryPos = -1;
+        // Check if the text has changed since the last iteration.
+        if (strcmp(this->LastCommandString.c_str(), data->Buf) != 0)
+        {
+            // The line has been modified so reset the history buffer position.
+            this->HistoryPos = -1;
+            this->LastCommandString = data->Buf;
+        }
 
         // Clear the auto complete items list.
         this->AutoCompleteCommands.clear();
@@ -424,30 +429,35 @@ int ImGuiConsole::TextEditHandler(ImGuiInputTextCallbackData* data)
             // If the history buffer position is not set, set it to the end of the history buffer.
             if (this->HistoryPos == -1)
             {
-                // If the history buffer is empty bail out.
-                if (this->History.size() == 0)
-                    return 0;
+                // If the history buffer is not empty and the up key was pressed set the position to the end of the history buffer.
+                if (this->History.size() > 0 && data->EventKey == ImGuiKey_UpArrow)
+                    this->HistoryPos = this->History.size() - 1;
                 else
-                    this->HistoryPos = this->History.size();
+                    return 0;
             }
-
-            // Check the key pressed and handle accordingly.
-            if (data->EventKey == ImGuiKey_UpArrow)
+            else
             {
-                // If possible move up in the history buffer.
-                if (this->HistoryPos > 0)
-                    this->HistoryPos--;
-            }
-            else if (data->EventKey == ImGuiKey_DownArrow)
-            {
-                // If possible move down in the history buffer.
-                if (this->History.size() > 0 && this->HistoryPos < this->History.size() - 1)
-                    this->HistoryPos++;
+                // Check the key pressed and handle accordingly.
+                if (data->EventKey == ImGuiKey_UpArrow)
+                {
+                    // If possible move up in the history buffer.
+                    if (this->HistoryPos > 0)
+                        this->HistoryPos--;
+                }
+                else if (data->EventKey == ImGuiKey_DownArrow)
+                {
+                    // If possible move down in the history buffer.
+                    if (this->History.size() > 0 && this->HistoryPos < this->History.size() - 1)
+                        this->HistoryPos++;
+                }
             }
 
             // Replace the current line with the command in the history buffer.
             data->DeleteChars(0, data->BufTextLen);
             data->InsertChars(0, this->History[this->HistoryPos]);
+
+            // Reset the last command string so the history buffer position does not get reset.
+            this->LastCommandString = this->History[this->HistoryPos];
         }
         break;
     }

@@ -32,6 +32,8 @@ protected:
     ImVector<const char*>   Commands;
     std::unordered_map<std::wstring, const ConsoleCommandInfo*> CommandInfo;
 
+    std::string             LastCommandString;      // Used to check if text has changed in the TextEditHandler for the Always event
+
     ImVector<char*>         History;
     int                     HistoryPos;    // -1: new line, 0..History.Size-1 browsing history.
 

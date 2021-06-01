@@ -604,6 +604,14 @@ void sSnatcherToolImpl::Draw()
         if (popItemFlag == true)
             ImGui::PopItemFlag();
 
+        // If the back button is being hovered show a tool tip for it.
+        if (ImGui::IsItemHovered() == true)
+        {
+            ImGui::BeginTooltip();
+            ImGui::Text("Goto previous page");
+            ImGui::EndTooltip();
+        }
+
         // Draw the options.
         MtPropertyListEntry *pEntry = this->sysMenuPropertyList[this->sysMenuIndex]->GetFirstNode();
         DrawSection(pEntry);
