@@ -132,10 +132,10 @@ struct sRender : public cSystem
     /* 0x868D */ bool       mDynamicTrans;
 
     /* 0x8690 */ cTrans                         mTrans[6];
-    /* 0x24B90 */ DWORD                         RenderBufferIndex;          // Index into pRenderCommandBuffer/pRenderCommands/RenderCommandCount arrays below
+    /* 0x24B90 */ DWORD                         RenderBufferIndex;          // Index into pRenderCommandBuffer/pSortedRenderCommands/RenderCommandCount arrays below
     /* 0x24B98 */ void                          *pRenderCommandBuffer[2];   // Buffer backing all cTrans->pCommandBuffer's
-    /* 0x24BA8 */ cTrans::RenderCommandInfo     *pRenderCommands[2];        // Sorted render commands from all mTrans command buffers alloc size = 1MB
-    /* 0x24BB8 */ DWORD                         RenderCommandCount;         // Number of render commands in the pRenderCommands buffer
+    /* 0x24BA8 */ cTrans::RenderCommandInfo     *pSortedRenderCommands[2];  // Sorted render commands from all mTrans command buffers alloc size = 1MB
+    /* 0x24BB8 */ DWORD                         RenderCommandCount;         // Number of render commands in the pSortedRenderCommands buffer
     /* 0x24BC0 */ DWORD                         RenderDataMemorySize;       // Size of memory allocated for render command data (pRenderCommandBuffer), 14MB
     /* 0x24BC8 */ Pass          mPassProfile[12];
     /* 0x25288 */ TempTexture   TempTextures[256];

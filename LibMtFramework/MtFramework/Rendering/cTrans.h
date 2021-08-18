@@ -309,8 +309,8 @@ struct cTrans : public MtObject
     /* 0x4B10 */ RenderCommandInfo      *pCommandBuffer;    // Holds render commands to be sorted before processing (buffer is allocated in sRender and reset every frame)
     /* 0x4B18 */ DWORD                  mTagNum;            // Number of RenderCommandInfo entries in the command buffer
     /* 0x4B20 */ void                   *pCommandBufferEnd; // Used to allocate memory backwards for command buffer data (buffer is allocated in sRender and reset every frame)
-    /* 0x4B28 */ // void* memory region
-    /* 0x4B30 */ // void* end of region
+    /* 0x4B28 */ // void* memory region same as pCommandBuffer
+    /* 0x4B30 */ // void* end of region same as pCommandBufferEnd
 
     IMPLEMENT_MYDTI(cTrans, 0x141CF38B0, 0x1400AF010, 0x14068B4C0);
 
