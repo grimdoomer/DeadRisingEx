@@ -44,4 +44,7 @@ struct sAreaHit : public cSystem
 
     /* 0xF8 */ sAreaHitResourceEntry    ResourceEntries[64];
     /* 0x6F8 */ sAreaHitStringEntry     StringEntries[32];      // This may be 31 entries not 32
+
+    inline static void(__stdcall *_SpawnItems)(sAreaHit *thisptr) =
+        (void(__stdcall*)(sAreaHit*))GetModuleAddress(0x14005E080);
 };

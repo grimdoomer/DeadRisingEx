@@ -9,8 +9,13 @@
 #include <string>
 #include <map>
 #include <functional>
+#include <tuple>
 #include <MtFramework/Archive/sResource.h>
-#include <MtFramework/Item/uItem.h>
+#include <MtFramework/Area/sAreaHit.h>
+#include <MtFramework/Game/sSnatcherMain.h>
+#include <MtFramework/Item/sItemCtrl.h>
+#include <MtFramework/Item/rItemLayout.h>
+#include <MtFramework/Memory/MtHeapAllocator.h>
 #include <MtFramework/Object/cUnit.h>
 #include "DeadRisingEx/MtFramework/Player/uPlayerImpl.h"
 
@@ -31,16 +36,32 @@ MtDTI *g_uSnatcherModelDTI = (MtDTI*)GetModuleAddress(0x141949C20);
 std::hash<std::string> stringHasher;
 std::map<size_t, const char*> mObjectArchiveLookupTable;
 
+// Randomizer state:
+bool itemRandomizerEnabled = false;
+
+// Map of item ids and a tuple: <bool itemCanBeRandomized, bool itemCanBeSpawned>
+// itemCanBeRandomized indicates the item can be replaced via item randomization, and itemCanBeSpawned indicates
+// the item can be spawned in place of another item.
+std::vector<std::tuple<bool, bool>> itemRandomizerAllowList;
+
 // Forward declarations for command functions.
 __int64 SpawnItem(WCHAR **argv, int argc);
 __int64 SpawnObject(WCHAR **argv, int argc);
+__int64 SetRandomizerState(WCHAR **argv, int argc);
+
+uItem * __stdcall Hook_SpawnAndPlaceItem(sItemCtrl *thisptr, DWORD dwItemId, Vector4 *pPosition, Vector4 *pRotation);
+uItem * __stdcall Hook_SpawnAndPlaceItem2(sItemCtrl *thisptr, DWORD dwItemId, Vector4 *pPosition, Vector4 *pRotation);
+void __stdcall Hook_sAreaHit_SpawnItems(sAreaHit *thisptr);
+
+uItem * __stdcall Hook_SpawnItem(sItemCtrl *thisptr, DWORD dwItemId);
 
 // Table of commands for uPlayer objects.
-const int g_uItemCommandsLength = 2;
+const int g_uItemCommandsLength = 3;
 const ConsoleCommandInfo g_uItemCommands[g_uItemCommandsLength] =
 {
     { L"spawn_item", L"Spawns an item near the player", SpawnItem },
     { L"spawn_object", L"Spawns an object by class name near the player", SpawnObject },
+    { L"item_randomizer", L"Randomizes all item spawns when enabled", SetRandomizerState },
 };
 
 void uItemImpl::RegisterTypeInfo()
@@ -56,6 +77,36 @@ void uItemImpl::RegisterTypeInfo()
         DbgPrint("%s -> %p\n", ObjectInfoTable[i].ClassName, hashcode);
         mObjectArchiveLookupTable.emplace(stringHasher(ObjectInfoTable[i].ClassName), ObjectInfoTable[i].ArchivePath);
     }
+}
+
+void uItemImpl::InstallHooks()
+{
+    // Install hooks:
+    //DetourAttach((void**)&sItemCtrl::_SpawnAndPlaceItem, Hook_SpawnAndPlaceItem);
+    //DetourAttach((void**)&sItemCtrl::_SpawnAndPlaceItem2, Hook_SpawnAndPlaceItem2);
+    DetourAttach((void**)&sAreaHit::_SpawnItems, Hook_sAreaHit_SpawnItems);
+
+    DetourAttach((void**)&sItemCtrl::_SpawnItem, Hook_SpawnItem);
+
+    // Initialize the item randomizer allow list.
+    for (int i = 0; i < ITEM_COUNT; i++)
+    {
+        // Special case items that should not be spawned or randomized:
+        if (i == 11)
+            // First Aid Kit, used as medicine for Brad
+            itemRandomizerAllowList.push_back(std::tuple<bool, bool> { false, false });
+        else if (i == 68)
+            // Book [Cult Initiation Guide]
+            itemRandomizerAllowList.push_back(std::tuple<bool, bool> { false, false });
+        else if (i >= 173 && i <= 179)
+            // 
+            itemRandomizerAllowList.push_back(std::tuple<bool, bool> { false, false });
+        else
+            itemRandomizerAllowList.push_back(std::tuple<bool, bool> { true, true });
+    }
+
+    // Set the item randomizer initial state.
+    itemRandomizerEnabled = ModConfig::Instance()->ItemRandomizerEnabled;
 }
 
 __int64 SpawnItem(WCHAR **argv, int argc)
@@ -290,4 +341,205 @@ __int64 SpawnObject(WCHAR **argv, int argc)
     // TODO: destroy pArchive if it was loaded.
 
     return 0;
+}
+
+__int64 SetRandomizerState(WCHAR **argv, int argc)
+{
+    // Make sure at least 1 argument was passed.
+    if (argc < 1)
+    {
+        // Invalid syntax.
+        ImGuiConsole::Instance()->ConsolePrint(L"Invalid command syntax!\n");
+        return 0;
+    }
+
+    // Determine the state from the first parameter.
+    if (argv[0][0] == '0')
+        itemRandomizerEnabled = false;
+    else if (argv[0][0] == '1')
+        itemRandomizerEnabled = true;
+    else
+    {
+        // Invalid randomizer state.
+        ImGuiConsole::Instance()->ConsolePrint(L"Invalid value provided, should be 0 to disable or 1 to enable!\n");
+    }
+
+    return 0;
+}
+
+DWORD GetRandomItemId()
+{
+    // Get the sSnatcherMain instance so we can access rng.
+    sSnatcherMain *pSnatcherMain = sSnatcherMain::Instance();
+    sSnatcherMain::RNGState *pRng = (sSnatcherMain::RNGState*)((BYTE*)pSnatcherMain + 0x203F4);
+
+    // Loop until we find a valid item to spawn.
+    DWORD itemId = 0;
+    do
+    {
+        // Generate new item id.
+        itemId = sSnatcherMain::_GetRandomInt(pRng) % ITEM_COUNT;
+
+        // Check if the selected item is restricted.
+        if (std::get<1>(itemRandomizerAllowList[itemId]) == false)
+            continue;
+
+    } while (uItem::ItemInfoTable[itemId].ArchivePath == nullptr || lstrlen(uItem::ItemInfoTable[itemId].ArchivePath) == 0 ||
+        uItem::ItemInfoTable[itemId].Name == nullptr || uItem::ItemInfoTable[itemId].Name[0] == '-' || uItem::ItemProperties[itemId] == nullptr);
+
+    // Return the item id.
+    return itemId;
+}
+
+uItem * __stdcall Hook_SpawnAndPlaceItem(sItemCtrl *thisptr, DWORD dwItemId, Vector4 *pPosition, Vector4 *pRotation)
+{
+    // Check if the item randomize mod is enabled and if not bail out.
+    if (itemRandomizerEnabled == false)
+        return sItemCtrl::_SpawnAndPlaceItem(thisptr, dwItemId, pPosition, pRotation);
+
+    // Choose a random item to spawn.
+    dwItemId = GetRandomItemId();
+
+    // Load the item archive so we can spawn objects that are not part of this area.
+    cResource *pResource = sResource::Instance()->LoadGameResource<cResource>(rArchive::DebugTypeInfo, uItem::ItemInfoTable[dwItemId].ArchivePath, RLF_SYNCHRONOUS | RLF_LOAD_AS_ARCHIVE);
+    if (pResource == nullptr)
+    {
+        // Failed to force load resource.
+        ImGuiConsole::Instance()->ConsolePrint(L"Failed to force load object '%S'!\n", uItem::ItemInfoTable[dwItemId].ArchivePath);
+        return 0;
+    }
+
+    // Call the trampoline with the new item id.
+    return sItemCtrl::_SpawnAndPlaceItem(thisptr, dwItemId, pPosition, pRotation);
+}
+
+uItem * __stdcall Hook_SpawnAndPlaceItem2(sItemCtrl *thisptr, DWORD dwItemId, Vector4 *pPosition, Vector4 *pRotation)
+{
+    // Check if the item randomize mod is enabled and if not bail out.
+    if (itemRandomizerEnabled == false)
+        return sItemCtrl::_SpawnAndPlaceItem2(thisptr, dwItemId, pPosition, pRotation);
+
+    // Choose a random item to spawn.
+    dwItemId = GetRandomItemId();
+
+    // Load the item archive so we can spawn objects that are not part of this area.
+    cResource *pResource = sResource::Instance()->LoadGameResource<cResource>(rArchive::DebugTypeInfo, uItem::ItemInfoTable[dwItemId].ArchivePath, RLF_SYNCHRONOUS | RLF_LOAD_AS_ARCHIVE);
+    if (pResource == nullptr)
+    {
+        // Failed to force load resource.
+        ImGuiConsole::Instance()->ConsolePrint(L"Failed to force load object '%S'!\n", uItem::ItemInfoTable[dwItemId].ArchivePath);
+        return 0;
+    }
+
+    // Call the trampoline with the new item id.
+    return sItemCtrl::_SpawnAndPlaceItem2(thisptr, dwItemId, pPosition, pRotation);
+}
+
+void __stdcall Hook_sAreaHit_SpawnItems(sAreaHit *thisptr)
+{
+    char sItemClassName[64];
+
+    // Check if the item randomizer mod is enabled and if not bail out.
+    if (itemRandomizerEnabled == false)
+    {
+        sAreaHit::_SpawnItems(thisptr);
+        return;
+    }
+
+    // Hacky pointer math:
+    BYTE *pbAreaHit = (BYTE*)thisptr;
+    DWORD *pResourceCount = (DWORD*)(pbAreaHit + 0x38);
+    sAreaHitResourceEntry *pResources = (sAreaHitResourceEntry*)(pbAreaHit + 0xF8);
+
+    // If no resources are loaded for this area bail out.
+    if (*pResourceCount == 0)
+        return;
+
+    // Loop through all the resources and spawn item resources.
+    for (int i = 0; i < *pResourceCount; i++)
+    {
+        // Check if this resource is an item.
+        if (pResources[i].Type != eAreaHitEntryType::TYPE_ITEM)
+            continue;
+
+        // Make sure the file has been loaded and parsed.
+        if (pResources[i].pResource == nullptr)
+            continue;
+
+        // Get the item layout from the resource pointer.
+        rItemLayout *pItemLayout = (rItemLayout*)pResources[i].pResource;
+
+        // Loop and randomize all the item spawns.
+        for (int x = 0; x < pItemLayout->LayoutCount; x++)
+        {
+            // Get the current item layout entry.
+            rItemLayout::LayoutInfo *pLayoutInfo = (rItemLayout::LayoutInfo*)((BYTE*)pItemLayout->pLayoutInfoList + (x * 0x3F0));
+            DWORD *pItemId = (DWORD*)((BYTE*)pLayoutInfo + 0xB0);
+            DWORD *pCheck = (DWORD*)((BYTE*)pLayoutInfo + 0x80);
+            MtString **ppClassName = (MtString**)((BYTE*)pLayoutInfo + 0xD8);
+
+            if ((*pCheck & 1) != 0)
+                continue;
+
+            // Ignore special case items.
+            if (!(*pItemId - 65534 <= 1) && (*pCheck & 0x400) == 0)
+            {
+                // Check if the item is allowed to be randomized.
+                if (*pItemId >= 0 && *pItemId < ITEM_COUNT && std::get<0>(itemRandomizerAllowList[*pItemId]) == false)
+                    continue;
+
+                // Randomize the item spawned.
+                DWORD oldItemId = *pItemId;
+                *pItemId = GetRandomItemId();
+                DbgPrint("Randomizing item %d -> %d\n", oldItemId, *pItemId);
+
+                // Find the index of the last slash so we can get the Om object name.
+                std::string sItemPath = uItem::ItemInfoTable[*pItemId].ArchivePath;
+                int index = sItemPath.find_last_of('\\');
+
+                // Get the om index from the string.
+                std::string sItemName = sItemPath.substr(index + 3);
+                DWORD itemFileId = strtoul(sItemName.c_str(), nullptr, 16);
+
+                // Load the item archive so we can spawn objects that are not part of this area.
+                cResource *pResource = sResource::Instance()->LoadGameResource<cResource>(rArchive::DebugTypeInfo, sItemPath.c_str(), RLF_SYNCHRONOUS | RLF_LOAD_AS_ARCHIVE);
+                if (pResource == nullptr)
+                {
+                    // Failed to force load resource.
+                    ImGuiConsole::Instance()->ConsolePrint(L"Failed to force load object '%S'!\n", sItemPath.c_str());
+                    continue;
+                }
+
+                // Format the item class name using the item id.
+                snprintf(sItemClassName, sizeof(sItemClassName), "uOm%02x", itemFileId);
+
+                // Allocate memory for a class name string.
+                DWORD stringLength = lstrlen(sItemClassName);
+                MtString *pClassName = (*g_pStringHeapAllocator)->Alloc<MtString>(sizeof(MtString) + stringLength + 1, 16);
+                if (pClassName != nullptr)
+                {
+                    // Initialize the string.
+                    pClassName->RefCount = 1;
+                    pClassName->Length = stringLength;
+                    strcpy(pClassName->String, sItemClassName);
+
+                    // Free the old string pointer.
+                    if (*ppClassName != nullptr)
+                        (*g_pStringHeapAllocator)->Free(*ppClassName);
+
+                    // Re-assign the class name pointer.
+                    *ppClassName = pClassName;
+                }
+            }
+        }
+
+        // Spawn the randomized items.
+        pItemLayout->SpawnItems();
+    }
+}
+
+uItem * __stdcall Hook_SpawnItem(sItemCtrl *thisptr, DWORD dwItemId)
+{
+    DbgPrint("Spawning item %d\n", dwItemId);
+    return sItemCtrl::_SpawnItem(thisptr, dwItemId);
 }

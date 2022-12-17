@@ -28,7 +28,6 @@ namespace DeadRisingLauncher
         private void SettingsDialog_Load(object sender, EventArgs e)
         {
             // Get a list of all mod files in the mods directory.
-            string modsDirectory = Application.StartupPath + "\\nativeWin64\\Mods";
             string[] modFilesFound = GetArchivesFromModsFolder();
 
             // Loop through all of the mod files specified in the config file and add them first.
@@ -61,6 +60,7 @@ namespace DeadRisingLauncher
             }
 
             // Setup the game settings tab.
+            this.chkRandomizeItems.Checked = this.configData.ItemRandomizer;
             this.chkDebugLog.Checked = this.configData.DebugLog;
             this.chkRecursiveGrenade.Checked = this.configData.RecursiveGrenade;
 
@@ -126,6 +126,7 @@ namespace DeadRisingLauncher
             this.configData.ModFileLoadOrder = modFiles.ToArray();
 
             // Update game settings.
+            this.configData.ItemRandomizer = this.chkRandomizeItems.Checked;
             this.configData.DebugLog = this.chkDebugLog.Checked;
             this.configData.RecursiveGrenade = this.chkRecursiveGrenade.Checked;
 

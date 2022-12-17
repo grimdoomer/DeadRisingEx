@@ -7,6 +7,14 @@
 // sizeof = 0x21110
 struct sSnatcherMain : public sMain
 {
+    // sizeof = 0x9C4
+    struct RNGState
+    {
+        /* 0x00 */ DWORD m[624];
+        /* 0x04 */ DWORD index;
+    };
+    static_assert(sizeof(RNGState) == 0x9C4, "sSnatcherMain::RNGState incorrect struct size");
+
     /* 0x20248 */
     /* 0x20250 */ void  *mpRender;
     /* 0x20258 */ sSnatcherTool *mpSnatcherTool;
@@ -52,10 +60,24 @@ struct sSnatcherMain : public sMain
     /* 0x203AC */ //DWORD camera/ui flags 0x8000000 = don't draw watch ui?
     /* 0x203B0 */ // DWORD state flags
 
+    /* 0x203F4 */ RNGState rngState;
+    /* 0x20DB8 */
+
     /* 0x20DC0 */ void  *pGametaskMain;
 
     IMPLEMENT_SINGLETON(sSnatcherMain, 0x141944DD8);
 
     inline static void(__stdcall *_InitializeAllocators)(sSnatcherMain *thisptr) =
         (void(__stdcall*)(sSnatcherMain*))GetModuleAddress(0x1400AB750);
+
+    inline static DWORD(__stdcall *_GetRandomInt)(RNGState *pRngState) =
+        (DWORD(__stdcall*)(RNGState*))GetModuleAddress(0x14000AE10);
+
+    inline static float(__stdcall *_GetRandomFloat)(RNGState *pRngState) =
+        (float(__stdcall*)(RNGState*))GetModuleAddress(0x14000ADA0);
+
+    /*DWORD GetRandomInt()
+    {
+        return _GetRandomInt(&this->rngState);
+    }*/
 };

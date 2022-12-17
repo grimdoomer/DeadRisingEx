@@ -42,10 +42,17 @@
             this.chkRecursiveGrenade = new System.Windows.Forms.CheckBox();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.chkRandomizeItems = new System.Windows.Forms.CheckBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -155,8 +162,9 @@
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPage2.Controls.Add(this.chkDebugLog);
-            this.tabPage2.Controls.Add(this.chkRecursiveGrenade);
+            this.tabPage2.Controls.Add(this.groupBox3);
+            this.tabPage2.Controls.Add(this.groupBox2);
+            this.tabPage2.Controls.Add(this.groupBox1);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -167,7 +175,7 @@
             // chkDebugLog
             // 
             this.chkDebugLog.AutoSize = true;
-            this.chkDebugLog.Location = new System.Drawing.Point(8, 9);
+            this.chkDebugLog.Location = new System.Drawing.Point(15, 19);
             this.chkDebugLog.Name = "chkDebugLog";
             this.chkDebugLog.Size = new System.Drawing.Size(75, 17);
             this.chkDebugLog.TabIndex = 2;
@@ -177,7 +185,7 @@
             // chkRecursiveGrenade
             // 
             this.chkRecursiveGrenade.AutoSize = true;
-            this.chkRecursiveGrenade.Location = new System.Drawing.Point(8, 32);
+            this.chkRecursiveGrenade.Location = new System.Drawing.Point(15, 19);
             this.chkRecursiveGrenade.Name = "chkRecursiveGrenade";
             this.chkRecursiveGrenade.Size = new System.Drawing.Size(118, 17);
             this.chkRecursiveGrenade.TabIndex = 1;
@@ -207,6 +215,52 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // chkRandomizeItems
+            // 
+            this.chkRandomizeItems.AutoSize = true;
+            this.chkRandomizeItems.Location = new System.Drawing.Point(15, 19);
+            this.chkRandomizeItems.Name = "chkRandomizeItems";
+            this.chkRandomizeItems.Size = new System.Drawing.Size(106, 17);
+            this.chkRandomizeItems.TabIndex = 3;
+            this.chkRandomizeItems.Text = "Randomize items";
+            this.chkRandomizeItems.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.chkRandomizeItems);
+            this.groupBox1.Location = new System.Drawing.Point(8, 6);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(383, 46);
+            this.groupBox1.TabIndex = 4;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Game Settings";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.chkDebugLog);
+            this.groupBox2.Location = new System.Drawing.Point(8, 58);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(383, 46);
+            this.groupBox2.TabIndex = 5;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Debug Settings";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Controls.Add(this.chkRecursiveGrenade);
+            this.groupBox3.Location = new System.Drawing.Point(8, 110);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(383, 46);
+            this.groupBox3.TabIndex = 6;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Experimental Settings";
+            // 
             // SettingsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -226,7 +280,12 @@
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -247,5 +306,9 @@
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.CheckBox chkDynamicGraphicsMemory;
         private System.Windows.Forms.CheckBox chkDebugLog;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CheckBox chkRandomizeItems;
     }
 }

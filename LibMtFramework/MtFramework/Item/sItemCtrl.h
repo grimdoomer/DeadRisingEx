@@ -19,6 +19,9 @@ struct sItemCtrl : public cSystem
     inline static uItem * (__stdcall *_SpawnAndPlaceItem)(sItemCtrl *thisptr, DWORD dwItemId, Vector4 *pPosition, Vector4 *pRotation) =
         (uItem*(__stdcall*)(sItemCtrl*, DWORD, Vector4*, Vector4*))GetModuleAddress(0x140075540);
 
+    inline static uItem * (__stdcall *_SpawnAndPlaceItem2)(sItemCtrl *thisptr, DWORD dwItemId, Vector4 *pPosition, Vector4 *pRotation) =
+        (uItem*(__stdcall*)(sItemCtrl*, DWORD, Vector4*, Vector4*))GetModuleAddress(0x1400754E0);
+
     inline static uItem * (__stdcall *_SpawnItem)(sItemCtrl *thisptr, DWORD dwItemId) =
         (uItem*(__stdcall*)(sItemCtrl*, DWORD))GetModuleAddress(0x140075680);
 
@@ -37,6 +40,21 @@ struct sItemCtrl : public cSystem
     uItem * SpawnAndPlaceItem(DWORD dwItemId, Vector4 *pPosition, Vector4 *pRotation)
     {
         return _SpawnAndPlaceItem(this, dwItemId, pPosition, pRotation);
+    }
+
+    /*
+        Description: Spawns the specified item and updates its position and rotation. Also sets some unknown physics flag.
+
+        Parameters:
+            dwItemId - Id of the item to spawn
+            pPosition - World position to spawn the item at
+            pRotation - Rotational vector for the item
+
+        Returns: Instance of the spawned item, or nullptr otherwise.
+    */
+    uItem * SpawnAndPlaceItem2(DWORD dwItemId, Vector4 *pPosition, Vector4 *pRotation)
+    {
+        return _SpawnAndPlaceItem2(this, dwItemId, pPosition, pRotation);
     }
 
     /*
