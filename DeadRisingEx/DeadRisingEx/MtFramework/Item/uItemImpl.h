@@ -159,4 +159,6 @@ protected:
 
 public:
     static void RegisterTypeInfo();
+
+    static void InstallHooks();
 };

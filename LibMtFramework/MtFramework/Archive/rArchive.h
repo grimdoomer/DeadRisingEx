@@ -47,7 +47,12 @@ struct rArchive : public cResource
     struct DecompressStream : public MtStream // sizeof = 0xA0
     {
         /* 0x08 */ MtFileStream *pFileStream;
-        /* 0x10 */ BYTE _[0x38];
+        /* 0x10 */ BYTE _[0x8];
+        /* 0x18 */ DWORD CompressedSize;
+        /* 0x1C */ DWORD DecompressedSize;
+        /* 0x20 */ BYTE __[0x20];
+        /* 0x40 */ DWORD DataOffset;
+        /* 0x44 */ BYTE ___[4];
         /* 0x48 */ z_stream_s zStream;
 
         inline static DecompressStream * (__stdcall *_ctor)(DecompressStream *thisptr, MtFileStream *pFileStream) =

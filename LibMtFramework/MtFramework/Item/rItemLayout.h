@@ -3,7 +3,7 @@
 #include "LibMtFramework.h"
 #include "MtFramework/Archive/cResource.h"
 
-typedef void uSnatcherModel;
+//typedef void uSnatcherModel;
 
 // sizeof = 0x70
 struct rItemLayout : public cResource
@@ -101,5 +101,16 @@ struct rItemLayout : public cResource
 
     /* 0x60 */ LayoutInfo   *pLayoutInfoList;
     /* 0x68 */ DWORD        LayoutCount;        // Number of items in the list
+
+    inline static void(__stdcall *_SpawnItems)(rItemLayout *thisptr) =
+        (void(__stdcall*)(rItemLayout*))GetModuleAddress(0x1400CCB00);
+
+    /*
+        Description: Loops through all item placements and spawns all items on the map.
+    */
+    void SpawnItems()
+    {
+        _SpawnItems(this);
+    }
 };
 static_assert(sizeof(rItemLayout) == 0x70, "rItemLayout incorrect struct size");

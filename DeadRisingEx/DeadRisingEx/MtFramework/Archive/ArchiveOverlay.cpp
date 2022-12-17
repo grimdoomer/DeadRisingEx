@@ -369,11 +369,16 @@ cResource * __stdcall Hook_sResource_LoadResourceFromArchive(sResource *thisptr,
 
     // Create a new archive decompression stream capable of decompressing data.
     pArchiveStream = new rArchive::DecompressStream(pFileStream);
+    memset(&pArchiveStream->zStream, 0, sizeof(pArchiveStream->zStream));
     if (inflateInit(&pArchiveStream->zStream, ZLIB_VERSION, sizeof(z_stream_s)) != 0)
     {
         // Print the zlib error.
         DbgPrint("inflateInit: %s\n", pArchiveStream->zStream.msg != nullptr ? pArchiveStream->zStream.msg : "???");
     }
+
+    pArchiveStream->CompressedSize = ArchiveOverlay::Instance()->vArcFiles[archiveIndex].pFileEntries[fileIndex].CompressedSize;
+    pArchiveStream->DecompressedSize = ArchiveOverlay::Instance()->vArcFiles[archiveIndex].pFileEntries[fileIndex].DecompressedSize;
+    pArchiveStream->DataOffset = ArchiveOverlay::Instance()->vArcFiles[archiveIndex].pFileEntries[fileIndex].DataOffset;
 
     // Decompress the arc file entry and create a new resource for it.
     pResource = sResource::_LoadResourceFromArchive(thisptr, pArchiveStream, pDTI, &ArchiveOverlay::Instance()->vArcFiles[archiveIndex].pFileEntries[fileIndex]);

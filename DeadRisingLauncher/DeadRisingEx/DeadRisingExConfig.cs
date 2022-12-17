@@ -19,6 +19,7 @@ namespace DeadRisingLauncher
         
         private const string DebugLogKey = "DebugLog";
         private const string RecursiveGrenadeKey = "RecursiveGrenade";
+        private const string ItemRandomizerKey = "ItemRandomizer";
 
         // Graphics settings:
         private const string DynamicGraphicsMemoryKey = "DynamicGraphicsMemory";
@@ -36,6 +37,10 @@ namespace DeadRisingLauncher
         /// Determines if the recursive grenade mod will be enabled or not
         /// </summary>
         public bool RecursiveGrenade { get; set; } = false;
+        /// <summary>
+        /// Determines if item drops are randomized or not
+        /// </summary>
+        public bool ItemRandomizer { get; set; } = false;
 
         /// <summary>
         /// Determines if graphics memory should be allocated/resized dynamically as needed
@@ -83,6 +88,7 @@ namespace DeadRisingLauncher
             // Read all the values from the ini file.
             this.DebugLog = GetConfigBool(configData, GameSettingsSection, DebugLogKey);
             this.RecursiveGrenade = GetConfigBool(configData, GameSettingsSection, RecursiveGrenadeKey);
+            this.ItemRandomizer = GetConfigBool(configData, GameSettingsSection, ItemRandomizerKey);
 
             this.DynamicGraphicsMemory = GetConfigBool(configData, GraphicsSettingsSection, DynamicGraphicsMemoryKey);
 
@@ -106,6 +112,7 @@ namespace DeadRisingLauncher
             configData.Sections.AddSection(GameSettingsSection);
             configData[GameSettingsSection].AddKey(DebugLogKey, this.DebugLog.ToString());
             configData[GameSettingsSection].AddKey(RecursiveGrenadeKey, this.RecursiveGrenade.ToString());
+            configData[GameSettingsSection].AddKey(ItemRandomizerKey, this.ItemRandomizer.ToString());
 
             // Graphics Settings:
             configData[GraphicsSettingsSection].AddKey(DynamicGraphicsMemoryKey, this.DynamicGraphicsMemory.ToString());

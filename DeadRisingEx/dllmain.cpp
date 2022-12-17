@@ -207,6 +207,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         cGametaskTitleImpl::InstallHooks();
         uNpcMarkerImpl::InstallHooks();
         uPhotoImpl::InstallHooks();
+        uItemImpl::InstallHooks();
 
         uPlayerImpl::RegisterTypeInfo();
 

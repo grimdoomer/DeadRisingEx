@@ -21,6 +21,8 @@ public:
 
     bool LoadConfigFile(std::string sConfigFile);
 
+    bool ItemRandomizerEnabled;     // Determines if items should be randomized
+
     bool DebugLog;                  // Determines if debug output should be written to a log file or not
 
     bool RecursiveGrenade;          // Enables the recursive grenade mod
