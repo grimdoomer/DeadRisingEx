@@ -65,6 +65,10 @@ struct sSnatcherMain : public sMain
 
     /* 0x20DC0 */ void  *pGametaskMain;
 
+    /* 0x20E2C */ DWORD SoundEffectVolume;
+    /* 0x20E30 */ DWORD Language;               // 1 = JPN, 2 = GER, 3 = FRA, 4 = SPA, 5 = ITA, 7 = RUS
+    /* 0x20E34 */ DWORD SubtitlesEnabled;
+
     IMPLEMENT_SINGLETON(sSnatcherMain, 0x141944DD8);
 
     inline static void(__stdcall *_InitializeAllocators)(sSnatcherMain *thisptr) =

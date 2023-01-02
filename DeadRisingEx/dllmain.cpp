@@ -23,6 +23,7 @@
 #include "DeadRisingEx/MtFramework/Game/sMainImpl.h"
 #include "DeadRisingEx/MtFramework/Game/sSnatcherPadImpl.h"
 #include "DeadRisingEx/MtFramework/Game/sSnatcherMainImpl.h"
+#include "DeadRisingEx/MtFramework/Game/Task/sTaskManagerImpl.h"
 #include "DeadRisingEx/MtFramework/Game/Task/cGametaskTitleImpl.h"
 #include "DeadRisingEx/MtFramework/Graphics/rModelImpl.h"
 #include "DeadRisingEx/MtFramework/Memory/MtHeapAllocatorImpl.h"
@@ -208,6 +209,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         uNpcMarkerImpl::InstallHooks();
         uPhotoImpl::InstallHooks();
         uItemImpl::InstallHooks();
+        sTaskManagerImpl::InstallHooks();
 
         uPlayerImpl::RegisterTypeInfo();
 

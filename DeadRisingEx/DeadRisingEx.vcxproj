@@ -25,6 +25,7 @@
     <ClCompile Include="DeadRisingEx\MtFramework\Game\sSnatcherPadImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Game\sSnatcherMainImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Game\Task\cGametaskTitleImpl.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Game\Task\sTaskManagerImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Graphics\rModelImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Memory\MtHeapAllocatorImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Object\Model\sSMManagerImpl.cpp" />
@@ -60,6 +61,7 @@
     <ClInclude Include="DeadRisingEx\MtFramework\Game\sSnatcherPadImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Game\sSnatcherMainImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Game\Task\cGametaskTitleImpl.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Game\Task\sTaskManagerImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Graphics\rModelImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Memory\MtHeapAllocatorImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Object\Model\sSMManagerImpl.h" />

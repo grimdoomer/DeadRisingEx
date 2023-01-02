@@ -115,10 +115,9 @@ struct sPad : public cSystem
 
     /* 0x38 */
     /* 0x3C */ DWORD        UpdatedPadSocket;   // Socket_no of the last gamepad with input
-
     /* 0x40 */ DWORD        NewInputAvailable;  // 1 if a gamepad had active input (0x1406523AA)
-    /* 0x44 */ // DWORD (0x1406523AA)
-    /* 0x48 */ // DWORD (0x1406523AA)
+    /* 0x44 */ DWORD        MouseSensitivity;
+    /* 0x48 */ DWORD        CameraSensitivity;
 
     /* 0x50 */ ULONGLONG    LastUpdateTime;     // Time of the last input update in ms (pulled from sMain->mTimer)
     /* 0x58 */ DWORD        ElapsedTime;        // Elapsed time since the last update in ms
@@ -152,6 +151,9 @@ struct sPad : public cSystem
     inline static bool(__stdcall *_GetButtonPressed)(InputButtonId buttonId) =
         (bool(__stdcall*)(InputButtonId))GetModuleAddress(0x1400291A0);
 
+    inline static bool(__stdcall *_GetKeyPressed)(int key) =
+        (bool(__stdcall*)(int))GetModuleAddress(0x140029460);
+
     /*
         Description: Gets the socket number for the last device to register input
 
@@ -171,5 +173,16 @@ struct sPad : public cSystem
     static bool GetButtonPressed(InputButtonId buttonId)
     {
         return _GetButtonPressed(buttonId);
+    }
+
+    /*
+        Description: Returns a value indicating if the specified key was pressed this frame
+
+        Parameters:
+            key: key id to query
+    */
+    static bool GetKeyPressed(int key)
+    {
+        return _GetKeyPressed(key);
     }
 };

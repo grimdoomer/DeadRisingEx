@@ -40,3 +40,10 @@ struct MtString
     /* 0x04 */ DWORD    Length;
     /* 0x08 */ CHAR     String[0];
 };
+
+
+/*
+    Returns a null pointer (or integer)
+*/
+inline static void* (__stdcall *ReturnNullPtr)() = (void*(__stdcall*)())GetModuleAddress(0x1401E94B0);
+inline static __int64 ReturnNullPtrFuncAddr = 0x1401E94B0;

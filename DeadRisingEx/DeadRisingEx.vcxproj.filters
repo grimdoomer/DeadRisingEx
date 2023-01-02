@@ -105,6 +105,9 @@
     <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\ImGuiConsole.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DeadRisingEx\MtFramework\Game\Task\sTaskManagerImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DeadRisingEx.h">
@@ -210,6 +213,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\ImGuiConsole.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeadRisingEx\MtFramework\Game\Task\sTaskManagerImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
