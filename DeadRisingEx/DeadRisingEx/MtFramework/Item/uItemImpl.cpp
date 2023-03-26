@@ -173,9 +173,25 @@ __int64 SpawnItem(WCHAR **argv, int argc)
         ImGuiConsole::Instance()->ConsolePrint(L"Failed to force load object '%S'!\n", sItemPath.c_str());
         return 0;
     }
-    
-    // Format the item class name using the item id.
-    snprintf(sItemClassName, sizeof(sItemClassName), "uOm%02x", itemFileId);
+
+    // Certain items have two DTI instances, one for static objects and one for item objects. Check the item id to see if
+    // we need to use the item DTI instance instead of the static object DTI.
+    switch (itemId)
+    {
+    case 69:        // Queen bee
+    case 135:       // Sniper rifle
+    {
+        // Format the item class name using the item id.
+        snprintf(sItemClassName, sizeof(sItemClassName), "uOm%02x_1", itemFileId);
+        break;
+    }
+    default:
+    {
+        // Format the item class name using the item id.
+        snprintf(sItemClassName, sizeof(sItemClassName), "uOm%02x", itemFileId);
+        break;
+    }
+    }
 
     // If an item class name was provided then use that instead of the one we calculated.
     if (argc >= 2)
