@@ -4,10 +4,10 @@
 
 #pragma once
 #include "DeadRisingEx.h"
-#include <MtFramework/MtObject.h>
+#include <MtFramework/Game/Player/uPlayer.h>
 
 extern void **g_sUnitInstance;
-extern void *uPlayerInstance;
+extern uPlayer *uPlayerInstance;
 
 class uPlayerImpl
 {
@@ -15,4 +15,5 @@ protected:
 
 public:
     static void RegisterTypeInfo();
+    static void InstallHooks();
 };

@@ -174,6 +174,8 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         sMainImpl::RegisterTypeInfo();
         sSnatcherMainImpl::RegisterTypeInfo();
         MtHeapAllocatorImpl::RegisterTypeInfo();
+        uPlayerImpl::RegisterTypeInfo();
+
         ImGuiRenderer::RegisterTypeInfo();
 
         if (ModConfig::Instance()->RecursiveGrenade == true)
@@ -209,7 +211,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         uPhotoImpl::InstallHooks();
         uItemImpl::InstallHooks();
 
-        uPlayerImpl::RegisterTypeInfo();
+        uPlayerImpl::InstallHooks();
 
         // Initialize the archive file overlay system.
         if (ArchiveOverlay::Instance()->Initialize() == false)

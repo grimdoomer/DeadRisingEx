@@ -42,6 +42,7 @@
     <ClInclude Include="MtFramework\Memory\MtDefaultAllocator.h" />
     <ClInclude Include="MtFramework\Object\Model\sSMManager.h" />
     <ClInclude Include="MtFramework\Object\Npc\uNpcMarker.h" />
+    <ClInclude Include="MtFramework\Game\Player\uPlayer.h" />
     <ClInclude Include="MtFramework\Rendering\sGpuParticle.h" />
     <ClInclude Include="MtFramework\System\cSystem.h" />
     <ClInclude Include="MtFramework\Game\sPad.h" />
@@ -157,6 +158,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)Detours\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -196,6 +199,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)Detours\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

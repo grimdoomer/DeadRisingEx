@@ -21,7 +21,7 @@ struct uCockpit : public cUnit
     /* 0x198 */ bool        MESSLISTSTATUS;
     /* 0x199 */ bool        MESSLISTTODO;
     /* 0x19A */ bool        MESSLISTNOTE;
-    /* 0x19B */ bool        MESSLIST(void)CE;
+    /* 0x19B */ bool        MESS_LIST_VOICE;
 
     /* 0x19D */ bool        mDispTimeFlag;
 
