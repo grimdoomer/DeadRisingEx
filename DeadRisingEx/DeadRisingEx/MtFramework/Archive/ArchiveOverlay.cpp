@@ -202,7 +202,7 @@ void __stdcall Hook_sResource_ResourceDecoderProc(int threadIndex)
             // Check if the resource has been loaded yet.
             if ((pDecodeReq->pResource->mState & RESS_RESOURCE_LOADED) == 0)
             {
-                MtStream *pStream = nullptr;
+                sResource::DecompressStream *pStream = nullptr;
                 MtFile *pArchiveFile = nullptr;
                 MtFileStream *pFileStream = nullptr;
                 sResource::DecodeFileRequest overlayReq = { 0 };

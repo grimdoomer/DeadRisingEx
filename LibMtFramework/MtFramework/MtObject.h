@@ -163,6 +163,11 @@ struct MtObject
 
     /* 0x00 */ void **vtable;
 
+    ~MtObject()
+    {
+        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
+    }
+
     /*
         Description: Adds debug menu options for this object to the propery list.
 
