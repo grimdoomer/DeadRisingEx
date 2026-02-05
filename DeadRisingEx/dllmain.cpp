@@ -37,6 +37,7 @@
 #include "DeadRisingEx/MtFramework/Object/Model/sSMManagerImpl.h"
 #include "DeadRisingEx/MtFramework/Object/Npc/uNpcMarkerImpl.h"
 #include "DeadRisingEx/MtFramework/Player/uPlayerImpl.h"
+#include "DeadRisingEx/MtFramework/Test/TestHooks.h"
 #include "DeadRisingEx/Utilities/DebugLog.h"
 
 // Version string for update 1 of the game exe.
@@ -176,6 +177,8 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         MtHeapAllocatorImpl::RegisterTypeInfo();
         uPlayerImpl::RegisterTypeInfo();
 
+        TestHooks::RegisterTypeInfo();
+
         ImGuiRenderer::RegisterTypeInfo();
 
         if (ModConfig::Instance()->RecursiveGrenade == true)
@@ -212,6 +215,8 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         uItemImpl::InstallHooks();
 
         uPlayerImpl::InstallHooks();
+
+        TestHooks::InstallHooks();
 
         // Initialize the archive file overlay system.
         if (ArchiveOverlay::Instance()->Initialize() == false)
