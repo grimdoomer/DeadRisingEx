@@ -18,6 +18,7 @@ namespace DeadRisingLauncher
         private const string ModLoadOrderSection = "ModLoadOrder";
         
         private const string DebugLogKey = "DebugLog";
+        private const string ConsoleHistoryLimitKey = "ConsoleHistoryLimit";
         private const string RecursiveGrenadeKey = "RecursiveGrenade";
         private const string ItemRandomizerKey = "ItemRandomizer";
 
@@ -33,6 +34,10 @@ namespace DeadRisingLauncher
         /// Determines if debug logging is enabled or not.
         /// </summary>
         public bool DebugLog { get; set; } = false;
+        /// <summary>
+        /// Maximum number of items to display in the console history log.
+        /// </summary>
+        public int ConsoleHistoryLimit { get; set; } = 256;
         /// <summary>
         /// Determines if the recursive grenade mod will be enabled or not
         /// </summary>
@@ -87,6 +92,7 @@ namespace DeadRisingLauncher
 
             // Read all the values from the ini file.
             this.DebugLog = GetConfigBool(configData, GameSettingsSection, DebugLogKey);
+            this.ConsoleHistoryLimit = GetConfigInt(configData, GameSettingsSection, ConsoleHistoryLimitKey, 256);
             this.RecursiveGrenade = GetConfigBool(configData, GameSettingsSection, RecursiveGrenadeKey);
             this.ItemRandomizer = GetConfigBool(configData, GameSettingsSection, ItemRandomizerKey);
 
@@ -111,6 +117,7 @@ namespace DeadRisingLauncher
             // Game Settings:
             configData.Sections.AddSection(GameSettingsSection);
             configData[GameSettingsSection].AddKey(DebugLogKey, this.DebugLog.ToString());
+            configData[GameSettingsSection].AddKey(ConsoleHistoryLimitKey, this.ConsoleHistoryLimit.ToString());
             configData[GameSettingsSection].AddKey(RecursiveGrenadeKey, this.RecursiveGrenade.ToString());
             configData[GameSettingsSection].AddKey(ItemRandomizerKey, this.ItemRandomizer.ToString());
 
@@ -141,14 +148,27 @@ namespace DeadRisingLauncher
             return true;
         }
 
-        private bool GetConfigBool(IniData config, string section, string value)
+        private bool GetConfigBool(IniData config, string section, string value, bool @default = false)
         {
             // Try to get the string representation of the config value.
             if (config.Sections.ContainsSection(section) == false || config[section].ContainsKey(value) == false)
-                return false;
+                return @default;
 
             // Return the parsed representation of the value.
             return bool.Parse(config[section][value]);
+        }
+
+        private int GetConfigInt(IniData config, string section, string value, int @default)
+        {
+            // Try to get the string representation of the config value.
+            if (config.Sections.ContainsSection(section) == false || config[section].ContainsKey(value) == false)
+                return @default;
+
+            // Return the parsed representation of the value.
+            if (int.TryParse(config[section][value], out int parsedValue) == true)
+                return parsedValue;
+            else
+                return @default;
         }
     }
 }

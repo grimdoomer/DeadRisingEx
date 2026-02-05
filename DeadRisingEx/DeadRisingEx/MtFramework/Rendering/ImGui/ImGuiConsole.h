@@ -32,10 +32,11 @@ protected:
     ImVector<const char*>   Commands;
     std::unordered_map<std::wstring, const ConsoleCommandInfo*> CommandInfo;
 
-    std::string             LastCommandString;      // Used to check if text has changed in the TextEditHandler for the Always event
+    std::string             LastCommandString;          // Used to check if text has changed in the TextEditHandler for the Always event
 
+    const int               HistoryBufferMaxLength = 50;     // Maximum number of items to keep in the history buffer
     ImVector<char*>         History;
-    int                     HistoryPos;    // -1: new line, 0..History.Size-1 browsing history.
+    int                     HistoryPos;                 // -1: new line, 0..History.Size-1 browsing history.
 
     ImVector<const char*>   AutoCompleteCommands;
     int                     AutoCompletePos;

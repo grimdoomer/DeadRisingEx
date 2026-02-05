@@ -24,6 +24,7 @@ public:
     bool ItemRandomizerEnabled;     // Determines if items should be randomized
 
     bool DebugLog;                  // Determines if debug output should be written to a log file or not
+    int ConsoleHistoryLimit;        // Maximum number of items to keep in the console log history buffer
 
     bool RecursiveGrenade;          // Enables the recursive grenade mod
 

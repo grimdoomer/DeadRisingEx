@@ -46,6 +46,7 @@ bool ModConfig::LoadConfigFile(std::string sConfigFile)
     // Load game settings.
     this->ItemRandomizerEnabled = GetPrivateProfileBool("GameSettings", "ItemRandomizer", "false", sConfigFilePath.c_str());
     this->DebugLog = GetPrivateProfileBool("GameSettings", "DebugLog", "false", sConfigFilePath.c_str());
+    this->ConsoleHistoryLimit = GetPrivateProfileInt("GameSettings", "ConsoleHistoryLimit", 256, sConfigFilePath.c_str());
     this->RecursiveGrenade = GetPrivateProfileBool("GameSettings", "RecursiveGrenade", "false", sConfigFilePath.c_str());
 
     // Load graphics settings.

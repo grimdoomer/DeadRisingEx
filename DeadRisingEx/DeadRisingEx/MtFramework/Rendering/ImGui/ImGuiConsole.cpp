@@ -3,12 +3,17 @@
 #include <MtFramework/Rendering/sRender.h>
 #include "DeadRisingEx/MtFramework/Debug/sSnatcherToolImpl.h"
 #include "DeadRisingEx/Utilities.h"
+#include "DeadRisingEx/ModConfig.h"
 #include <varargs.h>
 #include <shellapi.h>
 #include <locale>
 #include <codecvt>
 
 __int64 PrintCommandHelp(WCHAR **argv, int argc);
+
+// Scratch buffers for ConsolePrint functions.
+char sConsolePrintBuffer[1024];
+WCHAR sConsolePrintUnicBuffer[1024];
 
 // Table of commands for sRender objects.
 const ConsoleCommandInfo g_sRenderCommands[] =
@@ -34,6 +39,10 @@ ImGuiConsole::ImGuiConsole()
     this->AutoScroll = true;
     this->ScrollToBottom = false;
 
+    // Reserve history buffers up front.
+    this->Items.reserve(ModConfig::Instance()->ConsoleHistoryLimit);
+    this->History.reserve(HistoryBufferMaxLength);
+
     // Register the help command.
     RegisterCommands(g_sRenderCommands, ARRAYSIZE(g_sRenderCommands));
 }
@@ -54,18 +63,21 @@ ImGuiConsole::~ImGuiConsole()
 void ImGuiConsole::ConsolePrint(const WCHAR *format, ...)
 {
     va_list args;
-    WCHAR Buffer[1024];
+    WCHAR* pBuffer = sConsolePrintUnicBuffer;
 
     // Setup the string converter.
     std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
 
-    // Fast path: assume the buffer is less than 2014 characters and try to format it.
+    // Acquire the list lock which also guards access to the static string scratch buffer.
+    std::lock_guard<std::mutex> listLock(this->ConsoleLogMutex);
+
+    // Fast path: assume the buffer is less than 1024 characters and try to format it.
     va_start(args, format);
-    int length = _vsnwprintf(Buffer, ARRAYSIZE(Buffer) - 1, format, args);
+    int length = _vsnwprintf(pBuffer, ARRAYSIZE(sConsolePrintUnicBuffer) - 1, format, args);
     if (length >= 1024)
     {
         // Not enough space in the buffer to print, alloc a suitable buffer.
-        WCHAR *pBuffer = (WCHAR*)malloc((length + 1) * sizeof(WCHAR));
+        pBuffer = (WCHAR*)malloc((length + 1) * sizeof(WCHAR));
         if (pBuffer != nullptr)
         {
             // Reset the var args pointer.
@@ -74,19 +86,31 @@ void ImGuiConsole::ConsolePrint(const WCHAR *format, ...)
 
             // Format the string.
             _vsnwprintf(pBuffer, length, format, args);
-
-            // Add the string to the console line list.
-            std::lock_guard<std::mutex> listLock(this->ConsoleLogMutex);
-            this->Items.push_back(Strdup(converter.to_bytes(pBuffer).c_str()));
         }
     }
-    else if (length > 0)
+    
+    if (length > 0 && pBuffer != nullptr)
     {
+        // Make sure the string is null terminated.
+        pBuffer[length] = (WCHAR)0;
+
+        // If the console log exceeded the max history limit remove the oldest item.
+        if (this->Items.size() >= ModConfig::Instance()->ConsoleHistoryLimit)
+        {
+            // Remove the oldest item and free the string buffer.
+            char* pOldest = this->Items[0];
+            this->Items.erase(this->Items.begin());
+
+            free(pOldest);
+        }
+
         // Add the string to the console line list.
-        std::lock_guard<std::mutex> listLock(this->ConsoleLogMutex);
-        Buffer[length] = (WCHAR)0;
-        this->Items.push_back(Strdup(converter.to_bytes(Buffer).c_str()));
+        this->Items.push_back(Strdup(converter.to_bytes(pBuffer).c_str()));
     }
+
+    // If we needed to allocate a scratch buffer free it.
+    if (length >= 1024 && pBuffer != nullptr)
+        free(pBuffer);
 
     // Cleanup the args.
     va_end(args);
@@ -95,15 +119,18 @@ void ImGuiConsole::ConsolePrint(const WCHAR *format, ...)
 void ImGuiConsole::ConsolePrint(const char *format, ...)
 {
     va_list args;
-    char Buffer[1024];
+    char* pBuffer = sConsolePrintBuffer;
 
-    // Fast path: assume the buffer is less than 2014 characters and try to format it.
+    // Acquire the list lock which also guards access to the static string scratch buffer.
+    std::lock_guard<std::mutex> listLock(this->ConsoleLogMutex);
+
+    // Fast path: assume the buffer is less than 1024 characters and try to format it.
     va_start(args, format);
-    int length = vsnprintf(Buffer, sizeof(Buffer) - 1, format, args);
+    int length = vsnprintf(pBuffer, sizeof(sConsolePrintBuffer) - 1, format, args);
     if (length >= 1024)
     {
         // Not enough space in the buffer to print, alloc a suitable buffer.
-        char *pBuffer = (char*)malloc(length + 1);
+        pBuffer = (char*)malloc(length + 1);
         if (pBuffer != nullptr)
         {
             // Reset the var args pointer.
@@ -112,19 +139,31 @@ void ImGuiConsole::ConsolePrint(const char *format, ...)
 
             // Format the string.
             vsnprintf(pBuffer, length, format, args);
-
-            // Add the string to the console line list.
-            std::lock_guard<std::mutex> listLock(this->ConsoleLogMutex);
-            this->Items.push_back(pBuffer);
         }
     }
-    else if (length > 0)
+    
+    if (length > 0 && pBuffer != nullptr)
     {
+        // Make sure the string is null terminated.
+        pBuffer[length] = (char)0;
+
+        // If the console log exceeded the max history limit remove the oldest item.
+        if (this->Items.size() >= ModConfig::Instance()->ConsoleHistoryLimit)
+        {
+            // Remove the oldest item and free the string buffer.
+            char* pOldest = this->Items[0];
+            this->Items.erase(this->Items.begin());
+
+            free(pOldest);
+        }
+
         // Add the string to the console line list.
-        std::lock_guard<std::mutex> listLock(this->ConsoleLogMutex);
-        Buffer[length] = (char)0;
-        this->Items.push_back(Strdup(Buffer));
+        this->Items.push_back(Strdup(pBuffer));
     }
+
+    // If we needed to allocate a scratch buffer free it.
+    if (length >= 1024 && pBuffer != nullptr)
+        free(pBuffer);
 
     // Cleanup the args.
     va_end(args);
@@ -258,6 +297,16 @@ void ImGuiConsole::ExecuteCommand(const char *psCommand)
     }
     else
     {
+        // If the history buffer has exceeded the max number of items to hold remove the oldest item.
+        if (this->History.size() >= this->HistoryBufferMaxLength)
+        {
+            // Remove the oldest element and free the string buffer.
+            char* pOldest = this->History[0];
+            this->History.erase(this->History.begin());
+
+            free(pOldest);
+        }
+
         // Add the new command to the history buffer.
         this->History.push_back(Strdup(psCommand));
     }
