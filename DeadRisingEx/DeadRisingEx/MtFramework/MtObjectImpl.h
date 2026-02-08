@@ -7,8 +7,8 @@
 static const char * MtPropertyTypeNames[PROPERTY_TYPE_COUNT] =
 {
     nullptr,
-    nullptr,
-    nullptr,
+    "void*",
+    "void*",
     "BOOL",
     "BYTE",
     "WORD",
@@ -19,7 +19,7 @@ static const char * MtPropertyTypeNames[PROPERTY_TYPE_COUNT] =
     "INT32",
     "LONGLONG",
     "float",
-    nullptr,
+    "double",
     "MtString",
     nullptr,
     nullptr,
@@ -27,7 +27,7 @@ static const char * MtPropertyTypeNames[PROPERTY_TYPE_COUNT] =
     nullptr,
     nullptr,
     "Vector3",
-    nullptr,
+    "Vector4",
     "Quaternion",
 };
 

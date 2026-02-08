@@ -14,8 +14,13 @@ struct Vector2
 };
 static_assert(sizeof(Vector2) == 0x8, "Vector2 incorrect struct size");
 
-// I think this needs to be aligned to 16 bytes
 struct Vector3 
+{
+    float x, y, z;
+};
+static_assert(sizeof(Vector3) == 0xC, "Vector3 incorrect struct size");
+
+__declspec(align(16)) struct Vector3Aligned
 {
     float x, y, z;
 };

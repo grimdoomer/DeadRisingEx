@@ -25,12 +25,12 @@ struct cUnit : public MtObject // abstract
 
     /* 0x10 */ cUnit    *pBLink;
     /* 0x18 */ cUnit    *pFLink;
-    /* 0x20 */ DWORD    mDeltaTime; // float?
+    /* 0x20 */ float    mDeltaTime;
     /* 0x24 */ DWORD    mRno;
 
     /*
         VTable:
-            0x28
+            0x28 LoadUnitResources() ?
             0x30 RenderFrame() ?
             0x38
             0x40

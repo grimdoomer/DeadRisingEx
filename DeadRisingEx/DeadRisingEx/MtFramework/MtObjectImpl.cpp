@@ -3,6 +3,7 @@
 #include <locale>
 #include <codecvt>
 #include <string>
+#include <list>
 
 // Forward declarations for command functions.
 __int64 PrintDebugOptions(WCHAR **argv, int argc);
@@ -20,6 +21,18 @@ void MtObjectImpl::RegisterTypeInfo()
 #if _DEBUG
     ImGuiConsole::Instance()->RegisterCommands(g_MtObjectCommands, g_MtObjectCommandsLength);
 #endif
+}
+
+struct ClassField
+{
+    int Offset;
+    std::string FieldType;
+    std::string FieldName;
+};
+
+bool CompareClassField(const ClassField& a, const ClassField& b)
+{
+    return a.Offset < b.Offset;
 }
 
 std::string FixFieldName(const char *psFieldName)
@@ -56,48 +69,72 @@ std::string FixFieldName(const char *psFieldName)
     return sNewName;
 }
 
-void PrintPropertyListReversed(MtPropertyListEntry *pEntry, void *pBaseAddress)
+void PrintPropertyList(MtPropertyListEntry *pEntry, void *pBaseAddress)
 {
-    // Traverse the entire list before printing the info for the current property.
-    if (pEntry->pFLink != nullptr)
-        PrintPropertyListReversed(pEntry->pFLink, pBaseAddress);
+    std::list<ClassField> classFields;
 
-    // Special case for section headers.
-    //if ((pEntry->Flags & MT_PROP_FLAG_SECTION) != 0)
-    //{
-    //    // If there is a section header name print it, else just skip a line.
-    //    if (pEntry->pPropertyName[0] == 0)
-    //        ImGuiConsole::Instance()->ConsolePrint(L"\n");
-    //    else
-    //        ImGuiConsole::Instance()->ConsolePrint(L"[%S]\n", pEntry->pPropertyName);
+    // Loop until we reach the end of the property list.
+    while (pEntry != nullptr)
+    {
+        ClassField fieldInfo;
 
-    //    return;
-    //}
+        // Skip any fields that are section begin/end markers.
+        switch (pEntry->PropertyType)
+        {
+        case MT_PROP_TYPE_ACTION:
+        case MT_PROP_TYPE_SUB_SECTION_START:
+        case MT_PROP_TYPE_SUB_SECTION_START2:
+        case MT_PROP_TYPE_SUB_SECTION_END2:
+        case MT_PROP_TYPE_SUB_SECTION_END:
+        case MT_PROP_TYPE_STRING_PTR:
+        {
+            // Next node.
+            pEntry = pEntry->pBLink;
+            continue;
+        }
+        }
 
-    // Check if we know the property type or not.
-    std::string sFieldName = FixFieldName(pEntry->pPropertyName);
-    DWORD address = (BYTE*)pEntry->pFieldValue - (BYTE*)pBaseAddress;
-    if (pEntry->PropertyType < PROPERTY_TYPE_COUNT && MtPropertyTypeNames[pEntry->PropertyType] != nullptr)
-        //ImGuiConsole::Instance()->ConsolePrint(L"   %S %S 0x%04x ", MtPropertyTypeNames[pEntry->PropertyType], pEntry->pPropertyName, pEntry->Flags);
-        ImGuiConsole::Instance()->ConsolePrint(L"/* 0x%02X */ %S \t%S;", address, MtPropertyTypeNames[pEntry->PropertyType], sFieldName.c_str());
-    else
-        ImGuiConsole::Instance()->ConsolePrint(L"   0x%04x %S 0x%04x ", pEntry->PropertyType, pEntry->pPropertyName, pEntry->Flags);
+        // Determine the field type.
+        const char* psFieldType = nullptr;
+        if (pEntry->PropertyType < PROPERTY_TYPE_COUNT && MtPropertyTypeNames[pEntry->PropertyType] != nullptr)
+            fieldInfo.FieldType = MtPropertyTypeNames[pEntry->PropertyType];
+        else if (pEntry->PropertyType == MT_PROP_TYPE_CRESOURCE)
+            fieldInfo.FieldType = "cResource*";
+        else
+            fieldInfo.FieldType = "UNKNOWN_TYPE";
 
-    /*
-    // Print function addresses.
-    if (pEntry->pGetter)
-        ImGuiConsole::Instance()->ConsolePrint(L"Get: %p ", pEntry->pGetter);
-    if (pEntry->pGetArrayLength)
-        ImGuiConsole::Instance()->ConsolePrint(L"ArrayLength: %p ", pEntry->pGetArrayLength);
-    if (pEntry->pUnkFunc1)
-        ImGuiConsole::Instance()->ConsolePrint(L"Func1: %p ", pEntry->pUnkFunc1);
-    if (pEntry->pUnkFunc2)
-        ImGuiConsole::Instance()->ConsolePrint(L"Func2: %p ", pEntry->pUnkFunc2);
-    if (pEntry->pUnkFunc3)
-        ImGuiConsole::Instance()->ConsolePrint(L"Func3: %p ", pEntry->pUnkFunc3);
-        */
+        // Get field name and offset.
+        fieldInfo.FieldName = FixFieldName(pEntry->pPropertyName);
+        fieldInfo.Offset = (BYTE*)pEntry->pFieldValue - (BYTE*)pBaseAddress;
+        classFields.push_back(fieldInfo);
 
-    ImGuiConsole::Instance()->ConsolePrint(L"\n");
+        //if (pEntry->PropertyType < PROPERTY_TYPE_COUNT && MtPropertyTypeNames[pEntry->PropertyType] != nullptr)
+        //{
+        //    //ImGuiConsole::Instance()->ConsolePrint(L"   %S %S 0x%04x ", MtPropertyTypeNames[pEntry->PropertyType], pEntry->pPropertyName, pEntry->Flags);
+        //    //ImGuiConsole::Instance()->ConsolePrint(L"/* 0x%02X */ %S \t%S;\n", address, MtPropertyTypeNames[pEntry->PropertyType], sFieldName.c_str());
+        //    DbgPrint("/* 0x%02X */ %s \t%s;\n", address, MtPropertyTypeNames[pEntry->PropertyType], sFieldName.c_str());
+        //}
+        //else
+        //{
+        //    //ImGuiConsole::Instance()->ConsolePrint(L"   0x%04x %S 0x%04x \n", pEntry->PropertyType, pEntry->pPropertyName, pEntry->Flags);
+        //    DbgPrint("/* 0x%02X */   0x%04x %s 0x%04x \n", address, pEntry->PropertyType, pEntry->pPropertyName, pEntry->Flags);
+        //}
+
+        // Next node.
+        pEntry = pEntry->pBLink;
+    }
+
+    // Sort the field list by offset.
+    classFields.sort([](const ClassField& a, const ClassField& b)
+        {
+            return a.Offset < b.Offset;
+        });
+
+    // Loop and print class fields.
+    for (auto iter = classFields.begin(); iter != classFields.end(); iter++)
+    {
+        DbgPrint("/* 0x%02X */ %s \t\t%s;\n", iter->Offset, iter->FieldType.c_str(), iter->FieldName.c_str());
+    }
 }
 
 __int64 PrintDebugOptions(WCHAR **argv, int argc)
@@ -147,8 +184,9 @@ __int64 PrintDebugOptions(WCHAR **argv, int argc)
     pObjectInstance->RegisterDebugOptions(pPropertyList);
 
     // Loop and print all of the debug options in reverse.
-    if (pPropertyList->pHead != nullptr)
-        PrintPropertyListReversed(pPropertyList->pHead, pObjectInstance);
+    MtPropertyListEntry* pEntry = pPropertyList->GetFirstNode();
+    if (pEntry != nullptr)
+        PrintPropertyList(pEntry, pObjectInstance);
 
     // Cleanup objects.
     delete pPropertyList;

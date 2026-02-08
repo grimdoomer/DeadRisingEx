@@ -25,9 +25,6 @@ bool(__stdcall *sUnit_Something)(void *thisptr, int unk, uItem *pItem) =
 void(__stdcall *CopyMtString)(void *thisptr, MtString **ppString) =
     (void(__stdcall*)(void*, MtString**))GetModuleAddress(0x1400CCE80);
 
-void(__stdcall *uCoord_SetRotation)(void *thisptr, Vector4 *pRotation) =
-    (void(__stdcall*)(void*, Vector4*))GetModuleAddress(0x14063EB90);
-
 bool(__stdcall *sUnit_AddObject)(void *thisptr, DWORD Unk, void *pObject) =
     (bool(__stdcall*)(void*, DWORD, void*))GetModuleAddress(0x1406300B0);
 
