@@ -15,6 +15,8 @@ struct uCoord : public cUnit
 
     /* 0xB0 */ // Matrix4x4 0x140176B52 some sort of rotation, gets copied to mQuat after XMQuaternionRotationMatrix
 
+    BYTE _padding[0xF0 - 0x70];
+
     /*
         VTable:
             0x58
@@ -28,7 +30,7 @@ struct uCoord : public cUnit
     inline static uCoord* (__stdcall* _dtor)(uCoord* thisptr, bool bFreeMemory) =
         (uCoord * (__stdcall*)(uCoord*, bool))GetModuleAddress(0x14063E5A0);
 
-    void(__stdcall* _SetRotation)(uCoord* thisptr, Vector4* pRotation) =
+    inline static void(__stdcall* _SetRotation)(uCoord* thisptr, Vector4* pRotation) =
         (void(__stdcall*)(uCoord*, Vector4*))GetModuleAddress(0x14063EB90);
 
     IMPLEMENT_MYDTI(uCoord, 0x141CF28B8, 0x1400AF010, 0x1401E94B0);
@@ -38,14 +40,9 @@ struct uCoord : public cUnit
         _ctor(this);
     }
 
-    ~uCoord()
-    {
-        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
-    }
-
     void SetRotation(Vector4* pRotation)
     {
         _SetRotation(this, pRotation);
     }
 };
-//static_assert(sizeof(uCoord) == 0xF0, "uCoord incorrect struct size");
+static_assert(sizeof(uCoord) == 0xF0, "uCoord incorrect struct size");

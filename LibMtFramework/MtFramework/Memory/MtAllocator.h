@@ -44,11 +44,6 @@ struct MtAllocator : public MtObject
         _ctor(this, psName, type);
     }
 
-    ~MtAllocator()
-    {
-        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
-    }
-
     /*
         Description: Allocates a new block of memory from the allocator memory pool.
 

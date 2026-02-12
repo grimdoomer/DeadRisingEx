@@ -33,11 +33,6 @@ struct cSystem : public MtObject
         _ctor(this);
     }
 
-    ~cSystem()
-    {
-        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
-    }
-
     /*
         Description: Called during game shutdown to free resources.
     */

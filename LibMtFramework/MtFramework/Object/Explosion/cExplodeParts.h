@@ -28,9 +28,4 @@ struct cExplodeParts : public MtObject
     {
         _ctor(this);
     }
-
-    ~cExplodeParts()
-    {
-        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
-    }
 };

@@ -34,11 +34,6 @@ struct MtStream : public MtObject
 
     IMPLEMENT_MYDTI(MtStream, 0x141CF2568, 0x1400AF010, 0x14062CEB0);
 
-    ~MtStream()
-    {
-        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
-    }
-
     /*
         Returns: True if the stream was open for reading, false otherwise.
     */

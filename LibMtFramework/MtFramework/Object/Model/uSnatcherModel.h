@@ -1,7 +1,7 @@
 
 #pragma once
 #include "LibMtFramework.h"
-#include "uHavokModel.h"
+#include "MtFramework/Physics/Model/uHavokModel.h"
 
 // sizeof = 0x1390
 struct uSnatcherModel : public uHavokModel
@@ -16,6 +16,10 @@ struct uSnatcherModel : public uHavokModel
 
     /* 0x1018 */ // mpSectioning
     /* 0x1020 */ // mpAdhesion
+
+    /* 0x1090 */ //rSoundSnd*
+
+    /* 0x10A0 */ //rSoundSnd*
 
     /* 0x1248 */ DWORD      mWork;
 
@@ -62,6 +66,9 @@ struct uSnatcherModel : public uHavokModel
     inline static uSnatcherModel* (__stdcall* _dtor)(uSnatcherModel* thisptr, bool bFreeMemory) =
         (uSnatcherModel * (__stdcall*)(uSnatcherModel*, bool))GetModuleAddress(0x140145F00);
 
+    inline static void (__stdcall* _LoadAndAssignModel)(uSnatcherModel* thisptr, const char* psFileName) =
+        (void(__stdcall*)(uSnatcherModel*, const char*))GetModuleAddress(0x14014D630);
+
     IMPLEMENT_MYDTI(uSnatcherModel, 0x141949C20, 0x1400AF010, 0x1401E94B0);
 
     uSnatcherModel()
@@ -69,8 +76,11 @@ struct uSnatcherModel : public uHavokModel
         _ctor(this);
     }
 
-    ~uSnatcherModel()
+    /*
+
+    */
+    void LoadAndAssignModel(const char* psFileName)
     {
-        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
+        _LoadAndAssignModel(this, psFileName);
     }
 };

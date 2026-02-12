@@ -1,6 +1,6 @@
 
 #pragma once
-#include "uModel.h"
+#include "MtFramework/Object/Model/uModel.h"
 
 // sizeof = 0xD60
 struct uHavokModel : public uModel
@@ -32,10 +32,5 @@ struct uHavokModel : public uModel
 	uHavokModel()
 	{
 		_ctor(this);
-	}
-
-	~uHavokModel()
-	{
-		(void)ThisPtrCallNoFixup(this->vtable[0], this, false);
 	}
 };

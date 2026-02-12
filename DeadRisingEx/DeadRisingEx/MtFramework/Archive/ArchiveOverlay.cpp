@@ -462,7 +462,7 @@ cResource * __stdcall Hook_sResource_LoadGameResourceSynchronous(sResource *this
 
     // Create the fake decompression context struct.
     context.pArchiveStream = pFileStream;
-    context.ScratchBufferSize = overlayReq.DecompressedSize;
+    context.ScratchBufferSize = overlayReq.CompressedSize;
     context.pScratchBuffer = (*g_pTempHeapAllocator)->Alloc(context.ScratchBufferSize, 0x10);
     context.CurrentArchiveOffset = ArchiveOverlay::Instance()->vArcFiles[archiveIndex].pFileEntries[fileIndex].DataOffset;
     context.AsyncBytesRead = ArchiveOverlay::Instance()->vArcFiles[archiveIndex].pFileEntries[fileIndex].CompressedSize;

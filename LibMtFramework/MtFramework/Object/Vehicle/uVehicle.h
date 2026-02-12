@@ -2,7 +2,8 @@
 #pragma once
 #include "MtFramework/Object/Model/uSnatcherModel.h"
 #include "MtFramework/Object/Explosion/cExplodeParts.h"
-#include "rHavokVehicleData.h"
+#include "MtFramework/Physics/Vehicle/rHavokVehicleData.h"
+#include "MtFramework/Physics/rHavokVertexLayout.h"
 
 enum eVehicleVital
 {
@@ -23,6 +24,9 @@ struct uVehicle : public uSnatcherModel
     /* 0x1390 */ //cExplodeParts
     /* 0x2DC0 */ 
 
+    /* 0x2DD0 */ //rSoundWed*
+    /* 0x2DD8 */ //rSoundRrd*
+
     /* 0x2DF0 */ Vector3            mPlOffset;
 
     /* 0x2E00 */ Vector3Aligned     mCenterOffset;
@@ -36,6 +40,8 @@ struct uVehicle : public uSnatcherModel
     /* 0x2EE0 */ Vector3Aligned     mCameraPosOffs;
     /* 0x2EF0 */ Vector3Aligned     mCameraTargetOffsGetIn;
     /* 0x2F00 */ Vector3Aligned     mCameraPosOffsGetIn;
+
+    /* 0x2F20 */ rHavokVertexLayout*    pHavokVertexLayout;
 
     /* 0x2F30 */ rHavokVehicleData* pVehicleHavokData;
 
@@ -76,7 +82,9 @@ struct uVehicle : public uSnatcherModel
 
     /*
         VTable:
-            0x1B0
+            0x1B0 sets up havok state?
+
+            0x228 sets which parts of the model are displayed
     */
 
     inline static uVehicle* (__stdcall* _ctor)(uVehicle* thisptr) =
@@ -85,15 +93,13 @@ struct uVehicle : public uSnatcherModel
     inline static uVehicle* (__stdcall* _dtor)(uVehicle* thisptr, bool bFreeMemory) =
         (uVehicle * (__stdcall*)(uVehicle*, bool))GetModuleAddress(0x1401BDAB0);
 
+    inline static void (__stdcall* _LoadUnitResources)(uVehicle* thisptr) =
+        (void(__stdcall*)(uVehicle*))GetModuleAddress(0x1401C49D0);
+
     IMPLEMENT_MYDTI(uVehicle, 0x141950838, 0x1400AF010, 0x1401E94B0);
 
     uVehicle()
     {
         _ctor(this);
-    }
-
-    ~uVehicle()
-    {
-        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
     }
 };

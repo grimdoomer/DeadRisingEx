@@ -3,7 +3,7 @@
 */
 
 #include "Utilities.h"
-#include "Misc/AsmHelpers.h"
+#include "Utilities/Module.h"
 #include "detours.h"
 #include <stdio.h>
 

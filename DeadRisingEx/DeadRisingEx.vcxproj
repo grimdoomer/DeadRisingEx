@@ -30,6 +30,8 @@
     <ClCompile Include="DeadRisingEx\MtFramework\Object\Model\sSMManagerImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Object\Npc\uNpcMarkerImpl.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Object\uPhotoImpl.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Object\Vehicle\Vehicle.cpp" />
+    <ClCompile Include="DeadRisingEx\MtFramework\Object\Vehicle\VehicleDefinition.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\imgui.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\ImGuiConsole.cpp" />
     <ClCompile Include="DeadRisingEx\MtFramework\Rendering\ImGui\ImGuiRenderer.cpp" />
@@ -65,6 +67,8 @@
     <ClInclude Include="DeadRisingEx\MtFramework\Object\Model\sSMManagerImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Object\Npc\uNpcMarkerImpl.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Object\uPhotoImpl.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Object\Vehicle\Vehicle.h" />
+    <ClInclude Include="DeadRisingEx\MtFramework\Object\Vehicle\VehicleDefinition.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\imconfig.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\imgui.h" />
     <ClInclude Include="DeadRisingEx\MtFramework\Rendering\ImGui\ImGuiConsole.h" />

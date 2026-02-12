@@ -9,6 +9,12 @@
 // sizeof = 0x148
 struct MtFile : public MtObject
 {
+    // sizeof = 0x48
+    struct FileInfo : public MtObject
+    {
+        /* 0x08 */
+    };
+
     /*
         VTable:
             0x28 bool OpenFile(const char *psFileName, DWORD flags);
@@ -104,11 +110,6 @@ struct MtFile : public MtObject
         _ctor(this, psFileName, flags);
     }
 
-    ~MtFile()
-    {
-        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
-    }
-
     /*
         Description: Opens the specified file
 
@@ -155,9 +156,9 @@ struct MtFile : public MtObject
     }
 
     // Seek origin:
-    #define SEEK_BEGIN      FILE_BEGIN + 1
-    #define SEEK_CURRENT    FILE_CURRENT + 1
-    #define SEEK_END        FILE_END + 1
+    #define MT_SEEK_BEGIN       FILE_BEGIN + 1
+    #define MT_SEEK_CURRENT     FILE_CURRENT + 1
+    #define MT_SEEK_END         FILE_END + 1
 
     /*
         Description: Seeks to the specified offset from the specified origin.

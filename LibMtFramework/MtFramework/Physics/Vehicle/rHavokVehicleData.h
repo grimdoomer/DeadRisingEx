@@ -96,10 +96,5 @@ struct rHavokVehicleData : public cResource
     {
         _ctor(this);
     }
-
-    ~rHavokVehicleData()
-    {
-        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
-    }
 };
 static_assert(sizeof(rHavokVehicleData) == 0x1B0, "rHavokVehicleData incorrect struct size");

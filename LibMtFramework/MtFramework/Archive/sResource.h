@@ -61,11 +61,6 @@ struct sResource
         {
             _ctor(this, context, pDecodeReq);
         }
-
-        ~DecompressStream()
-        {
-            (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
-        }
     };
     static_assert(sizeof(DecompressStream) == 0x78, "sResource::DecompressStream incorrect struct size");
 

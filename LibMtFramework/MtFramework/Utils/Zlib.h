@@ -4,7 +4,7 @@
 
 #pragma once
 #include <Windows.h>
-#include "Misc/AsmHelpers.h"
+#include "Utilities/Module.h"
 
 struct z_stream_s;
 

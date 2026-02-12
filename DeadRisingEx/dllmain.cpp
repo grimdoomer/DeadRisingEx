@@ -8,7 +8,7 @@
 #include <shellapi.h>
 #include "LibMtFramework.h"
 #include <detours.h>
-#include "Misc/AsmHelpers.h"
+#include "Utilities/Module.h"
 #include "MtFramework/Utils/Utilities.h"
 #include "DeadRisingEx/ModConfig.h"
 
@@ -37,6 +37,7 @@
 #include "DeadRisingEx/MtFramework/Object/Model/sSMManagerImpl.h"
 #include "DeadRisingEx/MtFramework/Object/Npc/uNpcMarkerImpl.h"
 #include "DeadRisingEx/MtFramework/Player/uPlayerImpl.h"
+#include "DeadRisingEx/MtFramework/Object/Vehicle/Vehicle.h"
 #include "DeadRisingEx/Utilities/DebugLog.h"
 
 // Version string for update 1 of the game exe.
@@ -174,6 +175,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         sMainImpl::RegisterTypeInfo();
         sSnatcherMainImpl::RegisterTypeInfo();
         MtHeapAllocatorImpl::RegisterTypeInfo();
+        uDrexVehicle::RegisterCommands();
         ImGuiRenderer::RegisterTypeInfo();
 
         if (ModConfig::Instance()->RecursiveGrenade == true)

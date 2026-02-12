@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Misc\AsmHelpers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MtFramework\Graphics\rModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -165,9 +162,6 @@
     <ClInclude Include="MtFramework\Graphics\Sprites\cSprAnm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MtFramework\Utils\VTable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MtFramework\Game\Player\uCockpit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -189,7 +183,7 @@
     <ClInclude Include="MtFramework\Graphics\rMotionList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MtFramework\Object\Model\uHavokModel.h">
+    <ClInclude Include="MtFramework\Physics\Model\uHavokModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MtFramework\Object\Vehicle\uVehicle.h">
@@ -201,7 +195,22 @@
     <ClInclude Include="MtFramework\Object\Explosion\cExplodeParts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MtFramework\Object\Vehicle\rHavokVehicleData.h">
+    <ClInclude Include="MtFramework\Physics\Vehicle\rHavokVehicleData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Object\Vehicle\uVehicleOm09.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Physics\sHavok.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Physics\rHavokVertexLayout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MtFramework\Sound\sSoundSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\Module.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -209,12 +218,12 @@
     <ClCompile Include="MtFramework\Utils\Utilities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Misc\Module.cpp">
+    <ClCompile Include="Utilities\Module.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="Misc\AsmHelpers.asm">
+    <MASM Include="Utilities\ModuleAsm.asm">
       <Filter>Source Files</Filter>
     </MASM>
   </ItemGroup>

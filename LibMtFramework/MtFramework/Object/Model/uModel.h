@@ -96,7 +96,10 @@ struct uModel : public uCoord
 		/* 0x144 */ //DWORD?
 		/* 0x148 */ //float
 		/* 0x14C */ //DWORD?
+
+		BYTE _padding[0x150 - 0xE0];
 	};
+	static_assert(sizeof(Motion) == 0x150, "uMode::Motion incorrect struct size");
 
 	// sizeof = 0x50
 	struct RenderInfo : public MtObject
@@ -161,11 +164,6 @@ struct uModel : public uCoord
 	uModel()
 	{
 		_ctor(this);
-	}
-
-	~uModel()
-	{
-		(void)ThisPtrCallNoFixup(this->vtable[0], this, false);
 	}
 
 	void AssignModel(rModel* pModel)

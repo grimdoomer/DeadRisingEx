@@ -3,7 +3,7 @@
 */
 
 #include "sRenderImpl.h"
-#include <Misc/AsmHelpers.h>
+#include <Utilities/Module.h>
 #include <MtFramework/Game/sMain.h>
 #include <MtFramework/Rendering/sRender.h>
 #include <MtFramework/Rendering/sPrim.h>

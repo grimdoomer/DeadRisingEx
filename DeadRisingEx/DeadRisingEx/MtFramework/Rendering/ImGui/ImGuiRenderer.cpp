@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <DirectXMath.h>
 #include <d3dcompiler.h>
-#include <MtFramework/Utils/VTable.h>
 #include <MtFramework/Game/sMain.h>
 #include <MtFramework/Rendering/sRender.h>
 #include "DeadRisingEx/MtFramework/Rendering/ImGui/ImGuiRenderer.h"

@@ -59,10 +59,5 @@ struct MtFileStream : public MtStream
     {
         _ctor(this, pFile);
     }
-
-    ~MtFileStream()
-    {
-        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
-    }
 };
 static_assert(sizeof(MtFileStream) == 0x10, "MtFileStream incorrect struct size");

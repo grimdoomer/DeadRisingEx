@@ -33,11 +33,6 @@ struct sUnit : public cSystem
         {
             _ctor(this);
         }
-
-        ~MoveLine()
-        {
-            (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
-        }
     };
     static_assert(sizeof(MoveLine) == 0x28, "sUnit::MoveLine incorrect struct size");
 
@@ -71,11 +66,6 @@ struct sUnit : public cSystem
     sUnit()
     {
         _ctor(this);
-    }
-
-    ~sUnit()
-    {
-        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
     }
 
     /*

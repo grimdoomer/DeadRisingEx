@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LibMtFramework.h" />
-    <ClInclude Include="Misc\AsmHelpers.h" />
+    <ClInclude Include="Utilities\Module.h" />
     <ClInclude Include="MtFramework\Archive\cResource.h" />
     <ClInclude Include="MtFramework\Archive\rArchive.h" />
     <ClInclude Include="MtFramework\Area\rAreaHitLayout.h" />
@@ -44,13 +44,17 @@
     <ClInclude Include="MtFramework\Object\Explosion\cExplodeData.h" />
     <ClInclude Include="MtFramework\Object\Explosion\cExplodeParts.h" />
     <ClInclude Include="MtFramework\Object\Model\sSMManager.h" />
-    <ClInclude Include="MtFramework\Object\Model\uHavokModel.h" />
+    <ClInclude Include="MtFramework\Physics\Model\uHavokModel.h" />
     <ClInclude Include="MtFramework\Object\Model\uModel.h" />
     <ClInclude Include="MtFramework\Object\Npc\uNpcMarker.h" />
     <ClInclude Include="MtFramework\Object\uCoord.h" />
-    <ClInclude Include="MtFramework\Object\Vehicle\rHavokVehicleData.h" />
+    <ClInclude Include="MtFramework\Physics\sHavok.h" />
+    <ClInclude Include="MtFramework\Physics\Vehicle\rHavokVehicleData.h" />
     <ClInclude Include="MtFramework\Object\Vehicle\uVehicle.h" />
+    <ClInclude Include="MtFramework\Object\Vehicle\uVehicleOm09.h" />
+    <ClInclude Include="MtFramework\Physics\rHavokVertexLayout.h" />
     <ClInclude Include="MtFramework\Rendering\sGpuParticle.h" />
+    <ClInclude Include="MtFramework\Sound\sSoundSystem.h" />
     <ClInclude Include="MtFramework\System\cSystem.h" />
     <ClInclude Include="MtFramework\Game\sPad.h" />
     <ClInclude Include="MtFramework\Game\sSnatcherMain.h" />
@@ -80,16 +84,15 @@
     <ClInclude Include="MtFramework\Utils\MtArray.h" />
     <ClInclude Include="MtFramework\Utils\MtPropertyList.h" />
     <ClInclude Include="MtFramework\Utils\Utilities.h" />
-    <ClInclude Include="MtFramework\Utils\VTable.h" />
     <ClInclude Include="MtFramework\Utils\Zlib.h" />
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="Misc\AsmHelpers.asm">
+    <MASM Include="Utilities\ModuleAsm.asm">
       <FileType>Document</FileType>
     </MASM>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Misc\Module.cpp" />
+    <ClCompile Include="Utilities\Module.cpp" />
     <ClCompile Include="MtFramework\Utils\Utilities.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

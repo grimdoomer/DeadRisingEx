@@ -4,7 +4,7 @@
 
 #pragma once
 #include <Windows.h>
-#include "Misc/AsmHelpers.h"
+#include "Utilities/Module.h"
 #include "MtFramework/Utils/MtPropertyList.h"
 
 struct cResource;
@@ -60,6 +60,7 @@ struct MtDTI
     */
     MtDTI(const char *psTypeName, MtDTI *pParentType, DWORD dwSizeOf, DWORD dwFileType, BYTE flags)
     {
+        memset(this, 0, sizeof(MtDTI));
         _ctor(this, psTypeName, pParentType, dwSizeOf, dwFileType, flags);
     }
 

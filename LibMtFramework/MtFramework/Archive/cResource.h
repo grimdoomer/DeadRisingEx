@@ -5,6 +5,7 @@
 #pragma once
 #include "MtFramework/MtObject.h"
 #include "MtFramework/IO/MtStream.h"
+#include "MtFramework/IO/MtFile.h"
 
 // sizeof = 0x60
 struct cResource : public MtObject
@@ -33,6 +34,8 @@ struct cResource : public MtObject
     /* 0x54 */ DWORD        mSize;
     /* 0x58 */ ULONGLONG    mID;
 
+    inline static void** _vtable = (void**)GetModuleAddress(0x14103B2B0);
+
     inline static cResource * (__stdcall *_ctor)(cResource *thisptr) =
         (cResource*(__stdcall*)(cResource*))GetModuleAddress(0x140630C90);
 
@@ -45,6 +48,9 @@ struct cResource : public MtObject
     inline static MtDTI * (__stdcall *_GetDTI)(cResource *thisptr) =
         (MtDTI*(__stdcall*)(cResource*))GetModuleAddress(0x140631060);
 
+    inline static MtFile::FileInfo* (__stdcall* _GetFileInfo)(cResource* thisptr, MtFile::FileInfo* pFileInfo) =
+        (MtFile::FileInfo * (__stdcall*)(cResource*, MtFile::FileInfo*))GetModuleAddress(0x140631080);
+
     inline static const char * (__stdcall *_GetFileExtension)(cResource *thisptr) =
         (const char*(__stdcall*)(cResource*))GetModuleAddress(0x14103B2E0);
 
@@ -55,6 +61,14 @@ struct cResource : public MtObject
         (void(__stdcall*)(cResource*))GetModuleAddress(0x140631150);
 
     IMPLEMENT_MYDTI(cResource, 0x141CF2698, 0x1400AF010, 0x140631100);
+
+    /*
+
+    */
+    MtFile::FileInfo* GetFileInfo(MtFile::FileInfo* pFileInfo)
+    {
+        return (MtFile::FileInfo*)ThisPtrCallNoFixup(this->vtable[5], this, pFileInfo);
+    }
 
     /*
         Gets the file extension for this object type.

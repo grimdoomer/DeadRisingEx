@@ -4,7 +4,7 @@
 
 #pragma once
 #include <Windows.h>
-#include "Misc/AsmHelpers.h"
+#include "Utilities/Module.h"
 
 #pragma warning(disable: 4200) // nonstandard extension used: zero-sized array in struct/union
 
@@ -22,7 +22,14 @@ static_assert(sizeof(Vector3) == 0xC, "Vector3 incorrect struct size");
 
 __declspec(align(16)) struct Vector3Aligned
 {
-    float x, y, z;
+    union
+    {
+        struct
+        {
+            float x, y, z;
+        };
+        Vector3 AsVec3;
+    };
 };
 static_assert(sizeof(Vector3) == 0xC, "Vector3 incorrect struct size");
 

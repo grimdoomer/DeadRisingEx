@@ -71,11 +71,6 @@ struct rArchive : public cResource
         {
             _ctor(this, pFileStream);
         }
-
-        ~DecompressStream()
-        {
-            (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
-        }
     };
     static_assert(sizeof(DecompressStream) == 0xA0, "rArchive::DecompressStream incorrect struct size");
 };

@@ -21,9 +21,4 @@ struct cExplodeData : public MtObject
     {
         _ctor(this);
     }
-
-    ~cExplodeData()
-    {
-        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
-    }
 };

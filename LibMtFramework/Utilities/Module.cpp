@@ -2,7 +2,6 @@
 
 */
 
-#include "AsmHelpers.h"
-#include <Windows.h>
+#include "Module.h"
 
 void *SnatcherModuleHandle = GetModuleHandle(NULL);

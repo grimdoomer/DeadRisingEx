@@ -30,7 +30,7 @@ struct cUnit : public MtObject // abstract
 
     /*
         VTable:
-            0x28 LoadUnitResources() ?
+            0x28 void LoadUnitResources();
             0x30 RenderFrame() ?
             0x38
             0x40
@@ -54,17 +54,20 @@ struct cUnit : public MtObject // abstract
         _ctor(this);
     }
 
-    ~cUnit()
-    {
-        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
-    }
-
     /*
         Gets the name of the code class for this item instance.
     */
     const char * GetObjectName()
     {
         return (const char*)ThisPtrCallNoFixup(this->vtable[10], this);
+    }
+
+    /*
+        Loads resources for the unit and assigns it to a move line?
+    */
+    void LoadUnitResources()
+    {
+        (void)ThisPtrCallNoFixup(this->vtable[5], this);
     }
 };
 static_assert(sizeof(cUnit) == 0x28, "cUnit incorrect struct size");

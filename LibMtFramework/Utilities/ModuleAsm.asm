@@ -1,6 +1,7 @@
 
 PUBLIC ThisPtrCall
 PUBLIC ThisPtrCallNoFixup
+PUBLIC AssignVTableEntry
 
 EXTERNDEF SnatcherModuleHandle:qword
 
@@ -63,5 +64,14 @@ EXTERNDEF SnatcherModuleHandle:qword
         ret
 
     ThisPtrCallNoFixup ENDP
+
+    ; void AssignVTableEntry(void** vtable, int index, void* pFunction)
+	AssignVTableEntry PROC
+
+		; Store function pointer into vtable entry.
+		mov		qword ptr [rcx + rdx * 8], r8
+		ret
+
+	AssignVTableEntry ENDP
 
 END
