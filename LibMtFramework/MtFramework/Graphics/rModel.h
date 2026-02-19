@@ -171,5 +171,7 @@ struct rModel : cResource
     /* 0x108 */ DWORD       LightGroup;
     /* 0x110 */ Vector4     Scale; // BBMax - BBMin
     /* 0x120 */ Vector4     Unk; // gets set to BBMin at load
+
+    IMPLEMENT_MYDTI(rModel, 0x141CF2FD0, 0x1400AF010, 0x14064FA50);
 };
 static_assert(sizeof(rModel) == 0x130, "rModel incorrect struct size");

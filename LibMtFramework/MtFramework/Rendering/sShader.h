@@ -5,6 +5,7 @@
 #pragma once
 #include "LibMtFramework.h"
 #include "MtFramework/System/cSystem.h"
+#include "MtFramework/Graphics/rTexture.h"
 
 // sizeof = 0xB560
 struct sShader : public cSystem
@@ -46,7 +47,37 @@ struct sShader : public cSystem
     };
     static_assert(sizeof(TechniqueDesc) == 0x18, "sShader::TechniqueDesc incorrect struct size");
 
-    /* 0x38 */
+    /* 0x38 */ float                mDistanceFogStart;
+    /* 0x3C */ float                mDistanceFogEnd;
+    /* 0x40 */ float                mHeightFogStart;
+    /* 0x44 */ float                mHeightFogEnd;
+
+    /* 0x50 */ Vector4              mFogColor;
+
+    /* 0x70 */ float                mLightMapLerp;
+    /* 0x74 */ signed int           mDebugView;
+
+    /* 0x298 */ ParameterDesc       mParameter[512];
+    /* 0x6298 */ TechniqueDesc      mTechnique[512];
+    /* 0x9298 */ // 0x1000 bytes
+    /* 0xA298 */
+
+    /* 0xB298 */ DWORD              mParameterNum;
+    /* 0xB29C */ DWORD              mTechniqueNum;
+
+    /* 0xB4D0 */ rTexture*          pNullWhiteTexture;
+    /* 0xB4D8 */ rTexture*          pNullNormalTexture;
+    /* 0xB4E0 */ rTexture*          pNullBlackTexture;
+    /* 0xB4E8 */ rTexture*          mpEnvTexture;
+    /* 0xB4F0 */ rTexture*          pFontTexture;
+
+    /* 0xB548 */ BOOL               mDisableBaseMap;
+    /* 0xB549 */ BOOL               mDisableNormalMap;
+    /* 0xB54A */ BOOL               mDisableMaskMap;
+    /* 0xB54B */ BOOL               mDisableLightMap;
+    /* 0xB54C */ BOOL               mDisableShadowMap;
+    /* 0xB54D */ BOOL               mDisableEnvMap;
+    /* 0xB550 */ Vector4            mTestParam;
 
     IMPLEMENT_SINGLETON(sShader, 0x141D179A0);
 };

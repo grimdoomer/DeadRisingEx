@@ -273,6 +273,24 @@ struct cTrans : public MtObject
         /* 0x08 */ DWORD    Value;
     };
 
+    // sizeof = 0x48
+    struct RenderCommand_3 : public RenderCommandBase   // Used for models
+    {
+        /* 0x08 */ // Pointer to another command that sets up the shader technique?
+        /* 0x10 */ // pointer to buffer related to 0x4960 below
+
+        /* 0x24 */ // some complex flag value
+
+        /* 0x38 */
+        struct
+        {
+            DWORD TopologyType : 8;     // D3D11_PRIMITIVE_TOPOLOGY
+            DWORD IndexCount : 24;      // Passed to DrawIndexed, adjusted based on topology type 0x140662F27
+        };
+        /* 0x3C */ INT BaseVertexLocation;
+        /* 0x40 */ DWORD StartIndexLocation;
+    };
+
     // sizeof = 0x50
     struct RenderCommand_13 : public RenderCommandBase
     {

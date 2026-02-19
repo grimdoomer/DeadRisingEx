@@ -4,6 +4,7 @@
 #include "DeadRisingEx/MtFramework/Debug/sSnatcherToolImpl.h"
 #include "DeadRisingEx/Utilities.h"
 #include "DeadRisingEx/ModConfig.h"
+#include "DeadRisingEx/MtFramework/Rendering/Utilities/ImGuiWindowBase.h"
 #include <varargs.h>
 #include <shellapi.h>
 #include <locale>
@@ -279,6 +280,20 @@ void ImGuiConsole::Draw()
             }
         }
         ImGui::End();
+    }
+
+    // Loop and draw child windows.
+    for (std::vector<ImGuiWindowBase*>::iterator window = this->childWindows.begin(); window != this->childWindows.end(); window++)
+    {
+        // Always position the window below the console when first opening.
+        ImGui::SetNextWindowPos(ImVec2(100, consoleSize.y + 100), ImGuiCond_Appearing);
+
+        // Draw the UI window.
+        if ((*window)->DrawWindow() == false)
+        {
+            // Remove the window from the list.
+            this->childWindows.erase(window);
+        }
     }
 }
 

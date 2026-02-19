@@ -9,6 +9,8 @@
 #include <unordered_map>
 #include <mutex>
 
+class ImGuiWindowBase;
+
 // Function prototype for command handlers:
 typedef __int64(__stdcall *ConsoleCommandHandlerFunc)(WCHAR **argv, int argc);
 
@@ -47,6 +49,8 @@ protected:
     bool                    ScrollToBottom;
     std::mutex              ConsoleLogMutex;
 
+    std::vector<ImGuiWindowBase*> childWindows;
+
     int TextEditHandler(ImGuiInputTextCallbackData* data);
 
     void ExecuteCommand(const char *psCommand);
@@ -82,6 +86,11 @@ public:
 
     void RegisterCommand(const ConsoleCommandInfo *pCommand);
     void RegisterCommands(const ConsoleCommandInfo *pCommands, int count);
+
+    void OpenWindow(ImGuiWindowBase* pWindow)
+    {
+        this->childWindows.push_back(pWindow);
+    }
 
     // Portable helpers
     static int   Stricmp(const char* s1, const char* s2) { int d; while ((d = toupper(*s2) - toupper(*s1)) == 0 && *s1) { s1++; s2++; } return d; }

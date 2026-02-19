@@ -78,7 +78,7 @@ ImGuiRenderer *g_pImGuiRendererInstance = nullptr;
 
 void *ImGuiRenderer_vtable[4] = { nullptr };
 
-bool g_ShowImGuiDemo = true;
+bool g_ShowImGuiDemo = false;
 
 // Fake destructor function to bypass not being able to take the address of a destructor:
 void ImGuiRenderer_dtor(ImGuiRenderer *thisptr)
@@ -464,8 +464,8 @@ void ImGuiRenderer::BeginFrame()
         return;
 
     // Check if we should draw the imgui demo window.
-    //if (g_ShowImGuiDemo == true)
-    //ImGui::ShowDemoWindow(&g_ShowImGuiDemo);
+    if (g_ShowImGuiDemo == true)
+        ImGui::ShowDemoWindow(&g_ShowImGuiDemo);
 
     // Draw the console window.
     ImGuiConsole::Instance()->Draw();

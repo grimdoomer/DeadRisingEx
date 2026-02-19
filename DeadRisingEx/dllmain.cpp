@@ -167,7 +167,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         MtObjectImpl::RegisterTypeInfo();
         sSnatcherToolImpl::RegisterTypeInfo();
         sResourceImpl::InitializeTypeInfo();
-        rModelImpl::InitializeTypeInfo();
+        rModelImpl::RegisterCommands();
         sRenderImpl::RegisterTypeInfo();
         sShaderImpl::RegisterTypeInfo();
         uItemImpl::RegisterTypeInfo();
