@@ -8,6 +8,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -33,7 +34,8 @@ namespace Updater
                 if (processes.Length > 0)
                 {
                     // Display an error to the user.
-                    MessageBox.Show("Please close all DeadRisingLauncher windows before continuing!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    if (MessageBox.Show("Please close all DeadRisingLauncher windows before continuing!", "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
+                        Application.Exit();
                 }
 
                 // Check for any running game processes.
@@ -41,7 +43,8 @@ namespace Updater
                 if (processes.Length > 0)
                 {
                     // Display an error to the user.
-                    MessageBox.Show("Please close all DeadRising game windows before continuing!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    if (MessageBox.Show("Please close all DeadRising game windows before continuing!", "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
+                        Application.Exit();
                 }
             }
             while (processes.Length > 0);
@@ -89,17 +92,42 @@ namespace Updater
                         // Update the file name being copied.
                         worker.ReportProgress(i, zipFile.Entries[i].Name);
 
-                        // Check if this is a file or directory.
-                        string fileName = string.Format("{0}\\{1}", Application.StartupPath, zipFile.Entries[i].FullName.Replace('/', '\\'));
-                        if ((zipFile.Entries[i].ExternalAttributes & 0x10) != 0)
+                        // Format the full file path for the file and create the directory path if it doesn't exist.
+                        string filePath = Path.Combine(Application.StartupPath, zipFile.Entries[i].FullName);
+                        Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+
+                        bool fileCopied = false;
+                        do
                         {
-                            // Entry is a directory, create it if it does not already exist.
-                            Directory.CreateDirectory(fileName);
+                            // Defender may be holding a lock on the file, so retry max 3 times.
+                            for (int x = 0; x < 3; x++)
+                            {
+                                // Update worker status to indicate what's going on.
+                                if (x > 0)
+                                    worker.ReportProgress(i, $"{zipFile.Entries[i].Name} (attempt {x + 1})");
+
+                                try
+                                {
+                                    // Extract the file to the running directory.
+                                    zipFile.Entries[i].ExtractToFile(filePath, true);
+                                    fileCopied = true;
+                                    break;
+                                }
+                                catch (IOException ioException)
+                                {
+                                    // Delay for a second and try again.
+                                    worker.ReportProgress(i, $"{zipFile.Entries[i].Name} (in use by another program...)");
+                                    Thread.Sleep(1000);
+                                }
+                            }
                         }
-                        else
+                        while (fileCopied == false && MessageBox.Show($"Failed to copy {zipFile.Entries[i].Name}, it may be in use by another program. Try again?", "File copy failed", MessageBoxButtons.YesNo) == DialogResult.Yes);
+
+                        // If the file wasn't copied successfully then bail out.
+                        if (fileCopied == false)
                         {
-                            // Extract the file to the running directory.
-                            zipFile.Entries[i].ExtractToFile(fileName, true);
+                            e.Result = false;
+                            return;
                         }
                     }
 
@@ -117,7 +145,8 @@ namespace Updater
             catch (Exception exception)
             {
                 // Failed to open the zip file or copy files.
-                MessageBox.Show("Failed to install update!", "Update failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                File.WriteAllText(Application.StartupPath + "\\UpdateLog.txt", exception.ToString());
+                MessageBox.Show("Failed to install update! An error log has been saved to UpdateLog.txt in the application directory.", "Update failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 e.Result = false;
             }
         }
