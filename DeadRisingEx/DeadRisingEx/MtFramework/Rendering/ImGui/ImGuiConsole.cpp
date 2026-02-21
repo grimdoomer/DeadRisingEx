@@ -1,5 +1,6 @@
 
 #include "ImGuiConsole.h"
+#include "imgui_internal.h"
 #include <MtFramework/Rendering/sRender.h>
 #include "DeadRisingEx/MtFramework/Debug/sSnatcherToolImpl.h"
 #include "DeadRisingEx/Utilities.h"
@@ -35,6 +36,7 @@ ImGuiConsole::ImGuiConsole()
 
     this->AutoCompletePos = -1;
     this->DrawAutoComplete = false;
+    this->AutoCompleteSuppressed = false;
 
     this->AutoScroll = true;
     this->ScrollToBottom = false;
@@ -233,7 +235,7 @@ void ImGuiConsole::Draw()
         // Command line input:
         bool reclaimFocus = false;
         if (ImGui::InputText("##CommandLine", this->InputBuf, IM_ARRAYSIZE(this->InputBuf),
-            ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CallbackCompletion | ImGuiInputTextFlags_CallbackHistory | ImGuiInputTextFlags_CallbackAlways, TextEditCallback, this))
+            ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CallbackCompletion | ImGuiInputTextFlags_CallbackHistory | ImGuiInputTextFlags_CallbackAlways | ImGuiInputTextFlags_IgnoreEscapeKey, TextEditCallback, this))
         {
             // Cleanup the input buffer and if it's valid handle the command.
             Strtrim(this->InputBuf);
@@ -246,6 +248,10 @@ void ImGuiConsole::Draw()
             // Flag to reclaim focus.
             reclaimFocus = true;
         }
+
+        // If the command line box has focus and the user pressed the escape key, suppress the auto complete box.
+        if (ImGui::IsItemActive() && this->DrawAutoComplete == true && ImGui::IsKeyPressed(VK_ESCAPE) == true)
+            this->AutoCompleteSuppressed = true;
 
         // Check if we need to give the command box focus.
         if (reclaimFocus == true && sSnatcherToolImpl::Instance()->IsVisible() == false)
@@ -314,6 +320,7 @@ void ImGuiConsole::ExecuteCommand(const char *psCommand)
 
     // Close the auto complete window.
     this->DrawAutoComplete = false;
+    this->AutoCompleteSuppressed = false;
 
     // Setup the string converter.
     std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
@@ -419,24 +426,29 @@ int ImGuiConsole::TextEditHandler(ImGuiInputTextCallbackData* data)
         if (data->BufTextLen == 0)
         {
             this->AutoCompletePos = -1;
+            this->AutoCompleteSuppressed = false;
             return 0;
         }
 
-        // Loop and add any commands that match the entered text to the auto complete list.
-        for (int i = 0; i < this->Commands.size(); i++)
+        // Check if auto complete is suppressed and update suggestion list if not.
+        if (this->AutoCompleteSuppressed == false)
         {
-            // Check if the entered text matches the start of the command.
-            if (strncmp(data->Buf, this->Commands[i], data->BufTextLen) == 0)
+            // Loop and add any commands that match the entered text to the auto complete list.
+            for (int i = 0; i < this->Commands.size(); i++)
             {
-                // Insert the command into the auto complete list in a sorted manor.
-                InsertAutoCompleteOption(this->Commands[i]);
-                this->DrawAutoComplete = true;
+                // Check if the entered text matches the start of the command.
+                if (strncmp(data->Buf, this->Commands[i], data->BufTextLen) == 0)
+                {
+                    // Insert the command into the auto complete list in a sorted manor.
+                    InsertAutoCompleteOption(this->Commands[i]);
+                    this->DrawAutoComplete = true;
+                }
             }
-        }
 
-        // Check if we need to reset the auto complete position.
-        if (this->DrawAutoComplete == true && this->AutoCompletePos == -1)
-            this->AutoCompletePos = 0;
+            // Check if we need to reset the auto complete position.
+            if (this->DrawAutoComplete == true && this->AutoCompletePos == -1)
+                this->AutoCompletePos = 0;
+        }
         break;
     }
     case ImGuiInputTextFlags_CallbackCompletion:

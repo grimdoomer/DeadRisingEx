@@ -41,6 +41,7 @@ protected:
     ImVector<const char*>   AutoCompleteCommands;
     int                     AutoCompletePos;
     bool                    DrawAutoComplete;
+    bool                    AutoCompleteSuppressed;     // Indicates if the user suppressed the auto complete list
 
     ImGuiTextFilter         Filter;
     bool                    AutoScroll;
