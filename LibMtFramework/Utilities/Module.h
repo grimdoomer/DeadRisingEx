@@ -127,3 +127,58 @@ static void BuildVtableLayout(void** vtable, int length...)
     // Cleanup the args list.
     va_end(args);
 }
+
+
+/*
+    Helper class to wrap a global pointer variable in the game executable and remove a layer of indirection.
+*/
+template<typename T>
+class WrappedPtr
+{
+protected:
+    T** pointer;
+
+public:
+
+    WrappedPtr(T** pointer)
+    {
+        this->pointer = pointer;
+    }
+
+    T* operator*()
+    {
+        return (*this->pointer);
+    }
+
+    const T* operator*() const
+    {
+        return (*this->pointer);
+    }
+
+    T* operator->()
+    {
+        return (*this->pointer);
+    }
+
+    WrappedPtr<T>& operator=(T* rhs)
+    {
+        (*this->pointer) = rhs;
+
+        return *this;
+    }
+
+    bool operator==(const T* rhs) const
+    {
+        return (*this->pointer) == rhs;
+    }
+
+    bool operator!=(const T* rhs) const
+    {
+        return (*this->pointer) != rhs;
+    }
+
+    operator T* () const
+    {
+        return (*this->pointer);
+    }
+};
