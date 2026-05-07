@@ -14,4 +14,4 @@ struct MtRegistry : public MtObject
 
     IMPLEMENT_SINGLETON(MtRegistry, 0x141CF20B0);
 };
-static_assert(sizeof(MtRegistry) == 0x218, "MtRegistry incorrect struct size");
+ASSERT_STRUCT_SIZE(MtRegistry, 0x218);

@@ -60,4 +60,4 @@ struct MtFileStream : public MtStream
         _ctor(this, pFile);
     }
 };
-static_assert(sizeof(MtFileStream) == 0x10, "MtFileStream incorrect struct size");
+ASSERT_STRUCT_SIZE(MtFileStream, 0x10);

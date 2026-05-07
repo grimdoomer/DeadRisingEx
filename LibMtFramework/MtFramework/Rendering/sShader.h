@@ -37,7 +37,7 @@ struct sShader : public cSystem
 
         /* 0x20 */ BYTE        Unknown[16];    // Not sure if this is ever used...
     };
-    static_assert(sizeof(ParameterDesc) == 0x30, "sShader::ParameterDesc incorrect struct size");
+    ASSERT_STRUCT_SIZE(ParameterDesc, 0x30);
 
     // sizeof = 0x18
     struct TechniqueDesc : public MtObject
@@ -45,7 +45,7 @@ struct sShader : public cSystem
         /* 0x08 */ char     *mName;     // Shader name
         /* 0x10 */ DWORD    mID;        // Hashcode of the shader name
     };
-    static_assert(sizeof(TechniqueDesc) == 0x18, "sShader::TechniqueDesc incorrect struct size");
+    ASSERT_STRUCT_SIZE(TechniqueDesc, 0x18);
 
     /* 0x38 */ float                mDistanceFogStart;
     /* 0x3C */ float                mDistanceFogEnd;

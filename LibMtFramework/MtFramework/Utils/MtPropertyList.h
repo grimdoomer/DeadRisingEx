@@ -202,7 +202,7 @@ struct MtPropertyListEntry
         return _GetArrayLength(this);
     }
 };
-static_assert(sizeof(MtPropertyListEntry) == 0x50, "MtPropertyListEntry incorrect struct size");
+ASSERT_STRUCT_SIZE(MtPropertyListEntry, 0x50);
 
 // sizeof = 0x10
 struct MtPropertyList
@@ -273,4 +273,4 @@ struct MtPropertyList
         return _FindProperty(this, propertyType, psPropertyName);
     }
 };
-static_assert(sizeof(MtPropertyList) == 0x10, "MtPropertyList incorrect struct size");
+ASSERT_STRUCT_SIZE(MtPropertyList, 0x10);

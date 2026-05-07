@@ -35,4 +35,4 @@ struct z_stream_s
     /* 0x50 */ DWORD        reserved;
     /* 0x54 */ // padding
 };
-static_assert(sizeof(z_stream_s) == 0x58, "z_stream_s incorrect struct size");
+ASSERT_STRUCT_SIZE(z_stream_s, 0x58);

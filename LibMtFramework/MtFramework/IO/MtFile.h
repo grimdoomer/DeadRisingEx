@@ -227,4 +227,4 @@ struct MtFile : public MtObject
         return (bool)ThisPtrCallNoFixup(this->vtable[17], this);
     }
 };
-static_assert(sizeof(MtFile) == 0x148, "MtFile incorrect struct size");
+ASSERT_STRUCT_SIZE(MtFile, 0x148);

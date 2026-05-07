@@ -9,4 +9,4 @@ struct rMotionList : public cResource
 
     IMPLEMENT_MYDTI(rMotionList, 0x141D18080, 0x1400AF010, 0x1406BE750);
 };
-static_assert(sizeof(rMotionList) == 0x68, "rMotionList incorrect struct size");
+ASSERT_STRUCT_SIZE(rMotionList, 0x68);

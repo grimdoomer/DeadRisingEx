@@ -19,7 +19,7 @@ struct Joint
     /* 0x08 */ float Length;
     /* 0x0C */ Vector3 Offset;
 };
-static_assert(sizeof(Joint) == 0x18, "Joint incorrect struct size");
+ASSERT_STRUCT_SIZE(Joint, 0x18);
 
 // sizeof = 0x50
 struct Primitive
@@ -45,7 +45,7 @@ struct Primitive
     /* 0x30 */ Vector4      BoundingBoxMin;
     /* 0x40 */ Vector4      BoundingBoxMax;
 };
-static_assert(sizeof(Primitive) == 0x50, "Primitive incorrect struct size");
+ASSERT_STRUCT_SIZE(Primitive, 0x50);
 
 enum ShaderId : DWORD
 {
@@ -141,7 +141,7 @@ struct Material
     /* 0xC8 */ float    Unk34;
     /* 0xCC */ float    Unk35;
 };
-static_assert(sizeof(Material) == 0xD0, "Material incorrect struct size");
+ASSERT_STRUCT_SIZE(Material, 0xD0);
 
 // sizeof = 0x130
 struct rModel : cResource
@@ -174,4 +174,4 @@ struct rModel : cResource
 
     IMPLEMENT_MYDTI(rModel, 0x141CF2FD0, 0x1400AF010, 0x14064FA50);
 };
-static_assert(sizeof(rModel) == 0x130, "rModel incorrect struct size");
+ASSERT_STRUCT_SIZE(rModel, 0x130);

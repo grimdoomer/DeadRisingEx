@@ -83,4 +83,4 @@ struct MtAllocator : public MtObject
         (void)ThisPtrCallNoFixup(this->vtable[6], this, pAddress);
     }
 };
-static_assert(sizeof(MtAllocator) == 0x50, "MtAllocator incorrect struct size");
+ASSERT_STRUCT_SIZE(MtAllocator, 0x50);

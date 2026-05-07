@@ -13,7 +13,7 @@ struct sSnatcherMain : public sMain
         /* 0x00 */ DWORD m[624];
         /* 0x04 */ DWORD index;
     };
-    static_assert(sizeof(RNGState) == 0x9C4, "sSnatcherMain::RNGState incorrect struct size");
+    ASSERT_STRUCT_SIZE(RNGState, 0x9C4);
 
     /* 0x20248 */
     /* 0x20250 */ void  *mpRender;

@@ -138,7 +138,7 @@ struct MtDTI
         return _FindDTIByName(psTypeName, pRoot);
     }
 };
-static_assert(sizeof(MtDTI) == 0x38, "MtDTI struct has incorrect size");
+ASSERT_STRUCT_SIZE(MtDTI, 0x38);
 
 
 /*
@@ -212,5 +212,10 @@ struct MtObject
     {
         return (MtDTI*)ThisPtrCallNoFixup(this->vtable[4], this);
     }
+
+   /* void* operator new(size_t size)
+    {
+
+    }*/
 };
-static_assert(sizeof(MtObject) == 8, "MtObject incorrect struct size");
+ASSERT_STRUCT_SIZE(MtObject, 8);

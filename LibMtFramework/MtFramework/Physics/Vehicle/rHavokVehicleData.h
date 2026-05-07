@@ -32,7 +32,7 @@ struct rHavokVehicleData : public cResource
         /* 0x70 */ float 	length;
         /* 0x74 */ float    _unused[3];
     };
-    static_assert(sizeof(TireData) == 0x80, "rHavokVehicleData::TireData incorrect struct size");
+    ASSERT_STRUCT_SIZE(TireData, 0x80);
 
     /* 0x60 */ BOOL 	mBalanceSystem;
     /* 0x64 */ float 	mWeight;
@@ -97,4 +97,4 @@ struct rHavokVehicleData : public cResource
         _ctor(this);
     }
 };
-static_assert(sizeof(rHavokVehicleData) == 0x1B0, "rHavokVehicleData incorrect struct size");
+ASSERT_STRUCT_SIZE(rHavokVehicleData, 0x1B0);

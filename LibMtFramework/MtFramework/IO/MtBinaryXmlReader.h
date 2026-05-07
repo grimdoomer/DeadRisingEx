@@ -11,7 +11,7 @@ struct BinaryXmlHeader
     /* 0x08 */ DWORD    NodeCount;
     /* 0x0C */ DWORD    NodeDataSize;
 };
-static_assert(sizeof(BinaryXmlHeader) == 0x10, "BinaryXmlHeader incorrect struct size");
+ASSERT_STRUCT_SIZE(BinaryXmlHeader, 0x10);
 
 // sizeof = 0x10
 struct NodeEntry
@@ -23,7 +23,7 @@ struct NodeEntry
     };
     /* 0x08 */ DWORD NodeCount;
 };
-static_assert(sizeof(NodeEntry) == 0x10, "NodeEntry incorrect struct size");
+ASSERT_STRUCT_SIZE(NodeEntry, 0x10);
 
 // sizeof = 0x30
 struct NodeDescriptor
@@ -40,7 +40,7 @@ struct NodeDescriptor
     /* 0x20 */ void                             *pUnknownFunc1;         // pUnkFunc1 from the MtPropertyListEntry (runtime only)
     /* 0x28 */ void                             *pUnknownFunc2;         // pUnkFunc2 from the MtPropertyListEntry (runtime only)
 };
-static_assert(sizeof(NodeDescriptor) == 0x30, "NodeDescriptor incorrect struct size");
+ASSERT_STRUCT_SIZE(NodeDescriptor, 0x30);
 
 // sizeof = 0x280?
 struct MtBinaryXmlReader

@@ -116,4 +116,4 @@ struct cResource : public MtObject
         _DecrementRefCount(this);
     }
 };
-static_assert(sizeof(cResource) == 0x60, "cResource struct has incorrect size");
+ASSERT_STRUCT_SIZE(cResource, 0x60);

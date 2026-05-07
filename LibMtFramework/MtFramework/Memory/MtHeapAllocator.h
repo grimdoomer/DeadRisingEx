@@ -26,7 +26,7 @@ struct MtHeapAllocator : public MtAllocator
     inline static DWORD(__stdcall *_GetAllocationInfo)(MtHeapAllocator *thisptr, void *pAddress) =
         (DWORD(__stdcall*)(MtHeapAllocator*, void*))GetModuleAddress(0x140624C50);
 };
-static_assert(sizeof(MtHeapAllocator) == 0x78, "MtHeapAllocator incorrect struct size");
+ASSERT_STRUCT_SIZE(MtHeapAllocator, 0x78);
 
 // Global memory allocators:
 inline static WrappedPtr<MtHeapAllocator> g_pResourceHeapAllocator = (MtHeapAllocator**)GetModuleAddress(0x141CF2688);

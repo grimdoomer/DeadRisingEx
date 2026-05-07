@@ -38,7 +38,7 @@ struct uModel : public uCoord
 		/* 0x10 */ void*				pKeyFrameData;			// Gets set to KeyFrameDescriptor->DataOffset			
 		/* 0x18 */ float				BlendWeight;			// I think this is blend weight
 	};
-	static_assert(sizeof(KeyFrameBlendInfo) == 0x20, "uModel::KeyFrameBlendInfo incorrect struct size");
+	ASSERT_STRUCT_SIZE(KeyFrameBlendInfo, 0x20);
 
 	// sizeof = 0x90
 	struct Constraint	// I'm pretty sure this is the wrong name for this object
@@ -48,7 +48,7 @@ struct uModel : public uCoord
 		/* 0x70 */ Vector4				Offset;
 		/* 0x80 */ Vector4				Scale;
 	};
-	static_assert(sizeof(Constraint) == 0x90, "uModel::Constraint incorrect struct size");
+	ASSERT_STRUCT_SIZE(Constraint, 0x90);
 
 	// sizeof = 0x150
 	struct Motion : public MtObject
@@ -99,7 +99,7 @@ struct uModel : public uCoord
 
 		BYTE _padding[0x150 - 0xE0];
 	};
-	static_assert(sizeof(Motion) == 0x150, "uMode::Motion incorrect struct size");
+	ASSERT_STRUCT_SIZE(Motion, 0x150);
 
 	// sizeof = 0x50
 	struct RenderInfo : public MtObject

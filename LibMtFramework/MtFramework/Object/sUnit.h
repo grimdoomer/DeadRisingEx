@@ -34,7 +34,7 @@ struct sUnit : public cSystem
             _ctor(this);
         }
     };
-    static_assert(sizeof(MoveLine) == 0x28, "sUnit::MoveLine incorrect struct size");
+    ASSERT_STRUCT_SIZE(MoveLine, 0x28);
 
 
     /* 0x38 */ MoveLine     MoveLines[32];
@@ -90,4 +90,4 @@ struct sUnit : public cSystem
         return (const char*)ThisPtrCallNoFixup(this->vtable[10], this, dwLineIndex);
     }
 };
-static_assert(sizeof(sUnit) == 0x538, "sUnit incorrect struct size");
+ASSERT_STRUCT_SIZE(sUnit, 0x538);

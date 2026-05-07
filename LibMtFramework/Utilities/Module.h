@@ -5,6 +5,8 @@
 #pragma once
 #include <Windows.h>
 
+#define ASSERT_STRUCT_SIZE(type, size)        static_assert(sizeof(type) == size, "type incorrect struct size")
+
 extern "C" void *SnatcherModuleHandle;
 
 /*

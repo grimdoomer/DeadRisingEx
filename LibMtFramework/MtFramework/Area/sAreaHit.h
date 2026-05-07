@@ -23,7 +23,7 @@ struct sAreaHitResourceEntry
     /* 0x08 */ cResource            *pResource;     // Can be one of rAreaHitLayout, rItemLayout
     /* 0x10 */ const char           *psFilePath;    // File path of the layout file
 };
-static_assert(sizeof(sAreaHitResourceEntry) == 0x18, "sAreaHitResourceEntry incorrect struct size");
+ASSERT_STRUCT_SIZE(sAreaHitResourceEntry, 0x18);
 
 // sizeof = 0x28
 struct sAreaHitStringEntry

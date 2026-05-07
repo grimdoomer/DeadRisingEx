@@ -22,4 +22,4 @@ struct MtThread
     /* 0x4C */ DWORD                    ThreadId;
     /* 0x50 */ BOOL                     ThreadStarted;
 };
-static_assert(sizeof(MtThread) == 0x58, "MtThread incorrect struct size");
+ASSERT_STRUCT_SIZE(MtThread, 0x58);

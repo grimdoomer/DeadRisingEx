@@ -30,4 +30,4 @@ struct sToolBase : public cSystem
     /* 0x2264 */ DWORD          Unk7; // might be padding, previous field might be qword
     /* 0x2268 */ DWORD          Unk8;
 };
-static_assert(sizeof(sToolBase) == 0x2270, "sToolBase incorrect struct size");
+ASSERT_STRUCT_SIZE(sToolBase, 0x2270);

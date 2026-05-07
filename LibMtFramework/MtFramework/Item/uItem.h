@@ -10,7 +10,7 @@ struct NpcBonusBoxItems
     /* 0x00 */ const char   *psNpcDTIName;      // Npc DTI object name
     /* 0x08 */ WORD         ItemIds[5];         // Item IDs for items dropped when bonus box is opened
 };
-static_assert(sizeof(NpcBonusBoxItems) == 0x18, "NpcBonusBoxItems incorrect struct size");
+ASSERT_STRUCT_SIZE(NpcBonusBoxItems, 0x18);
 
 // sizeof = 0x18
 struct ItemInfoEntry
@@ -19,7 +19,7 @@ struct ItemInfoEntry
     /* 0x08 */ const char * Name;
     /* 0x10 */ const char * ArchivePath;
 };
-static_assert(sizeof(ItemInfoEntry) == 0x18, "ItemInfoEntry incorrect struct size");
+ASSERT_STRUCT_SIZE(ItemInfoEntry, 0x18);
 
 enum eItemHealthType : int
 {
@@ -51,7 +51,7 @@ struct ItemProperties
     /* 0x18 */ void                 *pProperties3;      // Entry size = 0x20
     /* 0x20 */ void                 *pProperties4;      // Entry size = 0x30
 };
-static_assert(sizeof(ItemProperties) == 0x28, "ItemProperties incorrect struct size");
+ASSERT_STRUCT_SIZE(ItemProperties, 0x28);
 
 // sizeof = 0x10
 struct ItemWeaponProperties
@@ -65,7 +65,7 @@ struct ItemWeaponProperties
     /* 0x0C */ WORD     DamagePropertiesIndex1;     // Index into the damage properties for the item
     /* 0x0E */ WORD     DamagePropertiesIndex2;     // Index into the damage properties for the item
 };
-//static_assert(sizeof(ItemWeaponProperties) == 0x10, "ItemWeaponProperties incorrect struct size");
+//ASSERT_STRUCT_SIZE(ItemWeaponProperties, 0x10);
 
 // sizeof = 0xA0
 struct ItemCollisionProperties

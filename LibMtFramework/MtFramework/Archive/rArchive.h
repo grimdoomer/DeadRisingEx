@@ -17,7 +17,7 @@ struct rArchiveHeader
     /* 0x04 */ WORD Version;
     /* 0x06 */ WORD NumberOfFiles;
 };
-static_assert(sizeof(rArchiveHeader) == 0x8, "rArchiveHeader incorrect struct size");
+ASSERT_STRUCT_SIZE(rArchiveHeader, 0x8);
 
 // sizeof = 0x50
 struct rArchiveFileEntry
@@ -28,7 +28,7 @@ struct rArchiveFileEntry
     /* 0x48 */ DWORD DecompressedSize;
     /* 0x4C */ DWORD DataOffset;
 };
-static_assert(sizeof(rArchiveFileEntry) == 0x50, "rArchiveFileEntry incorrect struct size");
+ASSERT_STRUCT_SIZE(rArchiveFileEntry, 0x50);
 
 // sizeof = 0x78
 struct rArchive : public cResource
@@ -72,5 +72,5 @@ struct rArchive : public cResource
             _ctor(this, pFileStream);
         }
     };
-    static_assert(sizeof(DecompressStream) == 0xA0, "rArchive::DecompressStream incorrect struct size");
+    ASSERT_STRUCT_SIZE(DecompressStream, 0xA0);
 };

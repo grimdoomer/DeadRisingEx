@@ -169,7 +169,7 @@ struct cTrans : public MtObject
         /* 0x10 */ DWORD    mRefCount;
         /* 0x14 */ DWORD    Flags;
     };
-    static_assert(sizeof(Element) == 0x18, "cTrans::Element incorrect struct size");
+    ASSERT_STRUCT_SIZE(Element, 0x18);
 
     // sizeof = 0x70
     struct TextureBase : public Element
@@ -214,7 +214,7 @@ struct cTrans : public MtObject
         /* 0x06 */ BYTE SemanticNameIndex;
         /* 0x07 */ BYTE SemanticIndex;
     };
-    static_assert(sizeof(VertexDeclElement) == 8, "VertexDeclElement inccorect struct size");
+    ASSERT_STRUCT_SIZE(VertexDeclElement, 8);
 
     // sizeof = 0x30
     struct VertexDecl : public Element
@@ -224,7 +224,7 @@ struct cTrans : public MtObject
         /* 0x28 */ DWORD                mElementNum;
         /* 0x2C */ DWORD                Id;                // Checksum? (0x140688ED0)
     };
-    static_assert(sizeof(VertexDecl) == 0x30, "cTrans::VertexDecl incorrect struct size");
+    ASSERT_STRUCT_SIZE(VertexDecl, 0x30);
 
     // sizeof = 0x30
     struct VertexBuffer : public Element
@@ -233,7 +233,7 @@ struct cTrans : public MtObject
         /* 0x20 */ void             *pRawBuffer;
         /* 0x28 */ DWORD            Size;
     };
-    static_assert(sizeof(VertexBuffer) == 0x30, "cTrans::VertexBuffer incorrect struct size");
+    ASSERT_STRUCT_SIZE(VertexBuffer, 0x30);
 
     // sizeof = 0x30
     struct IndexBuffer : public Element
@@ -242,7 +242,7 @@ struct cTrans : public MtObject
         /* 0x20 */ void             *pRawBuffer;
         /* 0x28 */ DWORD            Size;
     };
-    static_assert(sizeof(IndexBuffer) == 0x30, "cTrans::IndexBuffer incorrect struct size");
+    ASSERT_STRUCT_SIZE(IndexBuffer, 0x30);
 
     // sizeof = 0x10
     struct RenderCommandInfo
@@ -250,21 +250,21 @@ struct cTrans : public MtObject
         /* 0x00 */ void     *pCmdBuffer;    // Pointer to the command buffer
         /* 0x08 */ DWORD    Tag;            // Tag value used to sort the commands before processing
     };
-    static_assert(sizeof(RenderCommandInfo) == 0x10, "cTrans::RenderCommandInfo incorrect struct size");
+    ASSERT_STRUCT_SIZE(RenderCommandInfo, 0x10);
 
     // sizeof = ?
     struct RenderCommandBase
     {
         /* 0x00 */ DWORD    Command;        // Command type
     };
-    static_assert(sizeof(RenderCommandBase) == 4, "cTrans::RenderCommandBase incorrect struct size");
+    ASSERT_STRUCT_SIZE(RenderCommandBase, 4);
 
     // sizeof = 0x14?
     struct RenderCommand_SetScissorRect : public RenderCommandBase  // 0x140662FAF
     {
         /* 0x04 */ D3D11_RECT   ScissorRect;
     };
-    static_assert(sizeof(RenderCommand_SetScissorRect) == 0x14, "cTrans::RenderCommand_SetScissorRect incorrect struct size");
+    ASSERT_STRUCT_SIZE(RenderCommand_SetScissorRect, 0x14);
 
     // sizeof = 0xC?
     struct RenderCommand_2 : public RenderCommandBase   // 0x140662F93

@@ -60,4 +60,4 @@ struct cSystem : public MtObject
         (void)ThisPtrCallNoFixup(this->vtable[7], this, pPropertyList);
     }
 };
-static_assert(sizeof(cSystem) == 0x38, "cSystem incorrect struct size");
+ASSERT_STRUCT_SIZE(cSystem, 0x38);

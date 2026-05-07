@@ -45,4 +45,4 @@ struct uCoord : public cUnit
         _SetRotation(this, pRotation);
     }
 };
-static_assert(sizeof(uCoord) == 0xF0, "uCoord incorrect struct size");
+ASSERT_STRUCT_SIZE(uCoord, 0xF0);

@@ -19,7 +19,7 @@ struct sMain : public cSystem
         /* 0x28 */ DWORD        ThreadNumber;
         /* 0x2C */ BYTE         _pad[0xC];
     };
-    static_assert(sizeof(WorkerThreadInfo) == 0x38, "sMain::WorkerThreadInfo incorrect struct size");
+    ASSERT_STRUCT_SIZE(WorkerThreadInfo, 0x38);
 
     // sizeof = 0x10
     struct WorkItem
@@ -27,7 +27,7 @@ struct sMain : public cSystem
         /* 0x00 */ void *pObject;               // Common base type?
         /* 0x08 */ void *pWorkRoutine;          // ?
     };
-    static_assert(sizeof(WorkItem) == 0x10, "sMain::WorkItem incorrect struct size");
+    ASSERT_STRUCT_SIZE(WorkItem, 0x10);
 
     // sizeof = 0x18
     struct WorkItemWithArgument
@@ -36,7 +36,7 @@ struct sMain : public cSystem
         /* 0x08 */ void *pWorkRoutine;          // ?
         /* 0x10 */ void *pArgument;             // Argument passed to the work function
     };
-    static_assert(sizeof(WorkItemWithArgument) == 0x18, "sMain::WorkItemWithArgument incorrect struct size");
+    ASSERT_STRUCT_SIZE(WorkItemWithArgument, 0x18);
 
     // sizeof = 0x50
     struct GameTime
@@ -64,7 +64,7 @@ struct sMain : public cSystem
         /* 0x40 */ ULONGLONG    ElapsedTime;                    // Time elapsed since the game started
         /* 0x48 */ ULONGLONG    DeltaTime2;                     // Time difference between this frame and the previous frame
     };
-    static_assert(sizeof(GameTime) == 0x50, "sMain::GameTime incorrect struct size");
+    ASSERT_STRUCT_SIZE(GameTime, 0x50);
 
     /* 0x38 */ ULONGLONG    mTimer;                 // Elapsed time in milliseconds (from start of game)
     /* 0x40 */ ULONGLONG    PreviousPerfCounter;    // Performance counter for the previous update
@@ -107,4 +107,4 @@ struct sMain : public cSystem
     inline static LRESULT(__stdcall *_WndProc)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) =
         (LRESULT(__stdcall*)(HWND, UINT, WPARAM, LPARAM))GetModuleAddress(0x14002BDC0);
 };
-static_assert(sizeof(sMain) == 0x20248, "sMain incorrect struct size");
+ASSERT_STRUCT_SIZE(sMain, 0x20248);

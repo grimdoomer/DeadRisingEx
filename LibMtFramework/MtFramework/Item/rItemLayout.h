@@ -113,4 +113,4 @@ struct rItemLayout : public cResource
         _SpawnItems(this);
     }
 };
-static_assert(sizeof(rItemLayout) == 0x70, "rItemLayout incorrect struct size");
+ASSERT_STRUCT_SIZE(rItemLayout, 0x70);

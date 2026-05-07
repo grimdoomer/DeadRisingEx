@@ -70,4 +70,4 @@ struct cUnit : public MtObject // abstract
         (void)ThisPtrCallNoFixup(this->vtable[5], this);
     }
 };
-static_assert(sizeof(cUnit) == 0x28, "cUnit incorrect struct size");
+ASSERT_STRUCT_SIZE(cUnit, 0x28);

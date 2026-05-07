@@ -40,7 +40,7 @@ struct sRender : public cSystem
         /* 0x10 */ char     *mName;
         /* 0x18 */ void     *mpTexture;
     };
-    static_assert(sizeof(TempTexture) == 0x20, "sRender::TempTexture incorrect struct size");
+    ASSERT_STRUCT_SIZE(TempTexture, 0x20);
 
     // sizeof = 0x30
     struct Buffer
@@ -77,7 +77,7 @@ struct sRender : public cSystem
             return (T*)_MapForWrite(this, dwSize);
         }
     };
-    static_assert(sizeof(Buffer) == 0x30, "sRender::Buffer incorrect struct size");
+    ASSERT_STRUCT_SIZE(Buffer, 0x30);
 
     // sizeof = 0x10
     struct DeferredContext
@@ -85,7 +85,7 @@ struct sRender : public cSystem
         /* 0x00 */ ID3D11DeviceContext  *pDeviceContext;
         /* 0x08 */ DWORD                InUse;              // Indicates if the device context is currently being used by another thread
     };
-    static_assert(sizeof(DeferredContext) == 0x10, "sRender::DeferredContext incorect struct size");
+    ASSERT_STRUCT_SIZE(DeferredContext, 0x10);
 
     /* 0x38 */ // array? elem size = 0x2040 (0x1406629B9)
 

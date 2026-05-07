@@ -7,4 +7,4 @@ struct sTool : public sToolBase
 {
 
 };
-static_assert(sizeof(sTool) == 0x2270, "sTool incorrect struct size");
+ASSERT_STRUCT_SIZE(sTool, 0x2270);

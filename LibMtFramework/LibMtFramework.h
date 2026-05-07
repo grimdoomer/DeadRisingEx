@@ -12,13 +12,13 @@ struct Vector2
 {
     float x, y;
 };
-static_assert(sizeof(Vector2) == 0x8, "Vector2 incorrect struct size");
+ASSERT_STRUCT_SIZE(Vector2, 0x8);
 
 struct Vector3 
 {
     float x, y, z;
 };
-static_assert(sizeof(Vector3) == 0xC, "Vector3 incorrect struct size");
+ASSERT_STRUCT_SIZE(Vector3, 0xC);
 
 __declspec(align(16)) struct Vector3Aligned
 {
@@ -31,19 +31,19 @@ __declspec(align(16)) struct Vector3Aligned
         Vector3 AsVec3;
     };
 };
-static_assert(sizeof(Vector3) == 0xC, "Vector3 incorrect struct size");
+ASSERT_STRUCT_SIZE(Vector3, 0xC);
 
 __declspec(align(16)) struct Vector4
 {
     float x, y, z, w;
 };
-static_assert(sizeof(Vector4) == 0x10, "Vector4 incorrect struct size");
+ASSERT_STRUCT_SIZE(Vector4, 0x10);
 
 struct Matrix4x4
 {
     Vector4 Rows[4];
 };
-static_assert(sizeof(Matrix4x4) == 0x40, "Matrix4x4 incorrect struct size");
+ASSERT_STRUCT_SIZE(Matrix4x4, 0x40);
 
 // sizeof = 0x8+N
 struct MtString

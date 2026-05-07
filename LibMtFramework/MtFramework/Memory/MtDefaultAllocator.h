@@ -7,7 +7,7 @@ struct MtDefaultAllocator : public MtAllocator
 {
 
 };
-static_assert(sizeof(MtDefaultAllocator) == 0x50, "MtDefaultAllocator incorrect struct size");
+ASSERT_STRUCT_SIZE(MtDefaultAllocator, 0x50);
 
 // Global default memory allocator instance:
 inline static MtDefaultAllocator* g_DefaultAllocator = (MtDefaultAllocator*)GetModuleAddress(0x141C95BE0);

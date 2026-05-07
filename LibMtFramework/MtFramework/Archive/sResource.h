@@ -24,7 +24,7 @@ struct sResource
         /* 0x14 */ DWORD            BytesRead;            // Number of bytes read from the archive stream
         /* 0x18 */ DWORD            Result;                // 1 if the operation was successful
     };
-    static_assert(sizeof(DecodeFileRequest) == 0x20, "sResource::DecodeFileRequest incorrect struct size");
+    ASSERT_STRUCT_SIZE(DecodeFileRequest, 0x20);
 
     // sizeof = 0x44?
     struct DecompressStreamContext
@@ -62,7 +62,7 @@ struct sResource
             _ctor(this, context, pDecodeReq);
         }
     };
-    static_assert(sizeof(DecompressStream) == 0x78, "sResource::DecompressStream incorrect struct size");
+    ASSERT_STRUCT_SIZE(DecompressStream, 0x78);
 
     // sizeof = 0x20
     struct TypeInfo : public MtObject
@@ -71,7 +71,7 @@ struct sResource
         /* 0x10 */ char        mExt[4];    // File extension
         /* 0x18 */ MtDTI    *pTypeInfo;
     };
-    static_assert(sizeof(TypeInfo) == 0x20, "sResource::TypeInfo incorrect struct size");
+    ASSERT_STRUCT_SIZE(TypeInfo, 0x20);
 
 
     /* 0x00 */ void                 **vtable;
@@ -233,4 +233,4 @@ struct sResource
         return (T*)_FindResourceById(this, resourceId);
     }
 };
-static_assert(sizeof(sResource) == 0x24458, "sResource incorrect struct size");
+ASSERT_STRUCT_SIZE(sResource, 0x24458);
