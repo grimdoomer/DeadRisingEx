@@ -2,8 +2,6 @@
 #include "VehicleDefinition.h"
 #include <MtFramework/IO/MtDataReader.h>
 
-MtDTI* VehicleDefinitionDTI = new VehicleDefinition::MyDTI();
-
 // Fake destructor function to bypass not being able to take the address of a destructor:
 void VehicleDefinition_dtor(VehicleDefinition* thisptr)
 {

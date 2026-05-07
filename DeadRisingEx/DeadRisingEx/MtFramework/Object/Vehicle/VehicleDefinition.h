@@ -27,9 +27,6 @@ struct VehicleDefinitionAssetPaths
 };
 
 
-// VehicleDefinition DTI:
-extern MtDTI* VehicleDefinitionDTI;
-
 struct VehicleDefinition : public cResource
 {
     struct MyDTI : public MtDTI
@@ -38,16 +35,18 @@ struct VehicleDefinition : public cResource
 
         MyDTI() : MtDTI("VehicleDefinition", cResource::DebugTypeInfo, sizeof(VehicleDefinition), 'vehi', 0)
         {
+            DebugBreak();
+
             // Setup the vtable.
             BuildVtableLayout(_vtable, ARRAYSIZE(_vtable),
                 MtDTI::_dtor,
-                &MyDTI::CreateInstance
+                &MyDTI::_CreateInstance
             );
 
             this->vtable = _vtable;
         }
 
-        MtObject* CreateInstance()
+        MtObject* _CreateInstance()
         {
             // Allocate and initialize the vehicle definition.
             void* pVehicleDefAlloc = (*g_pResourceHeapAllocator)->Alloc(this->ObjectSize, 0x10);
@@ -59,6 +58,8 @@ struct VehicleDefinition : public cResource
             return nullptr;
         }
     };
+
+    inline static MyDTI DebugTypeInfo;
 
 
     VehicleDefinitionHeader Header;
@@ -74,7 +75,7 @@ struct VehicleDefinition : public cResource
 
     MtDTI* GetDTI()
     {
-        return VehicleDefinitionDTI;
+        return &DebugTypeInfo;
     }
 
     const char* GetFileExtension()

@@ -7,6 +7,38 @@
 #include "Utilities/Module.h"
 #include "MtFramework/Utils/MtPropertyList.h"
 
+#ifdef SHIMDLL
+
+// When linking from the shim dll declare APIs as dllexport:
+#define SHIM_API __declspec(dllexport)
+
+// Helper macro to stringify a parameter (required for SHIM_BODY macro to compile correctly):
+#define SHIM_STR(x)     #x
+
+// Helper macro to declare an empty function body when compiling from the shim dll. The first linker comment
+// creates an export alias for the function with the name "snatcher_0xXXXXXXXXXXX" where "XXXXX" is replaced
+// with the address of the function in the game executable. The second linker comment forces an include to the
+// function even if it's not used in code (the shim dll has no code).
+//
+// In the event the function is not redirected to the game executable the code in this stub will report an error.
+#define SHIM_BODY(addr)                                                                                                 \
+    {                                                                                                                   \
+__pragma(comment(linker, SHIM_STR(/EXPORT:snatcher_#addr=) __FUNCDNAME__))                                              \
+__pragma(comment(linker, "/INCLUDE:" __FUNCDNAME__))                                                                    \
+                                                                                                                        \
+        MessageBoxW(NULL, L"SnatcherShim.dll function '" __FUNCDNAME__ "' failed to redirect. Report this to grim.",    \
+            L"DeadRisingEx", MB_OK | MB_ICONERROR | MB_APPLMODAL);                                                      \
+        TerminateProcess(GetCurrentProcess(), 0xBAD0C0DE);                                                              \
+    }
+
+#else
+
+// When linking from outside the shim dll declare APIs as dllimport:
+#define SHIM_API __declspec(dllimport)
+
+#define SHIM_BODY(addr)     ;
+#endif
+
 struct cResource;
 struct MtObject;
 
@@ -58,16 +90,9 @@ struct MtDTI
             - dwFileType: File type ID, or 0 to calculate the file type id based on the file name
             - flags: Flag values for the DTI instance
     */
-    MtDTI(const char *psTypeName, MtDTI *pParentType, DWORD dwSizeOf, DWORD dwFileType, BYTE flags)
-    {
-        memset(this, 0, sizeof(MtDTI));
-        _ctor(this, psTypeName, pParentType, dwSizeOf, dwFileType, flags);
-    }
+    SHIM_API MtDTI(const char* psTypeName, MtDTI* pParentType, DWORD dwSizeOf, DWORD dwFileType, BYTE flags) SHIM_BODY(0x1406184C0)
 
-    ~MtDTI()
-    {
-        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
-    }
+    SHIM_API ~MtDTI() SHIM_BODY(0x1400AF010)
 
     /*
         Creates a new instance of this object type.

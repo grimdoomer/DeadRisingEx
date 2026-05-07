@@ -5,8 +5,6 @@
 #include "VehicleDefinition.h"
 #include <string>
 
-extern MtDTI* uDrexVehicleDTI;
-
 struct uDrexVehicle : public uVehicleOm09
 {
     struct MyDTI : public MtDTI
@@ -18,13 +16,13 @@ struct uDrexVehicle : public uVehicleOm09
             // Setup the vtable.
             BuildVtableLayout(_vtable, ARRAYSIZE(_vtable),
                 MtDTI::_dtor,
-                &MyDTI::CreateInstance
+                &MyDTI::_CreateInstance
             );
 
             this->vtable = _vtable;
         }
 
-        MtObject* CreateInstance()
+        MtObject* _CreateInstance()
         {
             // Allocate and initialize the vehicle definition.
             void* pVehicleDefAlloc = (*g_pUnitHeapAllocator)->Alloc(this->ObjectSize, 0x20);
@@ -36,6 +34,8 @@ struct uDrexVehicle : public uVehicleOm09
             return nullptr;
         }
     };
+
+    inline static MyDTI DebugTypeInfo;
 
 
     // Padding to match the size of uVehicleOm09
@@ -55,6 +55,6 @@ struct uDrexVehicle : public uVehicleOm09
 
     MtDTI* GetDTI()
     {
-        return uDrexVehicleDTI;
+        return &DebugTypeInfo;
     }
 };

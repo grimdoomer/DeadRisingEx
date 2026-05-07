@@ -9,8 +9,6 @@
 #include <locale>
 #include <codecvt>
 
-MtDTI* uDrexVehicleDTI = new uDrexVehicle::MyDTI();
-
 inline static void (__stdcall* _uVehicleOm09_Initialize)(uVehicleOm09* thisptr) = (void(__stdcall*)(uVehicleOm09*))GetModuleAddress(0x1401C6C70);
 
 
@@ -78,7 +76,7 @@ void uDrexVehicle::LoadUnitResources()
     }
 
     // Load the vehicle data file.
-    this->pVehicleData = sResource::Instance()->LoadGameResource<VehicleDefinition>(VehicleDefinitionDTI, this->VehicleDataFilePath.c_str(), RLF_SYNCHRONOUS);
+    this->pVehicleData = sResource::Instance()->LoadGameResource<VehicleDefinition>(&VehicleDefinition::DebugTypeInfo, this->VehicleDataFilePath.c_str(), RLF_SYNCHRONOUS);
     if (this->pVehicleData == nullptr)
     {
         DbgPrint(__FUNCTION__ ": failed to load vehicle data file '%s'\n", this->VehicleDataFilePath.c_str());
@@ -166,7 +164,7 @@ __int64 SpawnVehicle(WCHAR** argv, int argc)
     // TODO: lookup vehicle name
 
     // Create a new drex vehicle object.
-    uDrexVehicle* pVehicle = uDrexVehicleDTI->CreateInstance<uDrexVehicle>();
+    uDrexVehicle* pVehicle = uDrexVehicle::DebugTypeInfo.CreateInstance<uDrexVehicle>();
     if (pVehicle == nullptr)
     {
         ImGuiConsole::Instance()->ConsolePrint(L"Failed to create new drex vehicle\n");

@@ -1,22 +1,28 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36623.8 d17.14
+VisualStudioVersion = 17.14.36623.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibMtFramework", "LibMtFramework\LibMtFramework.vcxproj", "{182F7A1A-DEA6-4800-A52F-2217450064D9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeadRisingEx", "DeadRisingEx\DeadRisingEx.vcxproj", "{4372BE1E-F5FB-4C7E-A03A-958D1886422C}"
 	ProjectSection(ProjectDependencies) = postProject
 		{182F7A1A-DEA6-4800-A52F-2217450064D9} = {182F7A1A-DEA6-4800-A52F-2217450064D9}
+		{FE413E86-C9B6-43DF-8E46-A6600E7D12CD} = {FE413E86-C9B6-43DF-8E46-A6600E7D12CD}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeadRisingLauncher", "DeadRisingLauncher\DeadRisingLauncher.csproj", "{C25022C9-36A1-47DA-9213-D81E919D9A1C}"
 	ProjectSection(ProjectDependencies) = postProject
-		{4372BE1E-F5FB-4C7E-A03A-958D1886422C} = {4372BE1E-F5FB-4C7E-A03A-958D1886422C}
 		{30C860E8-04C2-48B3-96AA-FB83BFC4E19A} = {30C860E8-04C2-48B3-96AA-FB83BFC4E19A}
+		{4372BE1E-F5FB-4C7E-A03A-958D1886422C} = {4372BE1E-F5FB-4C7E-A03A-958D1886422C}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.csproj", "{30C860E8-04C2-48B3-96AA-FB83BFC4E19A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SnatcherShim", "SnatcherShim\SnatcherShim.vcxproj", "{FE413E86-C9B6-43DF-8E46-A6600E7D12CD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{182F7A1A-DEA6-4800-A52F-2217450064D9} = {182F7A1A-DEA6-4800-A52F-2217450064D9}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,6 +64,14 @@ Global
 		{30C860E8-04C2-48B3-96AA-FB83BFC4E19A}.Release_Update|x64.Build.0 = Release_Update|Any CPU
 		{30C860E8-04C2-48B3-96AA-FB83BFC4E19A}.Release|x64.ActiveCfg = Release|Any CPU
 		{30C860E8-04C2-48B3-96AA-FB83BFC4E19A}.Release|x64.Build.0 = Release|Any CPU
+		{FE413E86-C9B6-43DF-8E46-A6600E7D12CD}.Debug_Update|x64.ActiveCfg = Debug|x64
+		{FE413E86-C9B6-43DF-8E46-A6600E7D12CD}.Debug_Update|x64.Build.0 = Debug|x64
+		{FE413E86-C9B6-43DF-8E46-A6600E7D12CD}.Debug|x64.ActiveCfg = Debug|x64
+		{FE413E86-C9B6-43DF-8E46-A6600E7D12CD}.Debug|x64.Build.0 = Debug|x64
+		{FE413E86-C9B6-43DF-8E46-A6600E7D12CD}.Release_Update|x64.ActiveCfg = Release|x64
+		{FE413E86-C9B6-43DF-8E46-A6600E7D12CD}.Release_Update|x64.Build.0 = Release|x64
+		{FE413E86-C9B6-43DF-8E46-A6600E7D12CD}.Release|x64.ActiveCfg = Release|x64
+		{FE413E86-C9B6-43DF-8E46-A6600E7D12CD}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
