@@ -66,41 +66,41 @@ struct MtPropertyListEntry
     /* 0x40 */ MtPropertyListEntry  *pBLink;
     /* 0x48 */ MtPropertyListEntry  *pFLink;
 
-    inline static BYTE(__stdcall *_GetValueByte)(MtPropertyListEntry *thisptr) =
-        (BYTE(__stdcall*)(MtPropertyListEntry*))GetModuleAddress(0x140620FF0);
+    inline static BYTE(*_GetValueByte)(MtPropertyListEntry *thisptr) =
+        (BYTE(*)(MtPropertyListEntry*))GetModuleAddress(0x140620FF0);
 
-    inline static WORD(__stdcall *_GetValueWord)(MtPropertyListEntry *thisptr) =
-        (WORD(__stdcall*)(MtPropertyListEntry*))GetModuleAddress(0x1406219B0);
+    inline static WORD(*_GetValueWord)(MtPropertyListEntry *thisptr) =
+        (WORD(*)(MtPropertyListEntry*))GetModuleAddress(0x1406219B0);
 
-    inline static DWORD(__stdcall *_GetValueDword)(MtPropertyListEntry *thisptr) =
-        (DWORD(__stdcall*)(MtPropertyListEntry*))GetModuleAddress(0x1406219F0);
+    inline static DWORD(*_GetValueDword)(MtPropertyListEntry *thisptr) =
+        (DWORD(*)(MtPropertyListEntry*))GetModuleAddress(0x1406219F0);
 
-    inline static unsigned long long(__stdcall *_GetValueQword)(MtPropertyListEntry *thisptr) =
-        (unsigned long long(__stdcall*)(MtPropertyListEntry*))GetModuleAddress(0x140621CF0);
+    inline static unsigned long long(*_GetValueQword)(MtPropertyListEntry *thisptr) =
+        (unsigned long long(*)(MtPropertyListEntry*))GetModuleAddress(0x140621CF0);
 
-    inline static float(__stdcall *_GetValueFloat)(MtPropertyListEntry *thisptr) =
-        (float(__stdcall*)(MtPropertyListEntry*))GetModuleAddress(0x1406214A0);
+    inline static float(*_GetValueFloat)(MtPropertyListEntry *thisptr) =
+        (float(*)(MtPropertyListEntry*))GetModuleAddress(0x1406214A0);
 
-    inline static double(__stdcall *_GetValueDouble)(MtPropertyListEntry *thisptr) =
-        (double(__stdcall*)(MtPropertyListEntry*))GetModuleAddress(0x1406214E0);
+    inline static double(*_GetValueDouble)(MtPropertyListEntry *thisptr) =
+        (double(*)(MtPropertyListEntry*))GetModuleAddress(0x1406214E0);
 
-    inline static __int64(__stdcall *_GetPrimitiveFieldValue)(MtPropertyListEntry *thisptr) =
-        (__int64(__stdcall*)(MtPropertyListEntry*))GetModuleAddress(0x140621520);
+    inline static __int64(*_GetPrimitiveFieldValue)(MtPropertyListEntry *thisptr) =
+        (__int64(*)(MtPropertyListEntry*))GetModuleAddress(0x140621520);
     
-    inline static void(__stdcall *_GetValueVector)(MtPropertyListEntry *thisptr, Vector4 *pVector) =
-        (void(__stdcall*)(MtPropertyListEntry*,Vector4*))GetModuleAddress(0x140621D30);
+    inline static void(*_GetValueVector)(MtPropertyListEntry *thisptr, Vector4 *pVector) =
+        (void(*)(MtPropertyListEntry*,Vector4*))GetModuleAddress(0x140621D30);
 
-    inline static MtObject *(__stdcall *_GetValueMtObject)(MtPropertyListEntry *thisptr) =
-        (MtObject*(__stdcall*)(MtPropertyListEntry*))GetModuleAddress(0x140621210);
+    inline static MtObject *(*_GetValueMtObject)(MtPropertyListEntry *thisptr) =
+        (MtObject*(*)(MtPropertyListEntry*))GetModuleAddress(0x140621210);
 
-    inline static const char *(__stdcall *_GetValueString)(MtPropertyListEntry *thisptr) =
-        (const char *(__stdcall*)(MtPropertyListEntry*))GetModuleAddress(0x140621B10);
+    inline static const char *(*_GetValueString)(MtPropertyListEntry *thisptr) =
+        (const char *(*)(MtPropertyListEntry*))GetModuleAddress(0x140621B10);
 
-    inline static const char *(__stdcall *_GetDisplayName)(const char *psPropertyName) =
-        (const char*(__stdcall*)(const char*))GetModuleAddress(0x1407A5AB0);
+    inline static const char *(*_GetDisplayName)(const char *psPropertyName) =
+        (const char*(*)(const char*))GetModuleAddress(0x1407A5AB0);
 
-    inline static unsigned long long(__stdcall *_GetArrayLength)(MtPropertyListEntry *thisptr) =
-        (unsigned long long(__stdcall*)(MtPropertyListEntry*))GetModuleAddress(0x140621320);
+    inline static unsigned long long(*_GetArrayLength)(MtPropertyListEntry *thisptr) =
+        (unsigned long long(*)(MtPropertyListEntry*))GetModuleAddress(0x140621320);
 
     /*
         Gets the property value as a byte, used for bool, BYTE, and SBYTE
@@ -215,20 +215,20 @@ struct MtPropertyList
             0x00 dtor
     */
 
-    inline static MtPropertyList * (__stdcall *_ctor)(MtPropertyList *thisptr) =
-        (MtPropertyList*(__stdcall*)(MtPropertyList*))GetModuleAddress(0x1406188A0);
+    inline static MtPropertyList * (*_ctor)(MtPropertyList *thisptr) =
+        (MtPropertyList*(*)(MtPropertyList*))GetModuleAddress(0x1406188A0);
 
-    inline static MtPropertyList * (__stdcall *_dtor)(MtPropertyList *thisptr, bool bFreeMemory) =
-        (MtPropertyList*(__stdcall*)(MtPropertyList*, bool))GetModuleAddress(0x140618910);
+    inline static MtPropertyList * (*_dtor)(MtPropertyList *thisptr, bool bFreeMemory) =
+        (MtPropertyList*(*)(MtPropertyList*, bool))GetModuleAddress(0x140618910);
 
-    inline static MtPropertyListEntry * (__stdcall *_AllocatePropertyEntry)(MtPropertyList *thisptr) =
-        (MtPropertyListEntry*(__stdcall*)(MtPropertyList*))GetModuleAddress(0x140618AB0);
+    inline static MtPropertyListEntry * (*_AllocatePropertyEntry)(MtPropertyList *thisptr) =
+        (MtPropertyListEntry*(*)(MtPropertyList*))GetModuleAddress(0x140618AB0);
 
-    inline static MtPropertyListEntry * (__stdcall *_GetFirstNode)(MtPropertyList *thisptr) =
-        (MtPropertyListEntry*(__stdcall*)(MtPropertyList*))GetModuleAddress(0x140618950);
+    inline static MtPropertyListEntry * (*_GetFirstNode)(MtPropertyList *thisptr) =
+        (MtPropertyListEntry*(*)(MtPropertyList*))GetModuleAddress(0x140618950);
 
-    inline static MtPropertyListEntry * (__stdcall *_FindProperty)(MtPropertyList *thisptr, DWORD propertyType, const char *psPropertyName) =
-        (MtPropertyListEntry*(__stdcall*)(MtPropertyList*, DWORD, const char*))GetModuleAddress(0x140618A40);
+    inline static MtPropertyListEntry * (*_FindProperty)(MtPropertyList *thisptr, DWORD propertyType, const char *psPropertyName) =
+        (MtPropertyListEntry*(*)(MtPropertyList*, DWORD, const char*))GetModuleAddress(0x140618A40);
 
     MtPropertyList()
     {

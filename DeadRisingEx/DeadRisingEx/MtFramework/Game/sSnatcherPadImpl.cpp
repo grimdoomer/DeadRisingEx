@@ -9,7 +9,7 @@
 #include <dinput.h>
 
 // Forward declarations:
-void __stdcall Hook_sSnatcherPad_SystemUpdate(sSnatcherPad *thisptr);
+void Hook_sSnatcherPad_SystemUpdate(sSnatcherPad *thisptr);
 
 bool sSnatcherPadImpl::InstallHooks()
 {
@@ -18,7 +18,7 @@ bool sSnatcherPadImpl::InstallHooks()
     return true;
 }
 
-void __stdcall Hook_sSnatcherPad_SystemUpdate(sSnatcherPad *thisptr)
+void Hook_sSnatcherPad_SystemUpdate(sSnatcherPad *thisptr)
 {
     // Call the trampoline and update input.
     sSnatcherPad::_SystemUpdate(thisptr);

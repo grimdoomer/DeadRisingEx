@@ -84,11 +84,11 @@ struct rHavokVehicleData : public cResource
     /* 0x155 */ BOOL 	mReverseButtonPressed;
     /* 0x158 */ TireData*   mpTireWk[10];
 
-    inline static rHavokVehicleData* (__stdcall* _ctor)(rHavokVehicleData* thisptr) =
-        (rHavokVehicleData * (__stdcall*)(rHavokVehicleData*))GetModuleAddress(0x1400C6E90);
+    inline static rHavokVehicleData* (* _ctor)(rHavokVehicleData* thisptr) =
+        (rHavokVehicleData * (*)(rHavokVehicleData*))GetModuleAddress(0x1400C6E90);
 
-    inline static rHavokVehicleData* (__stdcall* _dtor)(rHavokVehicleData* thisptr, bool bFreeMemory) =
-        (rHavokVehicleData * (__stdcall*)(rHavokVehicleData*, bool))GetModuleAddress(0x1400C72E0);
+    inline static rHavokVehicleData* (* _dtor)(rHavokVehicleData* thisptr, bool bFreeMemory) =
+        (rHavokVehicleData * (*)(rHavokVehicleData*, bool))GetModuleAddress(0x1400C72E0);
 
     IMPLEMENT_MYDTI(rHavokVehicleData, 0x141947488, 0x1400AF010, 0x1400C98A0);
 

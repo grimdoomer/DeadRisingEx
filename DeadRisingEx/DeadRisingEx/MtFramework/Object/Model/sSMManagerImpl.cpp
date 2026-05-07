@@ -5,7 +5,7 @@
 
 BOOL *pGlobalLockStatus = (BOOL*)GetModuleAddress(0x141CF2A50);
 
-void __stdcall Hook_sSMManager_AddModel(sSMManager *thisptr, uSnatcherModel *pModel);
+void Hook_sSMManager_AddModel(sSMManager *thisptr, uSnatcherModel *pModel);
 
 bool sSMManagerImpl::InstallHooks()
 {
@@ -14,7 +14,7 @@ bool sSMManagerImpl::InstallHooks()
     return true;
 }
 
-void __stdcall Hook_sSMManager_AddModel(sSMManager *thisptr, uSnatcherModel *pModel)
+void Hook_sSMManager_AddModel(sSMManager *thisptr, uSnatcherModel *pModel)
 {
     // Check if we need to lock on list access.
     if (thisptr->IgnoreGlobalLock != FALSE || *pGlobalLockStatus != FALSE)

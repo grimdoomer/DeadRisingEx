@@ -3,7 +3,7 @@
 #include "DeadRisingEx.h"
 #include <MtFramework/MtObject.h>
 
-extern bool(__stdcall *sUnit_AddObject)(void *thisptr, DWORD Unk, void *pObject);
+extern bool(*sUnit_AddObject)(void *thisptr, DWORD Unk, void *pObject);
 
 struct ObjectInfo
 {

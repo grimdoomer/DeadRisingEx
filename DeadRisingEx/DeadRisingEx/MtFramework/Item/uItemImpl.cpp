@@ -19,14 +19,14 @@
 #include <MtFramework/Object/cUnit.h>
 #include "DeadRisingEx/MtFramework/Player/uPlayerImpl.h"
 
-bool(__stdcall *sUnit_Something)(void *thisptr, int unk, uItem *pItem) =
-    (bool(__stdcall*)(void*, int, uItem*))GetModuleAddress(0x1406300B0);
+bool(*sUnit_Something)(void *thisptr, int unk, uItem *pItem) =
+    (bool(*)(void*, int, uItem*))GetModuleAddress(0x1406300B0);
 
-void(__stdcall *CopyMtString)(void *thisptr, MtString **ppString) =
-    (void(__stdcall*)(void*, MtString**))GetModuleAddress(0x1400CCE80);
+void(*CopyMtString)(void *thisptr, MtString **ppString) =
+    (void(*)(void*, MtString**))GetModuleAddress(0x1400CCE80);
 
-bool(__stdcall *sUnit_AddObject)(void *thisptr, DWORD Unk, void *pObject) =
-    (bool(__stdcall*)(void*, DWORD, void*))GetModuleAddress(0x1406300B0);
+bool(*sUnit_AddObject)(void *thisptr, DWORD Unk, void *pObject) =
+    (bool(*)(void*, DWORD, void*))GetModuleAddress(0x1406300B0);
 
 MtDTI *g_uSnatcherModelDTI = (MtDTI*)GetModuleAddress(0x141949C20);
 
@@ -46,11 +46,11 @@ __int64 SpawnItem(WCHAR **argv, int argc);
 __int64 SpawnObject(WCHAR **argv, int argc);
 __int64 SetRandomizerState(WCHAR **argv, int argc);
 
-uItem * __stdcall Hook_SpawnAndPlaceItem(sItemCtrl *thisptr, DWORD dwItemId, Vector4 *pPosition, Vector4 *pRotation);
-uItem * __stdcall Hook_SpawnAndPlaceItem2(sItemCtrl *thisptr, DWORD dwItemId, Vector4 *pPosition, Vector4 *pRotation);
-void __stdcall Hook_sAreaHit_SpawnItems(sAreaHit *thisptr);
+uItem * Hook_SpawnAndPlaceItem(sItemCtrl *thisptr, DWORD dwItemId, Vector4 *pPosition, Vector4 *pRotation);
+uItem * Hook_SpawnAndPlaceItem2(sItemCtrl *thisptr, DWORD dwItemId, Vector4 *pPosition, Vector4 *pRotation);
+void Hook_sAreaHit_SpawnItems(sAreaHit *thisptr);
 
-uItem * __stdcall Hook_SpawnItem(sItemCtrl *thisptr, DWORD dwItemId);
+uItem * Hook_SpawnItem(sItemCtrl *thisptr, DWORD dwItemId);
 
 // Table of commands for uPlayer objects.
 const int g_uItemCommandsLength = 3;
@@ -404,7 +404,7 @@ DWORD GetRandomItemId()
     return itemId;
 }
 
-uItem * __stdcall Hook_SpawnAndPlaceItem(sItemCtrl *thisptr, DWORD dwItemId, Vector4 *pPosition, Vector4 *pRotation)
+uItem * Hook_SpawnAndPlaceItem(sItemCtrl *thisptr, DWORD dwItemId, Vector4 *pPosition, Vector4 *pRotation)
 {
     // Check if the item randomize mod is enabled and if not bail out.
     if (itemRandomizerEnabled == false)
@@ -426,7 +426,7 @@ uItem * __stdcall Hook_SpawnAndPlaceItem(sItemCtrl *thisptr, DWORD dwItemId, Vec
     return sItemCtrl::_SpawnAndPlaceItem(thisptr, dwItemId, pPosition, pRotation);
 }
 
-uItem * __stdcall Hook_SpawnAndPlaceItem2(sItemCtrl *thisptr, DWORD dwItemId, Vector4 *pPosition, Vector4 *pRotation)
+uItem * Hook_SpawnAndPlaceItem2(sItemCtrl *thisptr, DWORD dwItemId, Vector4 *pPosition, Vector4 *pRotation)
 {
     // Check if the item randomize mod is enabled and if not bail out.
     if (itemRandomizerEnabled == false)
@@ -448,7 +448,7 @@ uItem * __stdcall Hook_SpawnAndPlaceItem2(sItemCtrl *thisptr, DWORD dwItemId, Ve
     return sItemCtrl::_SpawnAndPlaceItem2(thisptr, dwItemId, pPosition, pRotation);
 }
 
-void __stdcall Hook_sAreaHit_SpawnItems(sAreaHit *thisptr)
+void Hook_sAreaHit_SpawnItems(sAreaHit *thisptr)
 {
     char sItemClassName[64];
 
@@ -551,7 +551,7 @@ void __stdcall Hook_sAreaHit_SpawnItems(sAreaHit *thisptr)
     }
 }
 
-uItem * __stdcall Hook_SpawnItem(sItemCtrl *thisptr, DWORD dwItemId)
+uItem * Hook_SpawnItem(sItemCtrl *thisptr, DWORD dwItemId)
 {
     DbgPrint("Spawning item %d\n", dwItemId);
     return sItemCtrl::_SpawnItem(thisptr, dwItemId);

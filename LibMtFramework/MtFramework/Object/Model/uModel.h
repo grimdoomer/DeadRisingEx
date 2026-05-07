@@ -147,17 +147,17 @@ struct uModel : public uCoord
 			0x88
 	*/
 
-	inline static uModel* (__stdcall* _ctor)(uModel* thisptr) =
-		(uModel * (__stdcall*)(uModel*))GetModuleAddress(0x1406A18E0);
+	inline static uModel* (* _ctor)(uModel* thisptr) =
+		(uModel * (*)(uModel*))GetModuleAddress(0x1406A18E0);
 
-	inline static uModel* (__stdcall* _dtor)(uModel* thisptr, bool bFreeMemory) =
-		(uModel * (__stdcall*)(uModel*, bool))GetModuleAddress(0x1406A1D40);
+	inline static uModel* (* _dtor)(uModel* thisptr, bool bFreeMemory) =
+		(uModel * (*)(uModel*, bool))GetModuleAddress(0x1406A1D40);
 
-	inline static void (__stdcall* _AssignModel)(uModel* thisptr, rModel* pModel) =
-		(void(__stdcall*)(uModel*, rModel*))GetModuleAddress(0x1406B2730);
+	inline static void (* _AssignModel)(uModel* thisptr, rModel* pModel) =
+		(void(*)(uModel*, rModel*))GetModuleAddress(0x1406B2730);
 
-	inline static void (__stdcall* _AssignAnimation)(uModel* thisptr, rMotionList* pAnimation, int Slot) =
-		(void(__stdcall*)(uModel*, rMotionList*, int))GetModuleAddress(0x1406B2E30);
+	inline static void (* _AssignAnimation)(uModel* thisptr, rMotionList* pAnimation, int Slot) =
+		(void(*)(uModel*, rMotionList*, int))GetModuleAddress(0x1406B2E30);
 
     IMPLEMENT_MYDTI(uModel, 0x141D17FE8, 0x1400AF010, 0x1406B1DB0);
 

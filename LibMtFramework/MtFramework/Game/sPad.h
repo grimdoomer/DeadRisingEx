@@ -143,14 +143,14 @@ struct sPad : public cSystem
 
     IMPLEMENT_SINGLETON(sPad, 0x141CF3190);
 
-    inline static void(__stdcall *_SystemUpdate)(sPad *thisptr) =
-        (void(__stdcall*)(sPad*))GetModuleAddress(0x140655C50);
+    inline static void(*_SystemUpdate)(sPad *thisptr) =
+        (void(*)(sPad*))GetModuleAddress(0x140655C50);
 
-    inline static DWORD(__stdcall *_GetLastInputSocketNumber)(sPad *thisptr) =
-        (DWORD(__stdcall*)(sPad*))GetModuleAddress(0x140652610);
+    inline static DWORD(*_GetLastInputSocketNumber)(sPad *thisptr) =
+        (DWORD(*)(sPad*))GetModuleAddress(0x140652610);
 
-    inline static bool(__stdcall *_GetButtonPressed)(InputButtonId buttonId) =
-        (bool(__stdcall*)(InputButtonId))GetModuleAddress(0x1400291A0);
+    inline static bool(*_GetButtonPressed)(InputButtonId buttonId) =
+        (bool(*)(InputButtonId))GetModuleAddress(0x1400291A0);
 
     /*
         Description: Gets the socket number for the last device to register input

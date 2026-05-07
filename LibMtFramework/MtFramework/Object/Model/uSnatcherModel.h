@@ -60,14 +60,14 @@ struct uSnatcherModel : public uHavokModel
             0x1A8
     */
 
-    inline static uSnatcherModel* (__stdcall* _ctor)(uSnatcherModel* thisptr) =
-        (uSnatcherModel * (__stdcall*)(uSnatcherModel*))GetModuleAddress(0x140145930);
+    inline static uSnatcherModel* (* _ctor)(uSnatcherModel* thisptr) =
+        (uSnatcherModel * (*)(uSnatcherModel*))GetModuleAddress(0x140145930);
 
-    inline static uSnatcherModel* (__stdcall* _dtor)(uSnatcherModel* thisptr, bool bFreeMemory) =
-        (uSnatcherModel * (__stdcall*)(uSnatcherModel*, bool))GetModuleAddress(0x140145F00);
+    inline static uSnatcherModel* (* _dtor)(uSnatcherModel* thisptr, bool bFreeMemory) =
+        (uSnatcherModel * (*)(uSnatcherModel*, bool))GetModuleAddress(0x140145F00);
 
-    inline static void (__stdcall* _LoadAndAssignModel)(uSnatcherModel* thisptr, const char* psFileName) =
-        (void(__stdcall*)(uSnatcherModel*, const char*))GetModuleAddress(0x14014D630);
+    inline static void (* _LoadAndAssignModel)(uSnatcherModel* thisptr, const char* psFileName) =
+        (void(*)(uSnatcherModel*, const char*))GetModuleAddress(0x14014D630);
 
     IMPLEMENT_MYDTI(uSnatcherModel, 0x141949C20, 0x1400AF010, 0x1401E94B0);
 

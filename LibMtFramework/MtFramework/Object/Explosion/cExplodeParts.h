@@ -16,11 +16,11 @@ struct cExplodeParts : public MtObject
     /* 0x1A28 */ 
     /* 0x1A2C */ //DWORD
 
-    inline static cExplodeParts* (__stdcall* _ctor)(cExplodeParts* thisptr) =
-        (cExplodeParts * (__stdcall*)(cExplodeParts*))GetModuleAddress(0x14000E200);
+    inline static cExplodeParts* (* _ctor)(cExplodeParts* thisptr) =
+        (cExplodeParts * (*)(cExplodeParts*))GetModuleAddress(0x14000E200);
 
-    inline static cExplodeParts* (__stdcall* _dtor)(cExplodeParts* thisptr, bool bFreeMemory) =
-        (cExplodeParts * (__stdcall*)(cExplodeParts*, bool))GetModuleAddress(0x14000E2E0);
+    inline static cExplodeParts* (* _dtor)(cExplodeParts* thisptr, bool bFreeMemory) =
+        (cExplodeParts * (*)(cExplodeParts*, bool))GetModuleAddress(0x14000E2E0);
 
     IMPLEMENT_MYDTI(cExplodeParts, 0x1419300B0, 0x1400AF010, 0x14000EF00);
 

@@ -6,9 +6,9 @@
 
 void **g_sMainInstance = (void**)GetModuleAddress(0x141CF2AA0);
 
-float(__stdcall *GetRandomFloat)(void *pThing) = (float(__stdcall*)(void*))GetModuleAddress(0x14000ADA0);
+float(*GetRandomFloat)(void *pThing) = (float(*)(void*))GetModuleAddress(0x14000ADA0);
 
-void(__stdcall *CalculateMatrix)(void *pMatrix, void *pVector) = (void(__stdcall*)(void*, void*))GetModuleAddress(0x14061B880);
+void(*CalculateMatrix)(void *pMatrix, void *pVector) = (void(*)(void*, void*))GetModuleAddress(0x14061B880);
 
 float velocity = 3.0f;
 Vector3 UnkVec = { 0.0f, 0.0f, 0.0f };

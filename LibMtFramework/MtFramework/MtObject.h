@@ -66,17 +66,17 @@ struct MtDTI
     /* 0x2C */ DWORD    FileTypeId;
     /* 0x30 */ void     *pUnknown3;
 
-    inline static MtDTI * (__stdcall *_ctor)(MtDTI *thisptr, const char *psTypeName, MtDTI *pParentType, DWORD dwSizeOf, DWORD dwFileType, BYTE flags) =
-        (MtDTI*(__stdcall*)(MtDTI*, const char*, MtDTI*, DWORD, DWORD, BYTE))GetModuleAddress(0x1406184C0);
+    inline static MtDTI * (*_ctor)(MtDTI *thisptr, const char *psTypeName, MtDTI *pParentType, DWORD dwSizeOf, DWORD dwFileType, BYTE flags) =
+        (MtDTI*(*)(MtDTI*, const char*, MtDTI*, DWORD, DWORD, BYTE))GetModuleAddress(0x1406184C0);
 
-    inline static MtDTI * (__stdcall *_dtor)(MtDTI *thisptr, bool bFreeMemory) =
-        (MtDTI*(__stdcall*)(MtDTI*, bool))GetModuleAddress(0x1400AF010);
+    inline static MtDTI * (*_dtor)(MtDTI *thisptr, bool bFreeMemory) =
+        (MtDTI*(*)(MtDTI*, bool))GetModuleAddress(0x1400AF010);
 
-    inline static MtDTI * (__stdcall *_FindDTIByFileType)(DWORD dwFileType, MtDTI *pRoot) = 
-        (MtDTI*(__stdcall*)(DWORD, MtDTI*))GetModuleAddress((void*)0x140618590);
+    inline static MtDTI * (*_FindDTIByFileType)(DWORD dwFileType, MtDTI *pRoot) = 
+        (MtDTI*(*)(DWORD, MtDTI*))GetModuleAddress((void*)0x140618590);
 
-    inline static MtDTI * (__stdcall *_FindDTIByName)(const char *psTypeName, MtDTI *pRoot) =
-        (MtDTI*(__stdcall*)(const char*, MtDTI*))GetModuleAddress(0x1406185F0);
+    inline static MtDTI * (*_FindDTIByName)(const char *psTypeName, MtDTI *pRoot) =
+        (MtDTI*(*)(const char*, MtDTI*))GetModuleAddress(0x1406185F0);
 
 
     // Default DTI parent object if not parent object is specified.
@@ -147,11 +147,11 @@ ASSERT_STRUCT_SIZE(MtDTI, 0x38);
 #define IMPLEMENT_MYDTI(type, dtiAddr, dtorAddr, createInstAddr) \
 struct MyDTI : public MtDTI \
 { \
-    inline static MyDTI * (__stdcall *_dtor)(MyDTI *thisptr, bool bFreeMemory) = \
-        (MyDTI*(__stdcall*)(MyDTI*, bool))GetModuleAddress(dtorAddr); \
+    inline static MyDTI * (*_dtor)(MyDTI *thisptr, bool bFreeMemory) = \
+        (MyDTI*(*)(MyDTI*, bool))GetModuleAddress(dtorAddr); \
 \
-    inline static type * (__stdcall *_CreateInstance)(MyDTI *thisptr) = \
-        (type*(__stdcall*)(MyDTI*))GetModuleAddress(createInstAddr); \
+    inline static type * (*_CreateInstance)(MyDTI *thisptr) = \
+        (type*(*)(MyDTI*))GetModuleAddress(createInstAddr); \
 \
     MyDTI(const char *psTypeName, MtDTI *pParentType, DWORD dwSizeOf, DWORD dwFileType, BYTE flags) : \
         MtDTI(psTypeName, pParentType, dwSizeOf, dwFileType, flags) \

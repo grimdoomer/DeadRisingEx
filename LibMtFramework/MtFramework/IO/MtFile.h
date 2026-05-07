@@ -42,53 +42,53 @@ struct MtFile : public MtObject
 
     BYTE _[0x134];
 
-    inline static MtFile * (__stdcall *_ctor)(MtFile *thisptr, const char *psFileName, DWORD flags) =
-        (MtFile*(__stdcall*)(MtFile*, const char*, DWORD))GetModuleAddress(0x140618ED0);
+    inline static MtFile * (*_ctor)(MtFile *thisptr, const char *psFileName, DWORD flags) =
+        (MtFile*(*)(MtFile*, const char*, DWORD))GetModuleAddress(0x140618ED0);
 
-    inline static MtFile * (__stdcall *_dtor)(MtFile *thisptr, bool bFreeMemory) =
-        (MtFile*(__stdcall*)(MtFile*, bool))GetModuleAddress(0x140619130);
+    inline static MtFile * (*_dtor)(MtFile *thisptr, bool bFreeMemory) =
+        (MtFile*(*)(MtFile*, bool))GetModuleAddress(0x140619130);
 
-    inline static MtDTI * (__stdcall *_GetDTI)(MtFile *thisptr) =
-        (MtDTI*(__stdcall*)(MtFile*))GetModuleAddress(0x140619780);
+    inline static MtDTI * (*_GetDTI)(MtFile *thisptr) =
+        (MtDTI*(*)(MtFile*))GetModuleAddress(0x140619780);
 
-    inline static bool(__stdcall *_OpenFile)(MtFile *thisptr, const char *psFileName, DWORD flags) =
-        (bool(__stdcall*)(MtFile*, const char*, DWORD))GetModuleAddress(0x140619940);
+    inline static bool(*_OpenFile)(MtFile *thisptr, const char *psFileName, DWORD flags) =
+        (bool(*)(MtFile*, const char*, DWORD))GetModuleAddress(0x140619940);
 
-    inline static void(__stdcall *_CloseFile)(MtFile *thisptr) =
-        (void(__stdcall*)(MtFile*))GetModuleAddress(0x140619160);
+    inline static void(*_CloseFile)(MtFile *thisptr) =
+        (void(*)(MtFile*))GetModuleAddress(0x140619160);
 
-    inline static DWORD(__stdcall *_ReadFile)(MtFile *thisptr, void *pBuffer, DWORD dwNumberOfBytes) =
-        (DWORD(__stdcall*)(MtFile*, void*, DWORD))GetModuleAddress(0x140619B20);
+    inline static DWORD(*_ReadFile)(MtFile *thisptr, void *pBuffer, DWORD dwNumberOfBytes) =
+        (DWORD(*)(MtFile*, void*, DWORD))GetModuleAddress(0x140619B20);
 
-    inline static DWORD(__stdcall *_ReadFileAsync)(MtFile *thisptr, void *pBuffer, DWORD dwNumberOfBytes) =
-        (DWORD(__stdcall*)(MtFile*, void*, DWORD))GetModuleAddress(0x140619E40);
+    inline static DWORD(*_ReadFileAsync)(MtFile *thisptr, void *pBuffer, DWORD dwNumberOfBytes) =
+        (DWORD(*)(MtFile*, void*, DWORD))GetModuleAddress(0x140619E40);
 
-    inline static void(__stdcall *_WaitForCompletion)(MtFile *thisptr) =
-        (void(__stdcall*)(MtFile*))GetModuleAddress(0x14061A050);
+    inline static void(*_WaitForCompletion)(MtFile *thisptr) =
+        (void(*)(MtFile*))GetModuleAddress(0x14061A050);
 
-    inline static DWORD(__stdcall *_WriteFile)(MtFile *thisptr, void *pBuffer, DWORD dwNumberOfBytes) =
-        (DWORD(__stdcall*)(MtFile*, void*, DWORD))GetModuleAddress(0x14061A1D0);
+    inline static DWORD(*_WriteFile)(MtFile *thisptr, void *pBuffer, DWORD dwNumberOfBytes) =
+        (DWORD(*)(MtFile*, void*, DWORD))GetModuleAddress(0x14061A1D0);
 
-    inline static DWORD(__stdcall* _Seek)(MtFile *thisptr, DWORD dwOffset, int seekOrigin) =
-        (DWORD(__stdcall*)(MtFile*, DWORD, int))GetModuleAddress(0x14061A0A0);
+    inline static DWORD(* _Seek)(MtFile *thisptr, DWORD dwOffset, int seekOrigin) =
+        (DWORD(*)(MtFile*, DWORD, int))GetModuleAddress(0x14061A0A0);
 
-    inline static DWORD(__stdcall *_GetCurrentPosition)(MtFile *thisptr) =
-        (DWORD(__stdcall*)(MtFile*))GetModuleAddress(0x1406197F0);
+    inline static DWORD(*_GetCurrentPosition)(MtFile *thisptr) =
+        (DWORD(*)(MtFile*))GetModuleAddress(0x1406197F0);
 
-    inline static DWORD(__stdcall *_GetFileSize)(MtFile *thisptr) =
-        (DWORD(__stdcall*)(MtFile*))GetModuleAddress(0x140619860);
+    inline static DWORD(*_GetFileSize)(MtFile *thisptr) =
+        (DWORD(*)(MtFile*))GetModuleAddress(0x140619860);
 
-    inline static DWORD(__stdcall *_SetFileSize)(MtFile *thisptr, DWORD dwFileSize) =
-        (DWORD(__stdcall*)(MtFile*, DWORD))GetModuleAddress(0x14061A170);
+    inline static DWORD(*_SetFileSize)(MtFile *thisptr, DWORD dwFileSize) =
+        (DWORD(*)(MtFile*, DWORD))GetModuleAddress(0x14061A170);
 
-    inline static bool(__stdcall *_CanRead)(MtFile *thisptr) =
-        (bool(__stdcall*)(MtFile*))GetModuleAddress(0x140619840);
+    inline static bool(*_CanRead)(MtFile *thisptr) =
+        (bool(*)(MtFile*))GetModuleAddress(0x140619840);
 
-    inline static bool(__stdcall *_CanWrite)(MtFile *thisptr) =
-        (bool(__stdcall*)(MtFile*))GetModuleAddress(0x140619850);
+    inline static bool(*_CanWrite)(MtFile *thisptr) =
+        (bool(*)(MtFile*))GetModuleAddress(0x140619850);
 
-    inline static bool(__stdcall *_IsAsync)(MtFile *thisptr) =
-        (bool(__stdcall*)(MtFile*))GetModuleAddress(0x140619810);
+    inline static bool(*_IsAsync)(MtFile *thisptr) =
+        (bool(*)(MtFile*))GetModuleAddress(0x140619810);
 
     IMPLEMENT_MYDTI(MtFile, 0x141CE5E28, 0x1400AF010, 0x1406198D0);
 

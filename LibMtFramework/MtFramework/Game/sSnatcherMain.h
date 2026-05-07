@@ -67,14 +67,14 @@ struct sSnatcherMain : public sMain
 
     IMPLEMENT_SINGLETON(sSnatcherMain, 0x141944DD8);
 
-    inline static void(__stdcall *_InitializeAllocators)(sSnatcherMain *thisptr) =
-        (void(__stdcall*)(sSnatcherMain*))GetModuleAddress(0x1400AB750);
+    inline static void(*_InitializeAllocators)(sSnatcherMain *thisptr) =
+        (void(*)(sSnatcherMain*))GetModuleAddress(0x1400AB750);
 
-    inline static DWORD(__stdcall *_GetRandomInt)(RNGState *pRngState) =
-        (DWORD(__stdcall*)(RNGState*))GetModuleAddress(0x14000AE10);
+    inline static DWORD(*_GetRandomInt)(RNGState *pRngState) =
+        (DWORD(*)(RNGState*))GetModuleAddress(0x14000AE10);
 
-    inline static float(__stdcall *_GetRandomFloat)(RNGState *pRngState) =
-        (float(__stdcall*)(RNGState*))GetModuleAddress(0x14000ADA0);
+    inline static float(*_GetRandomFloat)(RNGState *pRngState) =
+        (float(*)(RNGState*))GetModuleAddress(0x14000ADA0);
 
     /*DWORD GetRandomInt()
     {

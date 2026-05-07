@@ -14,17 +14,17 @@ struct MtHeapAllocator : public MtAllocator
     /* 0x68 */ DWORD        mBreakNo;
     /* 0x70 */ void         *pBaseAllocation;        // Heap data allocated by VirtualAlloc
 
-    inline static MtHeapAllocator * (__stdcall *_ctor)(MtHeapAllocator *thisptr, const char *psName, DWORD type, DWORD size) =
-        (MtHeapAllocator*(__stdcall*)(MtHeapAllocator*, const char*, DWORD, DWORD))GetModuleAddress(0x140623B80);
+    inline static MtHeapAllocator * (*_ctor)(MtHeapAllocator *thisptr, const char *psName, DWORD type, DWORD size) =
+        (MtHeapAllocator*(*)(MtHeapAllocator*, const char*, DWORD, DWORD))GetModuleAddress(0x140623B80);
 
-    inline static void * (__stdcall *_Alloc)(MtHeapAllocator *thisptr, DWORD size, DWORD alignment) =
-        (void*(__stdcall*)(MtHeapAllocator*, DWORD, DWORD))GetModuleAddress(0x140624790);
+    inline static void * (*_Alloc)(MtHeapAllocator *thisptr, DWORD size, DWORD alignment) =
+        (void*(*)(MtHeapAllocator*, DWORD, DWORD))GetModuleAddress(0x140624790);
 
-    inline static void(__stdcall *_Free)(MtHeapAllocator *thisptr, void *pAddress) =
-        (void(__stdcall*)(MtHeapAllocator*, void*))GetModuleAddress(0x140624A70);
+    inline static void(*_Free)(MtHeapAllocator *thisptr, void *pAddress) =
+        (void(*)(MtHeapAllocator*, void*))GetModuleAddress(0x140624A70);
 
-    inline static DWORD(__stdcall *_GetAllocationInfo)(MtHeapAllocator *thisptr, void *pAddress) =
-        (DWORD(__stdcall*)(MtHeapAllocator*, void*))GetModuleAddress(0x140624C50);
+    inline static DWORD(*_GetAllocationInfo)(MtHeapAllocator *thisptr, void *pAddress) =
+        (DWORD(*)(MtHeapAllocator*, void*))GetModuleAddress(0x140624C50);
 };
 ASSERT_STRUCT_SIZE(MtHeapAllocator, 0x78);
 

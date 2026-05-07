@@ -36,29 +36,29 @@ struct cResource : public MtObject
 
     inline static void** _vtable = (void**)GetModuleAddress(0x14103B2B0);
 
-    inline static cResource * (__stdcall *_ctor)(cResource *thisptr) =
-        (cResource*(__stdcall*)(cResource*))GetModuleAddress(0x140630C90);
+    inline static cResource * (*_ctor)(cResource *thisptr) =
+        (cResource*(*)(cResource*))GetModuleAddress(0x140630C90);
 
-    inline static cResource * (__stdcall *_dtor)(cResource *thisptr) =
-        (cResource*(__stdcall*)(cResource*))GetModuleAddress(0x1402B8640);
+    inline static cResource * (*_dtor)(cResource *thisptr) =
+        (cResource*(*)(cResource*))GetModuleAddress(0x1402B8640);
 
-    inline static void(__stdcall *_RegisterDebugOptions)(cResource *thisptr, MtPropertyList *pPropList) =
-        (void(__stdcall*)(cResource*, MtPropertyList*))GetModuleAddress(0x140630CC0);
+    inline static void(*_RegisterDebugOptions)(cResource *thisptr, MtPropertyList *pPropList) =
+        (void(*)(cResource*, MtPropertyList*))GetModuleAddress(0x140630CC0);
 
-    inline static MtDTI * (__stdcall *_GetDTI)(cResource *thisptr) =
-        (MtDTI*(__stdcall*)(cResource*))GetModuleAddress(0x140631060);
+    inline static MtDTI * (*_GetDTI)(cResource *thisptr) =
+        (MtDTI*(*)(cResource*))GetModuleAddress(0x140631060);
 
-    inline static MtFile::FileInfo* (__stdcall* _GetFileInfo)(cResource* thisptr, MtFile::FileInfo* pFileInfo) =
-        (MtFile::FileInfo * (__stdcall*)(cResource*, MtFile::FileInfo*))GetModuleAddress(0x140631080);
+    inline static MtFile::FileInfo* (* _GetFileInfo)(cResource* thisptr, MtFile::FileInfo* pFileInfo) =
+        (MtFile::FileInfo * (*)(cResource*, MtFile::FileInfo*))GetModuleAddress(0x140631080);
 
-    inline static const char * (__stdcall *_GetFileExtension)(cResource *thisptr) =
-        (const char*(__stdcall*)(cResource*))GetModuleAddress(0x14103B2E0);
+    inline static const char * (*_GetFileExtension)(cResource *thisptr) =
+        (const char*(*)(cResource*))GetModuleAddress(0x14103B2E0);
 
-    inline static void(__stdcall *_IncrementRefCount)(cResource *thisptr) =
-        (void(__stdcall*)(cResource*))GetModuleAddress(0x140630CB0);
+    inline static void(*_IncrementRefCount)(cResource *thisptr) =
+        (void(*)(cResource*))GetModuleAddress(0x140630CB0);
 
-    inline static void(__stdcall *_DecrementRefCount)(cResource *thisptr) =
-        (void(__stdcall*)(cResource*))GetModuleAddress(0x140631150);
+    inline static void(*_DecrementRefCount)(cResource *thisptr) =
+        (void(*)(cResource*))GetModuleAddress(0x140631150);
 
     IMPLEMENT_MYDTI(cResource, 0x141CF2698, 0x1400AF010, 0x140631100);
 

@@ -5,6 +5,6 @@
 // sizeof = 0x1BCD8
 struct sSnatcherPad : public sPad
 {
-    inline static void(__stdcall *_SystemUpdate)(sSnatcherPad *thisptr) =
-        (void(__stdcall*)(sSnatcherPad*))GetModuleAddress(0x1400ADD00);
+    inline static void(*_SystemUpdate)(sSnatcherPad *thisptr) =
+        (void(*)(sSnatcherPad*))GetModuleAddress(0x1400ADD00);
 };

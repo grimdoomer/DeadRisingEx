@@ -12,7 +12,7 @@
 class ImGuiWindowBase;
 
 // Function prototype for command handlers:
-typedef __int64(__stdcall *ConsoleCommandHandlerFunc)(WCHAR **argv, int argc);
+typedef __int64(*ConsoleCommandHandlerFunc)(WCHAR **argv, int argc);
 
 // Console command structure:
 struct ConsoleCommandInfo

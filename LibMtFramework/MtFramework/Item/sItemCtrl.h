@@ -10,20 +10,20 @@ struct sItemCtrl : public cSystem
 {
     /* 0x38 */ // array, 64 items, 0x40 element size
 
-    inline static sItemCtrl * (__stdcall *_ctor)(sItemCtrl *thisptr) =
-        (sItemCtrl*(__stdcall*)(sItemCtrl*))GetModuleAddress(0x1400680E0);
+    inline static sItemCtrl * (*_ctor)(sItemCtrl *thisptr) =
+        (sItemCtrl*(*)(sItemCtrl*))GetModuleAddress(0x1400680E0);
 
-    inline static sItemCtrl * (__stdcall *_dtor)(sItemCtrl *thisptr, bool bFreeMemory) =
-        (sItemCtrl*(__stdcall*)(sItemCtrl*, bool))GetModuleAddress(0x14006D9A0);
+    inline static sItemCtrl * (*_dtor)(sItemCtrl *thisptr, bool bFreeMemory) =
+        (sItemCtrl*(*)(sItemCtrl*, bool))GetModuleAddress(0x14006D9A0);
 
-    inline static uItem * (__stdcall *_SpawnAndPlaceItem)(sItemCtrl *thisptr, DWORD dwItemId, Vector4 *pPosition, Vector4 *pRotation) =
-        (uItem*(__stdcall*)(sItemCtrl*, DWORD, Vector4*, Vector4*))GetModuleAddress(0x140075540);
+    inline static uItem * (*_SpawnAndPlaceItem)(sItemCtrl *thisptr, DWORD dwItemId, Vector4 *pPosition, Vector4 *pRotation) =
+        (uItem*(*)(sItemCtrl*, DWORD, Vector4*, Vector4*))GetModuleAddress(0x140075540);
 
-    inline static uItem * (__stdcall *_SpawnAndPlaceItem2)(sItemCtrl *thisptr, DWORD dwItemId, Vector4 *pPosition, Vector4 *pRotation) =
-        (uItem*(__stdcall*)(sItemCtrl*, DWORD, Vector4*, Vector4*))GetModuleAddress(0x1400754E0);
+    inline static uItem * (*_SpawnAndPlaceItem2)(sItemCtrl *thisptr, DWORD dwItemId, Vector4 *pPosition, Vector4 *pRotation) =
+        (uItem*(*)(sItemCtrl*, DWORD, Vector4*, Vector4*))GetModuleAddress(0x1400754E0);
 
-    inline static uItem * (__stdcall *_SpawnItem)(sItemCtrl *thisptr, DWORD dwItemId) =
-        (uItem*(__stdcall*)(sItemCtrl*, DWORD))GetModuleAddress(0x140075680);
+    inline static uItem * (*_SpawnItem)(sItemCtrl *thisptr, DWORD dwItemId) =
+        (uItem*(*)(sItemCtrl*, DWORD))GetModuleAddress(0x140075680);
 
     IMPLEMENT_SINGLETON(sItemCtrl, 0x141CF2620);
 

@@ -17,14 +17,14 @@ struct cSystem : public MtObject
             0x38 void BuildSystemMenu(MtPropertyList *pPropertyList)
     */
 
-    inline static cSystem * (__stdcall *_ctor)(cSystem *thisptr) =
-        (cSystem*(__stdcall*)(cSystem*))GetModuleAddress(0x140643CE0);
+    inline static cSystem * (*_ctor)(cSystem *thisptr) =
+        (cSystem*(*)(cSystem*))GetModuleAddress(0x140643CE0);
 
-    inline static cSystem * (__stdcall *_dtor)(cSystem *thisptr, bool bFreeMemory) =
-        (cSystem*(__stdcall*)(cSystem*, bool))GetModuleAddress(0x140643D40);
+    inline static cSystem * (*_dtor)(cSystem *thisptr, bool bFreeMemory) =
+        (cSystem*(*)(cSystem*, bool))GetModuleAddress(0x140643D40);
 
-    inline static MtDTI * (__stdcall *_GetDTI)(cSystem *thisptr) =
-        (MtDTI*(__stdcall*)(cSystem*))GetModuleAddress(0x140643DA0);
+    inline static MtDTI * (*_GetDTI)(cSystem *thisptr) =
+        (MtDTI*(*)(cSystem*))GetModuleAddress(0x140643DA0);
 
     IMPLEMENT_MYDTI(cSystem, 0x141CF2A58, 0x1400AF010, 0x140643DB0);
 

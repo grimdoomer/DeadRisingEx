@@ -28,10 +28,10 @@ protected:
 
     bool LoadArcFile(std::string sFilePath);
 
-    friend sResource * __stdcall Hook_sResource_ctor(sResource *thisptr);
-    friend void __stdcall Hook_sResource_ResourceDecoderProc(int threadIndex);
-    friend cResource * __stdcall Hook_sResource_LoadResourceFromArchive(sResource *thisptr, rArchive::DecompressStream *pStream, MtDTI *pDTI, rArchiveFileEntry *pFileEntry);
-    friend cResource * __stdcall Hook_sResource_LoadGameResourceSynchronous(sResource *thisptr, MtDTI *pObjectType, char *psFileName, ULONGLONG resourceId, DWORD flags);
+    friend sResource * Hook_sResource_ctor(sResource *thisptr);
+    friend void Hook_sResource_ResourceDecoderProc(int threadIndex);
+    friend cResource * Hook_sResource_LoadResourceFromArchive(sResource *thisptr, rArchive::DecompressStream *pStream, MtDTI *pDTI, rArchiveFileEntry *pFileEntry);
+    friend cResource * Hook_sResource_LoadGameResourceSynchronous(sResource *thisptr, MtDTI *pObjectType, char *psFileName, ULONGLONG resourceId, DWORD flags);
 
 public:
     static ArchiveOverlay * Instance()

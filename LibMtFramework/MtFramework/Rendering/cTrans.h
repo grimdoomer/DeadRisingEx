@@ -332,6 +332,6 @@ struct cTrans : public MtObject
 
     IMPLEMENT_MYDTI(cTrans, 0x141CF38B0, 0x1400AF010, 0x14068B4C0);
 
-    inline static cTrans * (__stdcall *_ctor)(cTrans *thisptr) =
-        (cTrans*(__stdcall*)(cTrans*))GetModuleAddress(0x140688FD0);
+    inline static cTrans * (*_ctor)(cTrans *thisptr) =
+        (cTrans*(*)(cTrans*))GetModuleAddress(0x140688FD0);
 };

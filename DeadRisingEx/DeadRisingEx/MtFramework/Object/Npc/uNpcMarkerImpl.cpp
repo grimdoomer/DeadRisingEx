@@ -4,7 +4,7 @@
 #include <detours.h>
 
 // Forward declarations:
-void __stdcall Hook_uNpcMarker_Cleanup(uNpcMarker *thisptr);
+void Hook_uNpcMarker_Cleanup(uNpcMarker *thisptr);
 
 // Last uNpcMarker instance to be cleaned up.
 uNpcMarker *pLastNpcMarkerCleaned = nullptr;
@@ -16,7 +16,7 @@ bool uNpcMarkerImpl::InstallHooks()
     return true;
 }
 
-void __stdcall Hook_uNpcMarker_Cleanup(uNpcMarker *thisptr)
+void Hook_uNpcMarker_Cleanup(uNpcMarker *thisptr)
 {
     // Check if this npc marker was already cleaned up.
     if (thisptr == pLastNpcMarkerCleaned)

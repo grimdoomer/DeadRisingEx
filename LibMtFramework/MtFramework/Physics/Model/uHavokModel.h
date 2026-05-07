@@ -21,11 +21,11 @@ struct uHavokModel : public uModel
 			0xD8
 	*/
 
-	inline static uHavokModel* (__stdcall* _ctor)(uHavokModel* thisptr) =
-		(uHavokModel * (__stdcall*)(uHavokModel*))GetModuleAddress(0x14010E4A0);
+	inline static uHavokModel* (* _ctor)(uHavokModel* thisptr) =
+		(uHavokModel * (*)(uHavokModel*))GetModuleAddress(0x14010E4A0);
 
-	inline static uHavokModel* (__stdcall* _dtor)(uHavokModel* thisptr, bool bFreeMemory) =
-		(uHavokModel * (__stdcall*)(uHavokModel*, bool))GetModuleAddress(0x14010E520);
+	inline static uHavokModel* (* _dtor)(uHavokModel* thisptr, bool bFreeMemory) =
+		(uHavokModel * (*)(uHavokModel*, bool))GetModuleAddress(0x14010E520);
 
     IMPLEMENT_MYDTI(uHavokModel, 0x141948C60, 0x1400AF010, 0x14010E5D0);
 

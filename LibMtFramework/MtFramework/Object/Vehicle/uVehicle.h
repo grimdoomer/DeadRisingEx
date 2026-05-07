@@ -87,14 +87,14 @@ struct uVehicle : public uSnatcherModel
             0x228 sets which parts of the model are displayed
     */
 
-    inline static uVehicle* (__stdcall* _ctor)(uVehicle* thisptr) =
-        (uVehicle * (__stdcall*)(uVehicle*))GetModuleAddress(0x1401BD720);
+    inline static uVehicle* (* _ctor)(uVehicle* thisptr) =
+        (uVehicle * (*)(uVehicle*))GetModuleAddress(0x1401BD720);
 
-    inline static uVehicle* (__stdcall* _dtor)(uVehicle* thisptr, bool bFreeMemory) =
-        (uVehicle * (__stdcall*)(uVehicle*, bool))GetModuleAddress(0x1401BDAB0);
+    inline static uVehicle* (* _dtor)(uVehicle* thisptr, bool bFreeMemory) =
+        (uVehicle * (*)(uVehicle*, bool))GetModuleAddress(0x1401BDAB0);
 
-    inline static void (__stdcall* _LoadUnitResources)(uVehicle* thisptr) =
-        (void(__stdcall*)(uVehicle*))GetModuleAddress(0x1401C49D0);
+    inline static void (* _LoadUnitResources)(uVehicle* thisptr) =
+        (void(*)(uVehicle*))GetModuleAddress(0x1401C49D0);
 
     IMPLEMENT_MYDTI(uVehicle, 0x141950838, 0x1400AF010, 0x1401E94B0);
 

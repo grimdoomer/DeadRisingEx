@@ -29,14 +29,14 @@ RENDERDOC_API_1_4_1 *rdoc_api = NULL;
 __int64 PrintVertexDeclarations(WCHAR **argv, int argc);
 __int64 CaptureFrame(WCHAR **argv, int argc);
 
-sRender * __stdcall Hook_sRender_ctor(sRender *thisptr, DWORD interval, DWORD dwUnused1, DWORD dwGraphicsMemSize, DWORD dwUnused2);
-void __stdcall Hook_sRender_Present(sRender *thisptr);
-void __stdcall Hook_sRender_SystemCleanup(sRender *thisptr);
+sRender * Hook_sRender_ctor(sRender *thisptr, DWORD interval, DWORD dwUnused1, DWORD dwGraphicsMemSize, DWORD dwUnused2);
+void Hook_sRender_Present(sRender *thisptr);
+void Hook_sRender_SystemCleanup(sRender *thisptr);
 
-sPrim * __stdcall Hook_sPrim_ctor(sPrim *thisptr, DWORD entryCount);
+sPrim * Hook_sPrim_ctor(sPrim *thisptr, DWORD entryCount);
 //void __cdecl Hook_sRender_DrawFrame(sRender *thisptr);
-sRender::Buffer * __stdcall Hook_sRender__Buffer_ctor(sRender::Buffer *thisptr, ID3D11DeviceContext *pDeviceContext, DWORD dwBufferSize, DWORD dwBufferType);
-void * __stdcall Hook_sRender__Buffer_MapForWrite(sRender::Buffer *thisptr, DWORD dwSize);
+sRender::Buffer * Hook_sRender__Buffer_ctor(sRender::Buffer *thisptr, ID3D11DeviceContext *pDeviceContext, DWORD dwBufferSize, DWORD dwBufferType);
+void * Hook_sRender__Buffer_MapForWrite(sRender::Buffer *thisptr, DWORD dwSize);
 
 // Table of commands for sRender objects.
 const int g_sRenderCommandsLength = 2;
@@ -154,7 +154,7 @@ __int64 CaptureFrame(WCHAR **argv, int argc)
     return 0;
 }
 
-sRender * __stdcall Hook_sRender_ctor(sRender *thisptr, DWORD interval, DWORD dwUnused1, DWORD dwGraphicsMemSize, DWORD dwUnused2)
+sRender * Hook_sRender_ctor(sRender *thisptr, DWORD interval, DWORD dwUnused1, DWORD dwGraphicsMemSize, DWORD dwUnused2)
 {
     // If we are running in dynamic graphics mode adjust the graphics memory size to avoid crashes.
     sRender *psRender = nullptr;
@@ -178,7 +178,7 @@ sRender * __stdcall Hook_sRender_ctor(sRender *thisptr, DWORD interval, DWORD dw
     return psRender;
 }
 
-void __stdcall Hook_sRender_Present(sRender *thisptr)
+void Hook_sRender_Present(sRender *thisptr)
 {
     // Get all the variables we need for this function.
     BOOL VSync = *(BOOL*)((BYTE*)sRender::Instance() + 0x8404);
@@ -215,7 +215,7 @@ void __stdcall Hook_sRender_Present(sRender *thisptr)
     ThisPtrCall((void*)0x140661B70, sRender::Instance());
 }
 
-void __stdcall Hook_sRender_SystemCleanup(sRender *thisptr)
+void Hook_sRender_SystemCleanup(sRender *thisptr)
 {
     // Cleanup the imgui renderer.
     ImGuiRenderer::Instance()->SystemCleanup();
@@ -224,13 +224,13 @@ void __stdcall Hook_sRender_SystemCleanup(sRender *thisptr)
     sRender::_SystemCleanup(thisptr);
 }
 
-sPrim * __stdcall Hook_sPrim_ctor(sPrim *thisptr, DWORD entryCount)
+sPrim * Hook_sPrim_ctor(sPrim *thisptr, DWORD entryCount)
 {
     // Increase the number of command entries to avoid crashes.
     return sPrim::_ctor(thisptr, entryCount * 10);
 }
 
-//void __stdcall Hook_sRender_DrawFrame(sRender *thisptr)
+//void Hook_sRender_DrawFrame(sRender *thisptr)
 //{
 //    bool doFrameCapture = false;
 //
@@ -269,7 +269,7 @@ sPrim * __stdcall Hook_sPrim_ctor(sPrim *thisptr, DWORD entryCount)
 //    }
 //}
 
-sRender::Buffer * __stdcall Hook_sRender__Buffer_ctor(sRender::Buffer *thisptr, ID3D11DeviceContext *pDeviceContext, DWORD dwBufferSize, DWORD dwBufferType)
+sRender::Buffer * Hook_sRender__Buffer_ctor(sRender::Buffer *thisptr, ID3D11DeviceContext *pDeviceContext, DWORD dwBufferSize, DWORD dwBufferType)
 {
     // Check the buffer type and increase the size to avoid crashes.
     if (dwBufferType == BUFFER_TYPE_VERTEX)
@@ -315,7 +315,7 @@ sRender::Buffer * __stdcall Hook_sRender__Buffer_ctor(sRender::Buffer *thisptr, 
     return thisptr;
 }
 
-void * __stdcall Hook_sRender__Buffer_MapForWrite(sRender::Buffer *thisptr, DWORD dwSize)
+void * Hook_sRender__Buffer_MapForWrite(sRender::Buffer *thisptr, DWORD dwSize)
 {
     // Check if the size requested will exceed the capacity of the buffer.
     if (thisptr->CurrentPosition + dwSize <= thisptr->mMaxSize)

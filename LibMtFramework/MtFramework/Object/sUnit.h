@@ -21,11 +21,11 @@ struct sUnit : public cSystem
         /* 0x18 */ cUnit        *pBLink;
         /* 0x20 */ cUnit        *pFLink;
 
-        inline static MoveLine * (__stdcall *_ctor)(MoveLine *thisptr) =
-            (MoveLine*(__stdcall*)(MoveLine*))GetModuleAddress(0x14062FF60);
+        inline static MoveLine * (*_ctor)(MoveLine *thisptr) =
+            (MoveLine*(*)(MoveLine*))GetModuleAddress(0x14062FF60);
 
-        inline static MoveLine * (__stdcall *_dtor)(MoveLine *thisptr, bool bFreeMemory) =
-            (MoveLine*(__stdcall*)(MoveLine*, bool))GetModuleAddress(0x1400C72B0);
+        inline static MoveLine * (*_dtor)(MoveLine *thisptr, bool bFreeMemory) =
+            (MoveLine*(*)(MoveLine*, bool))GetModuleAddress(0x1400C72B0);
 
         IMPLEMENT_MYDTI(MoveLine, 0x141CF2628, 0x1400AF010, 0x140630900);
 
@@ -47,17 +47,17 @@ struct sUnit : public cSystem
             0x58
     */
 
-    inline static sUnit * (__stdcall *_ctor)(sUnit *thisptr) =
-        (sUnit*(__stdcall*)(sUnit*))GetModuleAddress(0x14062FF90);
+    inline static sUnit * (*_ctor)(sUnit *thisptr) =
+        (sUnit*(*)(sUnit*))GetModuleAddress(0x14062FF90);
 
-    inline static sUnit * (__stdcall *_dtor)(sUnit *thisptr, bool bFreeMemory) =
-        (sUnit*(__stdcall*)(sUnit*, bool))GetModuleAddress(0x140630030);
+    inline static sUnit * (*_dtor)(sUnit *thisptr, bool bFreeMemory) =
+        (sUnit*(*)(sUnit*, bool))GetModuleAddress(0x140630030);
 
-    inline static bool(__stdcall *_AddObjectToMoveLine)(sUnit *thisptr, DWORD dwLineIndex, cUnit *pObject) =
-        (bool(__stdcall*)(sUnit*, DWORD, cUnit*))GetModuleAddress(0x1406300B0);
+    inline static bool(*_AddObjectToMoveLine)(sUnit *thisptr, DWORD dwLineIndex, cUnit *pObject) =
+        (bool(*)(sUnit*, DWORD, cUnit*))GetModuleAddress(0x1406300B0);
 
-    inline static const char * (__stdcall *_GetMoveLineName)(sUnit *thisptr, DWORD dwLineIndex) =
-        (const char*(__stdcall*)(sUnit*, DWORD))GetModuleAddress(0x1406305C0);
+    inline static const char * (*_GetMoveLineName)(sUnit *thisptr, DWORD dwLineIndex) =
+        (const char*(*)(sUnit*, DWORD))GetModuleAddress(0x1406305C0);
 
     IMPLEMENT_MYDTI(sUnit, 0x141CF2658, 0x1400AF010, 0x140630950);
 

@@ -24,14 +24,14 @@ struct uCoord : public cUnit
             0x68
     */
 
-    inline static uCoord* (__stdcall* _ctor)(uCoord* thisptr) =
-        (uCoord * (__stdcall*)(uCoord*))GetModuleAddress(0x14063E520);
+    inline static uCoord* (* _ctor)(uCoord* thisptr) =
+        (uCoord * (*)(uCoord*))GetModuleAddress(0x14063E520);
 
-    inline static uCoord* (__stdcall* _dtor)(uCoord* thisptr, bool bFreeMemory) =
-        (uCoord * (__stdcall*)(uCoord*, bool))GetModuleAddress(0x14063E5A0);
+    inline static uCoord* (* _dtor)(uCoord* thisptr, bool bFreeMemory) =
+        (uCoord * (*)(uCoord*, bool))GetModuleAddress(0x14063E5A0);
 
-    inline static void(__stdcall* _SetRotation)(uCoord* thisptr, Vector4* pRotation) =
-        (void(__stdcall*)(uCoord*, Vector4*))GetModuleAddress(0x14063EB90);
+    inline static void(* _SetRotation)(uCoord* thisptr, Vector4* pRotation) =
+        (void(*)(uCoord*, Vector4*))GetModuleAddress(0x14063EB90);
 
     IMPLEMENT_MYDTI(uCoord, 0x141CF28B8, 0x1400AF010, 0x1401E94B0);
 

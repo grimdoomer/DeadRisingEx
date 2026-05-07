@@ -38,14 +38,14 @@ struct cUnit : public MtObject // abstract
             0x50 const char * GetObjectName();
     */
 
-    inline static cUnit * (__stdcall *_ctor)(cUnit *thisptr) =
-        (cUnit*(__stdcall*)(cUnit*))GetModuleAddress(0x1406466A0);
+    inline static cUnit * (*_ctor)(cUnit *thisptr) =
+        (cUnit*(*)(cUnit*))GetModuleAddress(0x1406466A0);
 
-    inline static cUnit * (__stdcall *_dtor)(cUnit *thisptr, bool bFreeMemory) =
-        (cUnit*(__stdcall*)(cUnit*, bool))GetModuleAddress(0x1402178A0);
+    inline static cUnit * (*_dtor)(cUnit *thisptr, bool bFreeMemory) =
+        (cUnit*(*)(cUnit*, bool))GetModuleAddress(0x1402178A0);
 
-    inline static const char * (__stdcall *_GetObjectName)(cUnit *thisptr) =
-        (const char*(__stdcall*)(cUnit*))GetModuleAddress(0x140646C80);
+    inline static const char * (*_GetObjectName)(cUnit *thisptr) =
+        (const char*(*)(cUnit*))GetModuleAddress(0x140646C80);
 
     IMPLEMENT_MYDTI(cUnit, 0x141CF2B78, 0x1400AF010, 0x1401E94B0);
 

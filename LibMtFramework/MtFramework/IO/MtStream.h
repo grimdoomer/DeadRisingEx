@@ -26,11 +26,11 @@ struct MtStream : public MtObject
             0x90 void Seek(DWORD dwOffset, int seekOrigin);
     */
 
-    inline static MtStream * (__stdcall* _dtor)(MtStream *thisptr, bool bFreeMemory) =
-        (MtStream*(__stdcall*)(MtStream*, bool))GetModuleAddress(0x1400C72B0);
+    inline static MtStream * (* _dtor)(MtStream *thisptr, bool bFreeMemory) =
+        (MtStream*(*)(MtStream*, bool))GetModuleAddress(0x1400C72B0);
 
-    inline static MtDTI * (__stdcall *_GetDTI)(MtStream *thisptr) =
-        (MtDTI*(__stdcall*)(MtStream*))GetModuleAddress(0x14062CC70);
+    inline static MtDTI * (*_GetDTI)(MtStream *thisptr) =
+        (MtDTI*(*)(MtStream*))GetModuleAddress(0x14062CC70);
 
     IMPLEMENT_MYDTI(MtStream, 0x141CF2568, 0x1400AF010, 0x14062CEB0);
 

@@ -9,11 +9,11 @@ struct cExplodeData : public MtObject
 
     /* 0xC0 */ //BYTE
 
-    inline static cExplodeData* (__stdcall* _ctor)(cExplodeData* thisptr) =
-        (cExplodeData * (__stdcall*)(cExplodeData*))GetModuleAddress(0x14000E1E0);
+    inline static cExplodeData* (* _ctor)(cExplodeData* thisptr) =
+        (cExplodeData * (*)(cExplodeData*))GetModuleAddress(0x14000E1E0);
 
-    inline static cExplodeData* (__stdcall* _dtor)(cExplodeData* thisptr, bool bFreeMemory) =
-        (cExplodeData * (__stdcall*)(cExplodeData*, bool))GetModuleAddress(0x1400C72B0);
+    inline static cExplodeData* (* _dtor)(cExplodeData* thisptr, bool bFreeMemory) =
+        (cExplodeData * (*)(cExplodeData*, bool))GetModuleAddress(0x1400C72B0);
 
     IMPLEMENT_MYDTI(cExplodeData, 0x141930078, 0x1400AF010, 0x14000EEC0);
 

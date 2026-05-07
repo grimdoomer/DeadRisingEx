@@ -9,7 +9,7 @@
 #include <locale>
 #include <codecvt>
 
-inline static void (__stdcall* _uVehicleOm09_Initialize)(uVehicleOm09* thisptr) = (void(__stdcall*)(uVehicleOm09*))GetModuleAddress(0x1401C6C70);
+inline static void (* _uVehicleOm09_Initialize)(uVehicleOm09* thisptr) = (void(*)(uVehicleOm09*))GetModuleAddress(0x1401C6C70);
 
 
 // Forward declarations for command functions.

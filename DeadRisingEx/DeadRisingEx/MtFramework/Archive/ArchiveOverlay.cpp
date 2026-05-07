@@ -10,10 +10,10 @@
 #include <MtFramework/Utils/Utilities.h>
 #include <MtFramework/Memory/MtHeapAllocator.h>
 
-sResource * __stdcall Hook_sResource_ctor(sResource *thisptr);
-void __stdcall Hook_sResource_ResourceDecoderProc(int threadIndex);
-cResource * __stdcall Hook_sResource_LoadResourceFromArchive(sResource *thisptr, rArchive::DecompressStream *pStream, MtDTI *pDTI, rArchiveFileEntry *pFileEntry);
-cResource * __stdcall Hook_sResource_LoadGameResourceSynchronous(sResource *thisptr, MtDTI *pObjectType, char *psFileName, ULONGLONG resourceId, DWORD flags);
+sResource * Hook_sResource_ctor(sResource *thisptr);
+void Hook_sResource_ResourceDecoderProc(int threadIndex);
+cResource * Hook_sResource_LoadResourceFromArchive(sResource *thisptr, rArchive::DecompressStream *pStream, MtDTI *pDTI, rArchiveFileEntry *pFileEntry);
+cResource * Hook_sResource_LoadGameResourceSynchronous(sResource *thisptr, MtDTI *pObjectType, char *psFileName, ULONGLONG resourceId, DWORD flags);
 
 ArchiveOverlay::ArchiveOverlay()
 {
@@ -125,7 +125,7 @@ Cleanup:
     return result;
 }
 
-sResource * __stdcall Hook_sResource_ctor(sResource *thisptr)
+sResource * Hook_sResource_ctor(sResource *thisptr)
 {
     // Call the trampoline.
     sResource *ret = sResource::_ctor(thisptr);
@@ -157,7 +157,7 @@ sResource * __stdcall Hook_sResource_ctor(sResource *thisptr)
     return ret;
 }
 
-void __stdcall Hook_sResource_ResourceDecoderProc(int threadIndex)
+void Hook_sResource_ResourceDecoderProc(int threadIndex)
 {
     // Get the global sResource instance.
     sResource *thisptr = sResource::Instance();
@@ -321,7 +321,7 @@ void __stdcall Hook_sResource_ResourceDecoderProc(int threadIndex)
     }
 }
 
-cResource * __stdcall Hook_sResource_LoadResourceFromArchive(sResource *thisptr, rArchive::DecompressStream *pStream, MtDTI *pDTI, rArchiveFileEntry *pFileEntry)
+cResource * Hook_sResource_LoadResourceFromArchive(sResource *thisptr, rArchive::DecompressStream *pStream, MtDTI *pDTI, rArchiveFileEntry *pFileEntry)
 {
     MtFile *pArchiveFile = nullptr;
     MtFileStream *pFileStream = nullptr;
@@ -396,7 +396,7 @@ Cleanup:
     return pResource;
 }
 
-cResource * __stdcall Hook_sResource_LoadGameResourceSynchronous(sResource *thisptr, MtDTI *pObjectType, char *psFileName, ULONGLONG resourceId, DWORD flags)
+cResource * Hook_sResource_LoadGameResourceSynchronous(sResource *thisptr, MtDTI *pObjectType, char *psFileName, ULONGLONG resourceId, DWORD flags)
 {
     sResource::DecompressStream *pStream = nullptr;
     MtFile *pArchiveFile = nullptr;

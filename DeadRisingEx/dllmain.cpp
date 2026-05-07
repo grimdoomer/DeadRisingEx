@@ -68,9 +68,9 @@ void ForceSymbolsHelper()
     MtFileStream *pFileStream = nullptr;
 }
 
-void(__stdcall *pOutputDebugStringA)(LPCSTR lpOutputString) = OutputDebugStringA;
+void(*pOutputDebugStringA)(LPCSTR lpOutputString) = OutputDebugStringA;
 
-void __stdcall Hook_OutputDebugStringA(LPCSTR lpOutputString)
+void Hook_OutputDebugStringA(LPCSTR lpOutputString)
 {
     // Print the message to the imgui console and the debugger.
     ImGuiConsole::Instance()->ConsolePrint(lpOutputString);

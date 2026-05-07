@@ -55,11 +55,11 @@ struct rArchive : public cResource
         /* 0x44 */ BYTE ___[4];
         /* 0x48 */ z_stream_s zStream;
 
-        inline static DecompressStream * (__stdcall *_ctor)(DecompressStream *thisptr, MtFileStream *pFileStream) =
-            (DecompressStream*(__stdcall*)(DecompressStream*, MtFileStream*))GetModuleAddress(0x14064FD90);
+        inline static DecompressStream * (*_ctor)(DecompressStream *thisptr, MtFileStream *pFileStream) =
+            (DecompressStream*(*)(DecompressStream*, MtFileStream*))GetModuleAddress(0x14064FD90);
 
-        inline static DecompressStream * (__stdcall *_dtor)(DecompressStream *thisptr, bool bFreeMemory) =
-            (DecompressStream*(__stdcall*)(DecompressStream*, bool))GetModuleAddress(0x14064FE90);
+        inline static DecompressStream * (*_dtor)(DecompressStream *thisptr, bool bFreeMemory) =
+            (DecompressStream*(*)(DecompressStream*, bool))GetModuleAddress(0x14064FE90);
 
         /*
             Description: Creates a new decompression stream from the file stream specified.

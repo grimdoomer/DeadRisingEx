@@ -137,14 +137,14 @@ struct uItem : public uSnatcherModel
             0x298 void UpdateState()    // called during model update routine
     */
 
-    inline static bool(__stdcall *_HasLowHealth)(uItem *thisptr) =
-        (bool(__stdcall*)(uItem*))GetModuleAddress(0x14018B1A0);
+    inline static bool(*_HasLowHealth)(uItem *thisptr) =
+        (bool(*)(uItem*))GetModuleAddress(0x14018B1A0);
 
-    inline static bool(__stdcall *_SetupItemProperties)(uItem *thisptr) =
-        (bool(__stdcall*)(uItem*))GetModuleAddress(0x14017F550);
+    inline static bool(*_SetupItemProperties)(uItem *thisptr) =
+        (bool(*)(uItem*))GetModuleAddress(0x14017F550);
 
-    inline static void(__stdcall *_GetItemPosition)(uItem *thisptr, Vector4 *pPosition) =
-        (void(__stdcall*)(uItem*, Vector4*))GetModuleAddress(0x14018AC70);
+    inline static void(*_GetItemPosition)(uItem *thisptr, Vector4 *pPosition) =
+        (void(*)(uItem*, Vector4*))GetModuleAddress(0x14018AC70);
 
 
 #define ITEM_COUNT 314

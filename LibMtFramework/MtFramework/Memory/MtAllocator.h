@@ -26,11 +26,11 @@ struct MtAllocator : public MtObject
     /* 0x24 */ DWORD        CreatorThreadId;
     /* 0x28 */ CRITICAL_SECTION        ListLock;
 
-    inline static MtAllocator * (__stdcall *_ctor)(MtAllocator *thisptr, const char *psName, DWORD type) =
-        (MtAllocator*(__stdcall*)(MtAllocator*, const char*, DWORD))GetModuleAddress(0x140623A00);
+    inline static MtAllocator * (*_ctor)(MtAllocator *thisptr, const char *psName, DWORD type) =
+        (MtAllocator*(*)(MtAllocator*, const char*, DWORD))GetModuleAddress(0x140623A00);
 
-    inline static MtAllocator * (__stdcall *_dtor)(MtAllocator *thisptr, bool bFreeMemory) =
-        (MtAllocator*(__stdcall*)(MtAllocator*, bool))GetModuleAddress(0x140623E80);
+    inline static MtAllocator * (*_dtor)(MtAllocator *thisptr, bool bFreeMemory) =
+        (MtAllocator*(*)(MtAllocator*, bool))GetModuleAddress(0x140623E80);
 
     /*
         Description: Creates a new MtAllocator with the specified name and type.

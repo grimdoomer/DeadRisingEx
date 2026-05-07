@@ -50,6 +50,6 @@ struct MtBinaryXmlReader
     /* 0x18 */ NodeEntry    **ppNodes;
     /* 0x20 */ DWORD        NodeCount;
 
-    inline static MtBinaryXmlReader * (__stdcall *_ctor)(MtBinaryXmlReader *thisptr, MtStream *pStream) =
-        (MtBinaryXmlReader*(__stdcall*)(MtBinaryXmlReader*, MtStream*))GetModuleAddress(0x140001000);
+    inline static MtBinaryXmlReader * (*_ctor)(MtBinaryXmlReader *thisptr, MtStream *pStream) =
+        (MtBinaryXmlReader*(*)(MtBinaryXmlReader*, MtStream*))GetModuleAddress(0x140001000);
 };

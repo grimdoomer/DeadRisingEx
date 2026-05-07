@@ -26,6 +26,6 @@ struct rTexture : public cResource
 
     IMPLEMENT_MYDTI(rTexture, 0x141CF2AE0, 0x1400AF010, 0x1406462E0);
 
-    inline static bool(__stdcall *_LoadResource)(rTexture *thisptr, MtStream *pStream) =
-        (bool(__stdcall*)(rTexture*, MtStream*))GetModuleAddress(0x140646000);
+    inline static bool(*_LoadResource)(rTexture *thisptr, MtStream *pStream) =
+        (bool(*)(rTexture*, MtStream*))GetModuleAddress(0x140646000);
 };

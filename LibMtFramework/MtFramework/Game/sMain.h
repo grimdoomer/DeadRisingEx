@@ -104,7 +104,7 @@ struct sMain : public cSystem
 
     inline static HWND *GameWindowHandle = (HWND*)GetModuleAddress(0x141CF2A88);
 
-    inline static LRESULT(__stdcall *_WndProc)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) =
-        (LRESULT(__stdcall*)(HWND, UINT, WPARAM, LPARAM))GetModuleAddress(0x14002BDC0);
+    inline static LRESULT(*_WndProc)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) =
+        (LRESULT(*)(HWND, UINT, WPARAM, LPARAM))GetModuleAddress(0x14002BDC0);
 };
 ASSERT_STRUCT_SIZE(sMain, 0x20248);

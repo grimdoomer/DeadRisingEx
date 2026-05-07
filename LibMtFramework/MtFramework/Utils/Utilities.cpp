@@ -8,10 +8,10 @@
 #include <stdio.h>
 
 // Function pointers/trampolines:
-void(__stdcall *DbgPrintError)(void **pPrintFunctions, const char *psFormat, __int64 arg1, __int64 arg2, __int64 arg3) = (void(__stdcall*)(void**, const char*, __int64, __int64, __int64))(__int64)GetModuleAddress((void*)0x14002F6D0);
+void(*DbgPrintError)(void **pPrintFunctions, const char *psFormat, __int64 arg1, __int64 arg2, __int64 arg3) = (void(*)(void**, const char*, __int64, __int64, __int64))(__int64)GetModuleAddress((void*)0x14002F6D0);
 
 // Forward declarations:
-void __stdcall Hook_DbgPrintError(void **pPrintFunctions, const char *psFormat, __int64 arg1, __int64 arg2, __int64 arg3);
+void Hook_DbgPrintError(void **pPrintFunctions, const char *psFormat, __int64 arg1, __int64 arg2, __int64 arg3);
 
 bool Utilities::InstallHooks()
 {
@@ -21,7 +21,7 @@ bool Utilities::InstallHooks()
     return true;
 }
 
-void __stdcall Hook_DbgPrintError(void **pPrintFunctions, const char *psFormat, __int64 arg1, __int64 arg2, __int64 arg3)
+void Hook_DbgPrintError(void **pPrintFunctions, const char *psFormat, __int64 arg1, __int64 arg2, __int64 arg3)
 {
     char sMessage[512] = { 0 };
 

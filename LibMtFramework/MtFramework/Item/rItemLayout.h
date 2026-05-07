@@ -102,8 +102,8 @@ struct rItemLayout : public cResource
     /* 0x60 */ LayoutInfo   *pLayoutInfoList;
     /* 0x68 */ DWORD        LayoutCount;        // Number of items in the list
 
-    inline static void(__stdcall *_SpawnItems)(rItemLayout *thisptr) =
-        (void(__stdcall*)(rItemLayout*))GetModuleAddress(0x1400CCB00);
+    inline static void(*_SpawnItems)(rItemLayout *thisptr) =
+        (void(*)(rItemLayout*))GetModuleAddress(0x1400CCB00);
 
     /*
         Description: Loops through all item placements and spawns all items on the map.

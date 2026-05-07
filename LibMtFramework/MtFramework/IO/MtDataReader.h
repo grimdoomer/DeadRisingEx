@@ -28,29 +28,29 @@ struct MtDataReader
             0x40 double ReadDouble()
     */
 
-    inline static MtDataReader * (__stdcall *_ctor)(MtDataReader *thisptr, MtStream* pStream, DWORD scratchBufferSize) =
-        (MtDataReader*(__stdcall*)(MtDataReader*, MtStream*, DWORD))GetModuleAddress(0x14062C1F0);
+    inline static MtDataReader * (*_ctor)(MtDataReader *thisptr, MtStream* pStream, DWORD scratchBufferSize) =
+        (MtDataReader*(*)(MtDataReader*, MtStream*, DWORD))GetModuleAddress(0x14062C1F0);
 
-    inline static MtDataReader * (__stdcall *_dtor)(MtDataReader *thisptr, bool bFreeMemory) =
-        (MtDataReader*(__stdcall*)(MtDataReader*, bool))GetModuleAddress(0x14062C260);
+    inline static MtDataReader * (*_dtor)(MtDataReader *thisptr, bool bFreeMemory) =
+        (MtDataReader*(*)(MtDataReader*, bool))GetModuleAddress(0x14062C260);
 
-    inline static WORD(__stdcall *_ReadUInt16)(MtDataReader *thisptr) =
-        (WORD(__stdcall*)(MtDataReader*))GetModuleAddress(0x14062C4A0);
+    inline static WORD(*_ReadUInt16)(MtDataReader *thisptr) =
+        (WORD(*)(MtDataReader*))GetModuleAddress(0x14062C4A0);
 
-    inline static DWORD(__stdcall *_ReadUInt32)(MtDataReader *thisptr) =
-        (DWORD(__stdcall*)(MtDataReader*))GetModuleAddress(0x14062C5F0);
+    inline static DWORD(*_ReadUInt32)(MtDataReader *thisptr) =
+        (DWORD(*)(MtDataReader*))GetModuleAddress(0x14062C5F0);
 
-    inline static ULONGLONG(__stdcall *_ReadUInt64)(MtDataReader *thisptr) =
-        (ULONGLONG(__stdcall*)(MtDataReader*))GetModuleAddress(0x14062C630);
+    inline static ULONGLONG(*_ReadUInt64)(MtDataReader *thisptr) =
+        (ULONGLONG(*)(MtDataReader*))GetModuleAddress(0x14062C630);
 
-    inline static float(__stdcall *_ReadFloat)(MtDataReader *thisptr) =
-        (float(__stdcall*)(MtDataReader*))GetModuleAddress(0x14062C400);
+    inline static float(*_ReadFloat)(MtDataReader *thisptr) =
+        (float(*)(MtDataReader*))GetModuleAddress(0x14062C400);
 
-    inline static double(__stdcall *_ReadDouble)(MtDataReader *thisptr) =
-        (double(__stdcall*)(MtDataReader*))GetModuleAddress(0x14062C450);
+    inline static double(*_ReadDouble)(MtDataReader *thisptr) =
+        (double(*)(MtDataReader*))GetModuleAddress(0x14062C450);
 
-    inline static DWORD (__stdcall* _ReadData)(MtDataReader* thisptr, void* pBuffer, DWORD length) =
-        (DWORD(__stdcall*)(MtDataReader*, void*, DWORD))GetModuleAddress(0x14062C330);
+    inline static DWORD (* _ReadData)(MtDataReader* thisptr, void* pBuffer, DWORD length) =
+        (DWORD(*)(MtDataReader*, void*, DWORD))GetModuleAddress(0x14062C330);
 
 
     MtDataReader(MtStream* pStream, DWORD scratchBufferSize)

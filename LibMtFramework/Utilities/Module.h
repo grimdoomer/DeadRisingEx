@@ -47,16 +47,16 @@ template<typename T, typename S> S* GetModulePointer(void *pAddress, int offset 
 /*
     Performs a this ptr call for an object adjusting functionPtr for relocation.
 */
-extern "C" __int64 __stdcall ThisPtrCall(void *functionPtr, void *thisPtr, ...);
+extern "C" __int64 ThisPtrCall(void *functionPtr, void *thisPtr, ...);
 
 /*
     Performs a this ptr call for an object without adjusting functionPtr for relocation.
 */
-extern "C" __int64 __stdcall ThisPtrCallNoFixup(void *functionPtr, void *thisPtr, ...);
+extern "C" __int64 ThisPtrCallNoFixup(void *functionPtr, void *thisPtr, ...);
 
 
 // Function to assign a member function to a vtable entry:
-extern "C" void __stdcall AssignVTableEntry(void** vtable, int index, ...);
+extern "C" void AssignVTableEntry(void** vtable, int index, ...);
 
 
 // Macros to help build out a custom vtable:

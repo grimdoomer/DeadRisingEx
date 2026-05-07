@@ -5,8 +5,8 @@
 #include <MtFramework/Item/Items/uOm23.h>
 #include <MtFramework/Memory/MtHeapAllocator.h>
 
-inline static DWORD(__stdcall *uOm23_OnExplode)(uOm23 *thisptr, DWORD unk) =
-    (DWORD(__stdcall*)(uOm23*, DWORD))GetModuleAddress(0x14006E2C0);
+inline static DWORD(*uOm23_OnExplode)(uOm23 *thisptr, DWORD unk) =
+    (DWORD(*)(uOm23*, DWORD))GetModuleAddress(0x14006E2C0);
 
 struct uOmRecursiveGrenade;
 

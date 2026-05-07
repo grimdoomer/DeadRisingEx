@@ -9,8 +9,8 @@ LRESULT Hook_WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 BOOL Hook_SetCursorPos(int x, int y);
 BOOL Hook_ClipCursor(const RECT *lpRect);
 
-BOOL(__stdcall *pSetCursorPosition)(int x, int y) = SetCursorPos;
-BOOL(__stdcall *pClipCursor)(const RECT *lpRect) = ClipCursor;
+BOOL(*pSetCursorPosition)(int x, int y) = SetCursorPos;
+BOOL(*pClipCursor)(const RECT *lpRect) = ClipCursor;
 
 // Forward declarations for command functions.
 __int64 EnableDebugZombieSpawner(WCHAR **argv, int argc);

@@ -39,7 +39,7 @@ bool sSnatcherMainImpl::InstallHooks()
 __int64 PrintMemoryUsage(WCHAR **argv, int argc)
 {
     // Create a list of memory allocators to print stats on.
-    MtAllocator* pMemoryAllocators[8] =
+    MtAllocator* pMemoryAllocators[] =
     {
         *g_pResourceHeapAllocator,
         *g_pTempHeapAllocator,
@@ -53,7 +53,7 @@ __int64 PrintMemoryUsage(WCHAR **argv, int argc)
     // Loop and print memory usage stats.
     ImGuiConsole::Instance()->ConsolePrint(L"Pool | Size (MB) | Used (MB)\n");
     ImGuiConsole::Instance()->ConsolePrint(L"----------------------------\n");
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < ARRAYSIZE(pMemoryAllocators); i++)
     {
         // Pad the allocator name for consistency.
         std::string sName = pMemoryAllocators[i]->mName;

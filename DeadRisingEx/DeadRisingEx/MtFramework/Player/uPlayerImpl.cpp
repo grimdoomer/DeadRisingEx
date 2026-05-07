@@ -13,9 +13,9 @@ void **g_sItemCtrlInstance = (void**)GetModuleAddress(0x1419462A0);
 
 void *uPlayerInstance = nullptr;
 
-void * (__stdcall *uPlayer_ctor)(void *thisptr) = (void*(__stdcall*)(void*))GetModuleAddress(0x1401306E0);
+void * (*uPlayer_ctor)(void *thisptr) = (void*(*)(void*))GetModuleAddress(0x1401306E0);
 
-void * __stdcall Hook_uPlayer_ctor(void *thisptr);
+void * Hook_uPlayer_ctor(void *thisptr);
 
 void uPlayerImpl::RegisterTypeInfo()
 {
@@ -23,7 +23,7 @@ void uPlayerImpl::RegisterTypeInfo()
     DetourAttach((void**)&uPlayer_ctor, Hook_uPlayer_ctor);
 }
 
-void * __stdcall Hook_uPlayer_ctor(void *thisptr)
+void * Hook_uPlayer_ctor(void *thisptr)
 {
     uPlayerInstance = thisptr;
     return uPlayer_ctor(thisptr);

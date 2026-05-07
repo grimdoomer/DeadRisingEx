@@ -7,7 +7,7 @@ EXTERNDEF SnatcherModuleHandle:qword
 
 .code
 
-    ; __int64 __stdcall ThisPtrCall(void *functionPtr, void *thisPtr, void *arg1, void *arg2, void *arg3, void *arg4)
+    ; __int64 ThisPtrCall(void *functionPtr, void *thisPtr, void *arg1, void *arg2, void *arg3, void *arg4)
     ThisPtrCall PROC
 
         ; Setup the stack.
@@ -39,7 +39,7 @@ EXTERNDEF SnatcherModuleHandle:qword
 
     ThisPtrCall ENDP
 
-    ; __int64 __stdcall ThisPtrCallNoFixup(void *functionPtr, void *thisPtr, void *arg1, void *arg2, void *arg3, void *arg4)
+    ; __int64 ThisPtrCallNoFixup(void *functionPtr, void *thisPtr, void *arg1, void *arg2, void *arg3, void *arg4)
     ThisPtrCallNoFixup PROC
 
         ; Setup the stack.
