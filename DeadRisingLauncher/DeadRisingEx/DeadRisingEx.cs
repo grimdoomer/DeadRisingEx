@@ -9,7 +9,7 @@ namespace DeadRisingLauncher
 {
     public class DeadRisingEx
     {
-        [DllImport("DeadRisingEx.dll", CharSet = CharSet.Ansi)]
+        [DllImport("DeadRisingLauncherHelper.dll", CharSet = CharSet.Ansi)]
         public static extern bool LaunchDeadRisingEx(string psGameDirectory);
     }
 }

@@ -168,6 +168,18 @@ struct cTrans : public MtObject
         /* 0x08 */ DWORD    mProtect[2];
         /* 0x10 */ DWORD    mRefCount;
         /* 0x14 */ DWORD    Flags;
+
+        Element()
+        {
+            // TODO:
+            DebugBreak();
+        }
+
+        ~Element()
+        {
+            // TODO:
+            DebugBreak();
+        }
     };
     ASSERT_STRUCT_SIZE(Element, 0x18);
 
@@ -194,6 +206,18 @@ struct cTrans : public MtObject
         /* 0x5C */ DWORD    SampleCount;    // Number of multisamples per pixel
         /* 0x60 */ ID3D11ShaderResourceView *pShaderResourceView;
         /* 0x68 */ ID3D11DepthStencilView   *pDepthStencilView;
+
+        TextureBase()
+        {
+            // TODO:
+            DebugBreak();
+        }
+
+        ~TextureBase()
+        {
+            // TODO:
+            DebugBreak();
+        }
     };
 
     // sizeof = 0x108 */
@@ -203,6 +227,18 @@ struct cTrans : public MtObject
 
         /* 0x78 */ ID3D11RenderTargetView   *pRenderTargetViews[16];    // Render target views, 1 for each mip map
         /* 0xF8 */
+
+        Texture()
+        {
+            // TODO:
+            DebugBreak();
+        }
+
+        ~Texture()
+        {
+            // TODO:
+            DebugBreak();
+        }
     };
 
     // sizeof = 0x8
@@ -334,4 +370,16 @@ struct cTrans : public MtObject
 
     inline static cTrans * (*_ctor)(cTrans *thisptr) =
         (cTrans*(*)(cTrans*))GetModuleAddress(0x140688FD0);
+
+    cTrans()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~cTrans()
+    {
+        // TODO:
+        DebugBreak();
+    }
 };

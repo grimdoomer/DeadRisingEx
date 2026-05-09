@@ -4,6 +4,7 @@
 
 #pragma once
 #include "MtFramework/MtObject.h"
+#include "MtFramework/Memory/MtHeapAllocator.h"
 #include "MtFramework/IO/MtStream.h"
 #include "MtFramework/IO/MtFile.h"
 
@@ -39,8 +40,8 @@ struct cResource : public MtObject
     inline static cResource * (*_ctor)(cResource *thisptr) =
         (cResource*(*)(cResource*))GetModuleAddress(0x140630C90);
 
-    inline static cResource * (*_dtor)(cResource *thisptr) =
-        (cResource*(*)(cResource*))GetModuleAddress(0x1402B8640);
+    inline static void * (*_scalar_deleting_dtor)(cResource *thisptr, unsigned int flags) =
+        (void*(*)(cResource*, unsigned int))GetModuleAddress(0x1402B8640);
 
     inline static void(*_RegisterDebugOptions)(cResource *thisptr, MtPropertyList *pPropList) =
         (void(*)(cResource*, MtPropertyList*))GetModuleAddress(0x140630CC0);
@@ -61,6 +62,10 @@ struct cResource : public MtObject
         (void(*)(cResource*))GetModuleAddress(0x140631150);
 
     IMPLEMENT_MYDTI(cResource, 0x141CF2698, 0x1400AF010, 0x140631100);
+
+    SHIM_API cResource() SHIM_BODY(0x140630C90)
+
+    SHIM_API ~cResource() SHIM_BODY_DTOR_VCALL()
 
     /*
 
@@ -115,5 +120,7 @@ struct cResource : public MtObject
     {
         _DecrementRefCount(this);
     }
+
+    IMPLEMENT_OPERATOR_NEW_DELETE(g_pResourceHeapAllocator, 16)
 };
 ASSERT_STRUCT_SIZE(cResource, 0x60);

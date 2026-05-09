@@ -10,4 +10,16 @@ struct sSnatcherTool : public sTool
     /* 0x2276 */ //BYTE/bool
 
     /* 0x22C0 */ //BYTE/bool
+
+    sSnatcherTool()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~sSnatcherTool()
+    {
+        // TODO:
+        DebugBreak();
+    }
 };

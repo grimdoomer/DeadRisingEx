@@ -28,4 +28,16 @@ struct sSMManager : public cSystem
 
     inline static bool(*_RemoveModel)(sSMManager *thisptr, uSnatcherModel *pModel) =
         (bool(*)(sSMManager*, uSnatcherModel*))GetModuleAddress(0x14009F9C0);
+
+    sSMManager()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~sSMManager()
+    {
+        // TODO:
+        DebugBreak();
+    }
 };

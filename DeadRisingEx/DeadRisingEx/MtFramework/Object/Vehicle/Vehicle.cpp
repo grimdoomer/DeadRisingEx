@@ -23,11 +23,8 @@ const ConsoleCommandInfo g_uDrexVehicleCommands[g_uDrexVehicleCommandsLength] =
 };
 
 
-// Fake destructor function to bypass not being able to take the address of a destructor:
-void uDrexVehicle_dtor(uDrexVehicle* thisptr)
-{
-    thisptr->~uDrexVehicle();
-}
+// Fake scalar deleting destructor:
+SCALAR_DELETING_DTOR(uDrexVehicle)
 
 //void* uDrexVehicle_vtable[70];
 
@@ -38,7 +35,7 @@ uDrexVehicle::uDrexVehicle()
 
         // Copy the vtable from uVehicleOm09 and replace functions we want to override.
         memcpy(uDrexVehicle_vtable, this->vtable, sizeof(uDrexVehicle_vtable));
-        VTABLE_ENTRY(uDrexVehicle, 0, uDrexVehicle_dtor)
+        VTABLE_ENTRY(uDrexVehicle, 0, uDrexVehicle_scalar_deleting_dtor)
         VTABLE_ENTRY(uDrexVehicle, 3, &uDrexVehicle::RegisterDebugOptions)
         VTABLE_ENTRY(uDrexVehicle, 4, &uDrexVehicle::GetDTI);
         VTABLE_ENTRY(uDrexVehicle, 5, &uDrexVehicle::LoadUnitResources);

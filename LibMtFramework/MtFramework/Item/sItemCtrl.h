@@ -13,8 +13,8 @@ struct sItemCtrl : public cSystem
     inline static sItemCtrl * (*_ctor)(sItemCtrl *thisptr) =
         (sItemCtrl*(*)(sItemCtrl*))GetModuleAddress(0x1400680E0);
 
-    inline static sItemCtrl * (*_dtor)(sItemCtrl *thisptr, bool bFreeMemory) =
-        (sItemCtrl*(*)(sItemCtrl*, bool))GetModuleAddress(0x14006D9A0);
+    inline static void * (*_scalar_deleting_dtor)(sItemCtrl *thisptr, unsigned int flags) =
+        (void*(*)(sItemCtrl*, unsigned int))GetModuleAddress(0x14006D9A0);
 
     inline static uItem * (*_SpawnAndPlaceItem)(sItemCtrl *thisptr, DWORD dwItemId, Vector4 *pPosition, Vector4 *pRotation) =
         (uItem*(*)(sItemCtrl*, DWORD, Vector4*, Vector4*))GetModuleAddress(0x140075540);
@@ -26,6 +26,10 @@ struct sItemCtrl : public cSystem
         (uItem*(*)(sItemCtrl*, DWORD))GetModuleAddress(0x140075680);
 
     IMPLEMENT_SINGLETON(sItemCtrl, 0x141CF2620);
+
+    SHIM_API sItemCtrl() SHIM_BODY(0x1400680E0)
+
+    SHIM_API ~sItemCtrl() SHIM_BODY_DTOR_VCALL()
 
     /*
         Description: Spawns the specified item and updates its position and rotation.
@@ -69,4 +73,6 @@ struct sItemCtrl : public cSystem
     {
         return _SpawnItem(this, dwItemId);
     }
+
+    IMPLEMENT_OPERATOR_NEW_DELETE(g_pSystemHeapAllocator, 16)
 };

@@ -64,7 +64,7 @@ __int64 PrintLoadedResources(WCHAR **argv, int argc)
 
     // Acquire the list lock.
     sResource *p_sResource = sResource::Instance();
-    EnterCriticalSection(&p_sResource->ListLock);
+    EnterCriticalSection(&p_sResource->Lock);
 
     // Loop through the hash table and print each entry.
     for (int i = 0; i < 8192; i++)
@@ -97,7 +97,7 @@ __int64 PrintLoadedResources(WCHAR **argv, int argc)
     }
 
     // Release the list lock.
-    LeaveCriticalSection(&p_sResource->ListLock);
+    LeaveCriticalSection(&p_sResource->Lock);
 
     return 0;
 }
@@ -125,7 +125,7 @@ __int64 GetResourceByIndex(WCHAR **argv, int argc)
 
     // Acquire the list lock.
     sResource *p_sResource = sResource::Instance();
-    EnterCriticalSection(&p_sResource->ListLock);
+    EnterCriticalSection(&p_sResource->Lock);
 
     // Get the resource list table pointer and make sure the resource we want is not null.
     if (p_sResource->pResourceEntries[index] != nullptr)
@@ -138,7 +138,7 @@ __int64 GetResourceByIndex(WCHAR **argv, int argc)
     }
 
     // Release the list lock.
-    LeaveCriticalSection(&p_sResource->ListLock);
+    LeaveCriticalSection(&p_sResource->Lock);
 
     // Return the resource.
     return (__int64)pResource;

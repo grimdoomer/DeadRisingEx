@@ -24,13 +24,14 @@ struct uHavokModel : public uModel
 	inline static uHavokModel* (* _ctor)(uHavokModel* thisptr) =
 		(uHavokModel * (*)(uHavokModel*))GetModuleAddress(0x14010E4A0);
 
-	inline static uHavokModel* (* _dtor)(uHavokModel* thisptr, bool bFreeMemory) =
-		(uHavokModel * (*)(uHavokModel*, bool))GetModuleAddress(0x14010E520);
+	inline static void* (* _scalar_deleting_dtor)(uHavokModel* thisptr, unsigned int flags) =
+		(void * (*)(uHavokModel*, unsigned int))GetModuleAddress(0x14010E520);
 
     IMPLEMENT_MYDTI(uHavokModel, 0x141948C60, 0x1400AF010, 0x14010E5D0);
 
-	uHavokModel()
-	{
-		_ctor(this);
-	}
+	SHIM_API uHavokModel() SHIM_BODY(0x14010E4A0)
+
+	SHIM_API ~uHavokModel() SHIM_BODY_DTOR_VCALL()
+
+	IMPLEMENT_OPERATOR_NEW_DELETE(g_pUnitHeapAllocator, 32)
 };

@@ -4,6 +4,7 @@
 
 #pragma once
 #include "MtFramework/MtObject.h"
+#include "MtFramework/Memory/MtHeapAllocator.h"
 
 // sizeof = 0x8
 struct MtStream : public MtObject
@@ -26,13 +27,22 @@ struct MtStream : public MtObject
             0x90 void Seek(DWORD dwOffset, int seekOrigin);
     */
 
-    inline static MtStream * (* _dtor)(MtStream *thisptr, bool bFreeMemory) =
-        (MtStream*(*)(MtStream*, bool))GetModuleAddress(0x1400C72B0);
+    inline static void** _vtable = (void**)GetModuleAddress(0x14103A998);
+
+    inline static void * (* _scalar_deleting_dtor)(MtStream *thisptr, unsigned int flags) =
+        (void*(*)(MtStream*, unsigned int))GetModuleAddress(0x1400C72B0);
 
     inline static MtDTI * (*_GetDTI)(MtStream *thisptr) =
         (MtDTI*(*)(MtStream*))GetModuleAddress(0x14062CC70);
 
     IMPLEMENT_MYDTI(MtStream, 0x141CF2568, 0x1400AF010, 0x14062CEB0);
+
+    MtStream()
+    {
+        this->vtable = MtStream::_vtable;
+    }
+
+    SHIM_API ~MtStream() SHIM_BODY_DTOR_VCALL()
 
     /*
         Returns: True if the stream was open for reading, false otherwise.
@@ -139,4 +149,7 @@ struct MtStream : public MtObject
     {
         return (DWORD)ThisPtrCallNoFixup(this->vtable[18], this, dwOffset, seekOrigin);
     }
+
+    IMPLEMENT_OPERATOR_NEW_DELETE(g_pResourceHeapAllocator2, 16)
 };
+ASSERT_STRUCT_SIZE(MtStream, 8);

@@ -218,8 +218,8 @@ struct MtPropertyList
     inline static MtPropertyList * (*_ctor)(MtPropertyList *thisptr) =
         (MtPropertyList*(*)(MtPropertyList*))GetModuleAddress(0x1406188A0);
 
-    inline static MtPropertyList * (*_dtor)(MtPropertyList *thisptr, bool bFreeMemory) =
-        (MtPropertyList*(*)(MtPropertyList*, bool))GetModuleAddress(0x140618910);
+    inline static void * (*_scalar_deleting_dtor)(MtPropertyList *thisptr, unsigned int flags) =
+        (void*(*)(MtPropertyList*, unsigned int))GetModuleAddress(0x140618910);
 
     inline static MtPropertyListEntry * (*_AllocatePropertyEntry)(MtPropertyList *thisptr) =
         (MtPropertyListEntry*(*)(MtPropertyList*))GetModuleAddress(0x140618AB0);
@@ -230,15 +230,9 @@ struct MtPropertyList
     inline static MtPropertyListEntry * (*_FindProperty)(MtPropertyList *thisptr, DWORD propertyType, const char *psPropertyName) =
         (MtPropertyListEntry*(*)(MtPropertyList*, DWORD, const char*))GetModuleAddress(0x140618A40);
 
-    MtPropertyList()
-    {
-        _ctor(this);
-    }
+    SHIM_API MtPropertyList() SHIM_BODY(0x1406188A0)
 
-    ~MtPropertyList()
-    {
-        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
-    }
+    SHIM_API ~MtPropertyList() SHIM_BODY_DTOR_VCALL()
 
     /*
         Description: Allocates a new property entry from the global property list buffer. The entry is NOT
@@ -272,5 +266,9 @@ struct MtPropertyList
     {
         return _FindProperty(this, propertyType, psPropertyName);
     }
+
+    void* operator new(size_t size);
+
+    void operator delete(void* ptr);
 };
 ASSERT_STRUCT_SIZE(MtPropertyList, 0x10);

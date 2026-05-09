@@ -14,8 +14,8 @@ struct MtFileStream : public MtStream
     inline static MtFileStream * (*_ctor)(MtFileStream *thisptr, MtFile *pFile) =
         (MtFileStream*(*)(MtFileStream*, MtFile*))GetModuleAddress(0x14062C7A0);
 
-    inline static MtFileStream * (*_dtor)(MtFileStream *thisptr, bool bFreeMemory) =
-        (MtFileStream*(*)(MtFileStream*, bool))GetModuleAddress(0x1400C72B0);
+    inline static void * (*_scalar_deleting_dtor)(MtFileStream *thisptr, unsigned int flags) =
+        (void*(*)(MtFileStream*, unsigned int))GetModuleAddress(0x1400C72B0);
 
     inline static MtDTI * (*_GetDTI)(MtFileStream *thisptr) =
         (MtDTI*(*)(MtFileStream*))GetModuleAddress(0x14062CC40);
@@ -55,9 +55,10 @@ struct MtFileStream : public MtStream
         Parameters:
             - pFile: Underlying file to read/write
     */
-    MtFileStream(MtFile *pFile)
-    {
-        _ctor(this, pFile);
-    }
+    SHIM_API MtFileStream(MtFile *pFile) SHIM_BODY(0x14062C7A0)
+
+    SHIM_API ~MtFileStream() SHIM_BODY_DTOR_VCALL()
+
+    IMPLEMENT_OPERATOR_NEW_DELETE(g_pResourceHeapAllocator2, 16)
 };
 ASSERT_STRUCT_SIZE(MtFileStream, 0x10);

@@ -47,4 +47,16 @@ struct sAreaHit : public cSystem
 
     inline static void(*_SpawnItems)(sAreaHit *thisptr) =
         (void(*)(sAreaHit*))GetModuleAddress(0x14005E080);
+
+    sAreaHit()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~sAreaHit()
+    {
+        // TODO:
+        DebugBreak();
+    }
 };

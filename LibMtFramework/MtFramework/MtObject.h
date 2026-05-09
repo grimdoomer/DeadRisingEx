@@ -7,38 +7,6 @@
 #include "Utilities/Module.h"
 #include "MtFramework/Utils/MtPropertyList.h"
 
-#ifdef SHIMDLL
-
-// When linking from the shim dll declare APIs as dllexport:
-#define SHIM_API __declspec(dllexport)
-
-// Helper macro to stringify a parameter (required for SHIM_BODY macro to compile correctly):
-#define SHIM_STR(x)     #x
-
-// Helper macro to declare an empty function body when compiling from the shim dll. The first linker comment
-// creates an export alias for the function with the name "snatcher_0xXXXXXXXXXXX" where "XXXXX" is replaced
-// with the address of the function in the game executable. The second linker comment forces an include to the
-// function even if it's not used in code (the shim dll has no code).
-//
-// In the event the function is not redirected to the game executable the code in this stub will report an error.
-#define SHIM_BODY(addr)                                                                                                 \
-    {                                                                                                                   \
-__pragma(comment(linker, SHIM_STR(/EXPORT:snatcher_#addr=) __FUNCDNAME__))                                              \
-__pragma(comment(linker, "/INCLUDE:" __FUNCDNAME__))                                                                    \
-                                                                                                                        \
-        MessageBoxW(NULL, L"SnatcherShim.dll function '" __FUNCDNAME__ "' failed to redirect. Report this to grim.",    \
-            L"DeadRisingEx", MB_OK | MB_ICONERROR | MB_APPLMODAL);                                                      \
-        TerminateProcess(GetCurrentProcess(), 0xBAD0C0DE);                                                              \
-    }
-
-#else
-
-// When linking from outside the shim dll declare APIs as dllimport:
-#define SHIM_API __declspec(dllimport)
-
-#define SHIM_BODY(addr)     ;
-#endif
-
 struct cResource;
 struct MtObject;
 
@@ -69,8 +37,8 @@ struct MtDTI
     inline static MtDTI * (*_ctor)(MtDTI *thisptr, const char *psTypeName, MtDTI *pParentType, DWORD dwSizeOf, DWORD dwFileType, BYTE flags) =
         (MtDTI*(*)(MtDTI*, const char*, MtDTI*, DWORD, DWORD, BYTE))GetModuleAddress(0x1406184C0);
 
-    inline static MtDTI * (*_dtor)(MtDTI *thisptr, bool bFreeMemory) =
-        (MtDTI*(*)(MtDTI*, bool))GetModuleAddress(0x1400AF010);
+    inline static MtDTI * (*_dtor)(MtDTI *thisptr, unsigned int flags) =
+        (MtDTI*(*)(MtDTI*, unsigned int))GetModuleAddress(0x1400AF010);
 
     inline static MtDTI * (*_FindDTIByFileType)(DWORD dwFileType, MtDTI *pRoot) = 
         (MtDTI*(*)(DWORD, MtDTI*))GetModuleAddress((void*)0x140618590);
@@ -92,7 +60,7 @@ struct MtDTI
     */
     SHIM_API MtDTI(const char* psTypeName, MtDTI* pParentType, DWORD dwSizeOf, DWORD dwFileType, BYTE flags) SHIM_BODY(0x1406184C0)
 
-    SHIM_API ~MtDTI() SHIM_BODY(0x1400AF010)
+    SHIM_API ~MtDTI() SHIM_BODY_DTOR_VCALL()
 
     /*
         Creates a new instance of this object type.
@@ -147,8 +115,8 @@ ASSERT_STRUCT_SIZE(MtDTI, 0x38);
 #define IMPLEMENT_MYDTI(type, dtiAddr, dtorAddr, createInstAddr) \
 struct MyDTI : public MtDTI \
 { \
-    inline static MyDTI * (*_dtor)(MyDTI *thisptr, bool bFreeMemory) = \
-        (MyDTI*(*)(MyDTI*, bool))GetModuleAddress(dtorAddr); \
+    inline static MyDTI * (*_dtor)(MyDTI *thisptr, unsigned int flags) = \
+        (MyDTI*(*)(MyDTI*, unsigned int))GetModuleAddress(dtorAddr); \
 \
     inline static type * (*_CreateInstance)(MyDTI *thisptr) = \
         (type*(*)(MyDTI*))GetModuleAddress(createInstAddr); \
@@ -160,19 +128,6 @@ struct MyDTI : public MtDTI \
 }; \
 \
 inline static MtDTI *DebugTypeInfo = (MyDTI*)GetModuleAddress(dtiAddr)
-
-
-/*
-    Implements a singleton pattern for the object.
-*/
-#define IMPLEMENT_SINGLETON(type, instanceAddr) \
-inline static type **_Instance = (type**)GetModuleAddress(instanceAddr); \
-\
-inline static type * Instance() \
-{ \
-    return *type::_Instance; \
-}
-
 
 
 // sizeof = 0x8
@@ -189,10 +144,10 @@ struct MtObject
 
     /* 0x00 */ void **vtable;
 
-    ~MtObject()
-    {
-        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
-    }
+    inline static void* (*_scalar_deleting_dtor)(MtObject* thisptr, unsigned int flags) =
+        (void* (*)(MtObject*, unsigned int))GetModuleAddress(0x1400C72B0);
+
+    SHIM_API ~MtObject() SHIM_BODY_DTOR_VCALL()
 
     /*
         Description: Adds debug menu options for this object to the propery list.
@@ -213,9 +168,8 @@ struct MtObject
         return (MtDTI*)ThisPtrCallNoFixup(this->vtable[4], this);
     }
 
-   /* void* operator new(size_t size)
-    {
+    void* operator new(size_t size);
 
-    }*/
+    void operator delete(void* ptr);
 };
 ASSERT_STRUCT_SIZE(MtObject, 8);

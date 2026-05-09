@@ -13,5 +13,17 @@ struct MtRegistry : public MtObject
     IMPLEMENT_MYDTI(MtRegistry, 0x141CF22C8, 0x1400AF012, 0x140620BA0);
 
     IMPLEMENT_SINGLETON(MtRegistry, 0x141CF20B0);
+
+    MtRegistry()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~MtRegistry()
+    {
+        // TODO:
+        DebugBreak();
+    }
 };
 ASSERT_STRUCT_SIZE(MtRegistry, 0x218);

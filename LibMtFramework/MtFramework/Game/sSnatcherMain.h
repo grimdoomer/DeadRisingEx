@@ -76,6 +76,18 @@ struct sSnatcherMain : public sMain
     inline static float(*_GetRandomFloat)(RNGState *pRngState) =
         (float(*)(RNGState*))GetModuleAddress(0x14000ADA0);
 
+    sSnatcherMain()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~sSnatcherMain()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
     /*DWORD GetRandomInt()
     {
         return _GetRandomInt(&this->rngState);

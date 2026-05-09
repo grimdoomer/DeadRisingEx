@@ -11,4 +11,16 @@ struct MtArray : public MtObject
     /* 0x10 */ BYTE     mAutoDelete;
 
     /* 0x18 */ void     **mpArray;
+
+    MtArray()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~MtArray()
+    {
+        // TODO:
+        DebugBreak();
+    }
 };

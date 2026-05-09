@@ -7,4 +7,16 @@ struct cGametask : public cSystem
 {
     /* 0x38 */ // BYTE
     /* 0x3A */ // BYTE
+
+    cGametask()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~cGametask()
+    {
+        // TODO:
+        DebugBreak();
+    }
 };

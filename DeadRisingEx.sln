@@ -24,6 +24,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SnatcherShim", "SnatcherShi
 		{182F7A1A-DEA6-4800-A52F-2217450064D9} = {182F7A1A-DEA6-4800-A52F-2217450064D9}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeadRisingLauncherHelper", "DeadRisingLauncherHelper\DeadRisingLauncherHelper.vcxproj", "{686A3DA6-132C-42C7-BD1D-CF57CA01C20F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug_Update|x64 = Debug_Update|x64
@@ -72,6 +74,14 @@ Global
 		{FE413E86-C9B6-43DF-8E46-A6600E7D12CD}.Release_Update|x64.Build.0 = Release|x64
 		{FE413E86-C9B6-43DF-8E46-A6600E7D12CD}.Release|x64.ActiveCfg = Release|x64
 		{FE413E86-C9B6-43DF-8E46-A6600E7D12CD}.Release|x64.Build.0 = Release|x64
+		{686A3DA6-132C-42C7-BD1D-CF57CA01C20F}.Debug_Update|x64.ActiveCfg = Debug|x64
+		{686A3DA6-132C-42C7-BD1D-CF57CA01C20F}.Debug_Update|x64.Build.0 = Debug|x64
+		{686A3DA6-132C-42C7-BD1D-CF57CA01C20F}.Debug|x64.ActiveCfg = Debug|x64
+		{686A3DA6-132C-42C7-BD1D-CF57CA01C20F}.Debug|x64.Build.0 = Debug|x64
+		{686A3DA6-132C-42C7-BD1D-CF57CA01C20F}.Release_Update|x64.ActiveCfg = Release|x64
+		{686A3DA6-132C-42C7-BD1D-CF57CA01C20F}.Release_Update|x64.Build.0 = Release|x64
+		{686A3DA6-132C-42C7-BD1D-CF57CA01C20F}.Release|x64.ActiveCfg = Release|x64
+		{686A3DA6-132C-42C7-BD1D-CF57CA01C20F}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

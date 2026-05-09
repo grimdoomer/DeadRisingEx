@@ -34,8 +34,8 @@ namespace Updater
                 }
 
                 // Get the command line args for packaging the update.
-                string buildFolder = args[0];
-                string drexDll = args[1];
+                string launcherBuildFolder = args[0];
+                string dllBuildFolder = args[1];
 
                 // Determine the build flavor.
 #if DEBUG
@@ -45,22 +45,26 @@ namespace Updater
 #endif
 
                 // Get the build version from the application exe.
-                string buildVersion = FileVersionInfo.GetVersionInfo(buildFolder + "DeadRisingLauncher.exe").FileVersion;
+                string buildVersion = FileVersionInfo.GetVersionInfo(launcherBuildFolder + "DeadRisingLauncher.exe").FileVersion;
 
                 // Remove any old zip files in the build folder.
-                string[] oldZipFiles = Directory.GetFiles(buildFolder, "*.zip", SearchOption.TopDirectoryOnly);
+                string[] oldZipFiles = Directory.GetFiles(launcherBuildFolder, "*.zip", SearchOption.TopDirectoryOnly);
                 for (int i = 0; i < oldZipFiles.Length; i++)
                 {
                     // Delete old zip files.
                     File.Delete(oldZipFiles[i]);
                 }
 
-                // Get a recursive list of all files inside the build directory.
-                List<string> filesToZip = new List<string>(Directory.GetFiles(buildFolder));
-                filesToZip.Add(drexDll);
+                // Get a recursive list of all files inside the launcher build directory.
+                List<string> filesToZip = new List<string>(Directory.GetFiles(launcherBuildFolder));
+
+                // Add required dlls:
+                filesToZip.Add(Path.Combine(dllBuildFolder, "DeadRisingEx.dll"));
+                filesToZip.Add(Path.Combine(dllBuildFolder, "DeadRisingLauncherHelper.dll"));
+                filesToZip.Add(Path.Combine(dllBuildFolder, "SnatcherShim.dll"));
 
                 // Create a file stream for the zip file.
-                string updateZipFile = string.Format("{0}DeadRisingEx_{1}_{2}.zip", buildFolder, buildVersion, buildFlavor);
+                string updateZipFile = string.Format("{0}DeadRisingEx_{1}_{2}.zip", launcherBuildFolder, buildVersion, buildFlavor);
                 using (FileStream zipStream = new FileStream(updateZipFile, FileMode.Create, FileAccess.ReadWrite, FileShare.Read))
                 {
                     using (ZipArchive zipFile = new ZipArchive(zipStream, ZipArchiveMode.Create, false))

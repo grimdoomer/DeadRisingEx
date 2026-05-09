@@ -23,6 +23,18 @@ struct uModel : public uCoord
 		/* 0x40 */ Vector4			mScale;			// Set to Vector3(1.0f, 1.0f, 1.0f) at creation
 		/* 0x50 */ Vector4			mTrans;			// Current translation
 		/* 0x60 */ Vector4			SRTMatrix[4];	// joint SRT matrix from joint data 2
+
+		Joint()
+		{
+			// TODO:
+			DebugBreak();
+		}
+
+		~Joint()
+		{
+			// TODO:
+			DebugBreak();
+		}
 	};
 
 	struct KeyFrameDescriptor
@@ -98,6 +110,18 @@ struct uModel : public uCoord
 		/* 0x14C */ //DWORD?
 
 		BYTE _padding[0x150 - 0xE0];
+
+		Motion()
+		{
+			// TODO:
+			DebugBreak();
+		}
+
+		~Motion()
+		{
+			// TODO:
+			DebugBreak();
+		}
 	};
 	ASSERT_STRUCT_SIZE(Motion, 0x150);
 
@@ -112,6 +136,18 @@ struct uModel : public uCoord
 		/* 0x1C */ int 			mPriorityBias;
 
 		/* 0x30 */ Vector3		mUVScroll;
+
+		RenderInfo()
+		{
+			// TODO:
+			DebugBreak();
+		}
+
+		~RenderInfo()
+		{
+			// TODO:
+			DebugBreak();
+		}
 	};
 
 	/* 0xF0 */ DWORD		mBlendNum;
@@ -150,8 +186,8 @@ struct uModel : public uCoord
 	inline static uModel* (* _ctor)(uModel* thisptr) =
 		(uModel * (*)(uModel*))GetModuleAddress(0x1406A18E0);
 
-	inline static uModel* (* _dtor)(uModel* thisptr, bool bFreeMemory) =
-		(uModel * (*)(uModel*, bool))GetModuleAddress(0x1406A1D40);
+	inline static void* (* _scalar_deleting_dtor)(uModel* thisptr, unsigned int flags) =
+		(void * (*)(uModel*, unsigned int))GetModuleAddress(0x1406A1D40);
 
 	inline static void (* _AssignModel)(uModel* thisptr, rModel* pModel) =
 		(void(*)(uModel*, rModel*))GetModuleAddress(0x1406B2730);
@@ -161,10 +197,9 @@ struct uModel : public uCoord
 
     IMPLEMENT_MYDTI(uModel, 0x141D17FE8, 0x1400AF010, 0x1406B1DB0);
 
-	uModel()
-	{
-		_ctor(this);
-	}
+	SHIM_API uModel() SHIM_BODY(0x1406A18E0)
+
+	SHIM_API ~uModel() SHIM_BODY_DTOR_VCALL()
 
 	void AssignModel(rModel* pModel)
 	{
@@ -175,4 +210,6 @@ struct uModel : public uCoord
 	{
 		_AssignAnimation(this, pAnimation, Slot);
 	}
+
+	IMPLEMENT_OPERATOR_NEW_DELETE(g_pUnitHeapAllocator, 16)
 };

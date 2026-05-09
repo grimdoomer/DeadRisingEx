@@ -106,5 +106,17 @@ struct sMain : public cSystem
 
     inline static LRESULT(*_WndProc)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) =
         (LRESULT(*)(HWND, UINT, WPARAM, LPARAM))GetModuleAddress(0x14002BDC0);
+
+    sMain()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~sMain()
+    {
+        // TODO:
+        DebugBreak();
+    }
 };
 ASSERT_STRUCT_SIZE(sMain, 0x20248);

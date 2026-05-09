@@ -25,13 +25,7 @@ struct uDrexVehicle : public uVehicleOm09
         MtObject* _CreateInstance()
         {
             // Allocate and initialize the vehicle definition.
-            void* pVehicleDefAlloc = (*g_pUnitHeapAllocator)->Alloc(this->ObjectSize, 0x20);
-            if (pVehicleDefAlloc != nullptr)
-            {
-                return new(pVehicleDefAlloc) uDrexVehicle();
-            }
-
-            return nullptr;
+            return new uDrexVehicle();
         }
     };
 
@@ -57,4 +51,6 @@ struct uDrexVehicle : public uVehicleOm09
     {
         return &DebugTypeInfo;
     }
+
+    IMPLEMENT_OPERATOR_NEW_DELETE(g_pUnitHeapAllocator, 32)
 };

@@ -3,6 +3,7 @@
 #pragma once
 #include "LibMtFramework.h"
 #include "MtFramework/MtObject.h"
+#include "MtFramework/Memory/MtHeapAllocator.h"
 
 // sizeof = 0x28
 struct cUnit : public MtObject // abstract
@@ -41,18 +42,17 @@ struct cUnit : public MtObject // abstract
     inline static cUnit * (*_ctor)(cUnit *thisptr) =
         (cUnit*(*)(cUnit*))GetModuleAddress(0x1406466A0);
 
-    inline static cUnit * (*_dtor)(cUnit *thisptr, bool bFreeMemory) =
-        (cUnit*(*)(cUnit*, bool))GetModuleAddress(0x1402178A0);
+    inline static void * (*_scalar_deleting_dtor)(cUnit *thisptr, unsigned int flags) =
+        (void*(*)(cUnit*, unsigned int))GetModuleAddress(0x1402178A0);
 
     inline static const char * (*_GetObjectName)(cUnit *thisptr) =
         (const char*(*)(cUnit*))GetModuleAddress(0x140646C80);
 
     IMPLEMENT_MYDTI(cUnit, 0x141CF2B78, 0x1400AF010, 0x1401E94B0);
 
-    cUnit()
-    {
-        _ctor(this);
-    }
+    SHIM_API cUnit() SHIM_BODY(0x1406466A0)
+
+    SHIM_API ~cUnit() SHIM_BODY_DTOR_VCALL()
 
     /*
         Gets the name of the code class for this item instance.
@@ -69,5 +69,7 @@ struct cUnit : public MtObject // abstract
     {
         (void)ThisPtrCallNoFixup(this->vtable[5], this);
     }
+
+    IMPLEMENT_OPERATOR_NEW_DELETE(g_pUnitHeapAllocator, 32)
 };
 ASSERT_STRUCT_SIZE(cUnit, 0x28);

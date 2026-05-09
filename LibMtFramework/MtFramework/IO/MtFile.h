@@ -13,6 +13,18 @@ struct MtFile : public MtObject
     struct FileInfo : public MtObject
     {
         /* 0x08 */
+
+        FileInfo()
+        {
+            // TODO:
+            DebugBreak();
+        }
+
+        ~FileInfo()
+        {
+            // TODO:
+            DebugBreak();
+        }
     };
 
     /*
@@ -45,8 +57,11 @@ struct MtFile : public MtObject
     inline static MtFile * (*_ctor)(MtFile *thisptr, const char *psFileName, DWORD flags) =
         (MtFile*(*)(MtFile*, const char*, DWORD))GetModuleAddress(0x140618ED0);
 
-    inline static MtFile * (*_dtor)(MtFile *thisptr, bool bFreeMemory) =
-        (MtFile*(*)(MtFile*, bool))GetModuleAddress(0x140619130);
+    inline static void * (*_dtor)(MtFile* thisptr) =
+        (void*(*)(MtFile*))GetModuleAddress(0x140619080);
+
+    inline static void * (*_scalar_deleting_dtor)(MtFile *thisptr, unsigned int flags) =
+        (void*(*)(MtFile*, unsigned int))GetModuleAddress(0x140619130);
 
     inline static MtDTI * (*_GetDTI)(MtFile *thisptr) =
         (MtDTI*(*)(MtFile*))GetModuleAddress(0x140619780);
@@ -105,10 +120,9 @@ struct MtFile : public MtObject
             - psFileName: Full file path of the file to open
             - flags: Flags for how to open the file, see FOF_* above
     */
-    MtFile(const char *psFileName, DWORD flags)
-    {
-        _ctor(this, psFileName, flags);
-    }
+    SHIM_API MtFile(const char *psFileName, DWORD flags) SHIM_BODY(0x140618ED0)
+
+    SHIM_API ~MtFile() SHIM_BODY_DTOR_VCALL()
 
     /*
         Description: Opens the specified file
@@ -226,5 +240,7 @@ struct MtFile : public MtObject
     {
         return (bool)ThisPtrCallNoFixup(this->vtable[17], this);
     }
+
+    IMPLEMENT_OPERATOR_NEW_DELETE(g_pResourceHeapAllocator2, 16)
 };
 ASSERT_STRUCT_SIZE(MtFile, 0x148);

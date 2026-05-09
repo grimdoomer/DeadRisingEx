@@ -7,4 +7,16 @@ struct sSnatcherPad : public sPad
 {
     inline static void(*_SystemUpdate)(sSnatcherPad *thisptr) =
         (void(*)(sSnatcherPad*))GetModuleAddress(0x1400ADD00);
+
+    sSnatcherPad()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~sSnatcherPad()
+    {
+        // TODO:
+        DebugBreak();
+    }
 };

@@ -63,18 +63,17 @@ struct uSnatcherModel : public uHavokModel
     inline static uSnatcherModel* (* _ctor)(uSnatcherModel* thisptr) =
         (uSnatcherModel * (*)(uSnatcherModel*))GetModuleAddress(0x140145930);
 
-    inline static uSnatcherModel* (* _dtor)(uSnatcherModel* thisptr, bool bFreeMemory) =
-        (uSnatcherModel * (*)(uSnatcherModel*, bool))GetModuleAddress(0x140145F00);
+    inline static void* (* _scalar_deleting_dtor)(uSnatcherModel* thisptr, unsigned int flags) =
+        (void * (*)(uSnatcherModel*, unsigned int))GetModuleAddress(0x140145F00);
 
     inline static void (* _LoadAndAssignModel)(uSnatcherModel* thisptr, const char* psFileName) =
         (void(*)(uSnatcherModel*, const char*))GetModuleAddress(0x14014D630);
 
     IMPLEMENT_MYDTI(uSnatcherModel, 0x141949C20, 0x1400AF010, 0x1401E94B0);
 
-    uSnatcherModel()
-    {
-        _ctor(this);
-    }
+    SHIM_API uSnatcherModel() SHIM_BODY(0x140145930)
+
+    SHIM_API ~uSnatcherModel() SHIM_BODY_DTOR_VCALL()
 
     /*
 
@@ -83,4 +82,6 @@ struct uSnatcherModel : public uHavokModel
     {
         _LoadAndAssignModel(this, psFileName);
     }
+
+    IMPLEMENT_OPERATOR_NEW_DELETE(g_pUnitHeapAllocator, 32)
 };

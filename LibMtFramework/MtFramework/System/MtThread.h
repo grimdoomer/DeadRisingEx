@@ -21,5 +21,17 @@ struct MtThread
     /* 0x48 */ BYTE                     Unk1;
     /* 0x4C */ DWORD                    ThreadId;
     /* 0x50 */ BOOL                     ThreadStarted;
+
+    MtThread()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~MtThread()
+    {
+        // TODO:
+        DebugBreak();
+    }
 };
 ASSERT_STRUCT_SIZE(MtThread, 0x58);

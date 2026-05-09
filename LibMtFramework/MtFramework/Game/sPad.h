@@ -39,6 +39,18 @@ struct sPad : public cSystem
         /* 0x23B */ BYTE    AnalogRy;
 
         IMPLEMENT_MYDTI(Map, 0x141CF31C8, 0x1400AF010, 0x140656B80);
+
+        Map()
+        {
+            // TODO:
+            DebugBreak();
+        }
+
+        ~Map()
+        {
+            // TODO:
+            DebugBreak();
+        }
     };
 
     // sizeof = 0x678
@@ -111,6 +123,18 @@ struct sPad : public cSystem
         /* 0x438 */ sPad::Map   JoyPadMapping;
 
         IMPLEMENT_MYDTI(Pad, 0x141CF3198, 0x1400AF010, 0x140656BB0);
+
+        Pad()
+        {
+            // TODO:
+            DebugBreak();
+        }
+
+        ~Pad()
+        {
+            // TODO:
+            DebugBreak();
+        }
     };
 
     /* 0x38 */
@@ -151,6 +175,18 @@ struct sPad : public cSystem
 
     inline static bool(*_GetButtonPressed)(InputButtonId buttonId) =
         (bool(*)(InputButtonId))GetModuleAddress(0x1400291A0);
+
+    sPad()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~sPad()
+    {
+        // TODO:
+        DebugBreak();
+    }
 
     /*
         Description: Gets the socket number for the last device to register input

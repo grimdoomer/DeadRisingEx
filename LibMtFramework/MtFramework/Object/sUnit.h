@@ -3,6 +3,7 @@
 #include "LibMtFramework.h"
 #include "MtFramework/System/cSystem.h"
 #include "MtFramework/Object/cUnit.h"
+#include "MtFramework/Memory/MtHeapAllocator.h"
 
 // sizeof = 0x538
 struct sUnit : public cSystem
@@ -24,15 +25,16 @@ struct sUnit : public cSystem
         inline static MoveLine * (*_ctor)(MoveLine *thisptr) =
             (MoveLine*(*)(MoveLine*))GetModuleAddress(0x14062FF60);
 
-        inline static MoveLine * (*_dtor)(MoveLine *thisptr, bool bFreeMemory) =
-            (MoveLine*(*)(MoveLine*, bool))GetModuleAddress(0x1400C72B0);
+        inline static void * (*_scalar_deleting_dtor)(MoveLine *thisptr, unsigned int flags) =
+            (void*(*)(MoveLine*, unsigned int))MtObject::_scalar_deleting_dtor;
 
         IMPLEMENT_MYDTI(MoveLine, 0x141CF2628, 0x1400AF010, 0x140630900);
 
-        MoveLine()
-        {
-            _ctor(this);
-        }
+        SHIM_API MoveLine() SHIM_BODY(0x14062FF60)
+
+        SHIM_API ~MoveLine() SHIM_BODY_DTOR_VCALL()
+
+        IMPLEMENT_OPERATOR_NEW_DELETE(g_pResourceHeapAllocator2, 16)
     };
     ASSERT_STRUCT_SIZE(MoveLine, 0x28);
 
@@ -50,8 +52,8 @@ struct sUnit : public cSystem
     inline static sUnit * (*_ctor)(sUnit *thisptr) =
         (sUnit*(*)(sUnit*))GetModuleAddress(0x14062FF90);
 
-    inline static sUnit * (*_dtor)(sUnit *thisptr, bool bFreeMemory) =
-        (sUnit*(*)(sUnit*, bool))GetModuleAddress(0x140630030);
+    inline static void * (*_scalar_deleting_dtor)(sUnit *thisptr, unsigned int flags) =
+        (void*(*)(sUnit*, unsigned int))GetModuleAddress(0x140630030);
 
     inline static bool(*_AddObjectToMoveLine)(sUnit *thisptr, DWORD dwLineIndex, cUnit *pObject) =
         (bool(*)(sUnit*, DWORD, cUnit*))GetModuleAddress(0x1406300B0);
@@ -63,10 +65,9 @@ struct sUnit : public cSystem
 
     IMPLEMENT_SINGLETON(sUnit, 0x141CF2620);
 
-    sUnit()
-    {
-        _ctor(this);
-    }
+    SHIM_API sUnit() SHIM_BODY(0x14062FF90)
+
+    SHIM_API ~sUnit() SHIM_BODY_DTOR_VCALL()
 
     /*
         Description: Adds an object to the specified move line list.
@@ -89,5 +90,7 @@ struct sUnit : public cSystem
     {
         return (const char*)ThisPtrCallNoFixup(this->vtable[10], this, dwLineIndex);
     }
+
+    IMPLEMENT_OPERATOR_NEW_DELETE(g_pSystemHeapAllocator, 16)
 };
 ASSERT_STRUCT_SIZE(sUnit, 0x538);

@@ -29,8 +29,18 @@ struct MtAllocator : public MtObject
     inline static MtAllocator * (*_ctor)(MtAllocator *thisptr, const char *psName, DWORD type) =
         (MtAllocator*(*)(MtAllocator*, const char*, DWORD))GetModuleAddress(0x140623A00);
 
-    inline static MtAllocator * (*_dtor)(MtAllocator *thisptr, bool bFreeMemory) =
-        (MtAllocator*(*)(MtAllocator*, bool))GetModuleAddress(0x140623E80);
+    inline static void * (*_scalar_deleting_dtor)(MtAllocator *thisptr, unsigned int flags) =
+        (void*(*)(MtAllocator*, unsigned int))GetModuleAddress(0x140623E80);
+
+#ifdef SHIMDLL
+
+    // Satisy the compiler by providing a default constructor for MtAllocator.
+    MtAllocator()
+    {
+
+    }
+
+#endif
 
     /*
         Description: Creates a new MtAllocator with the specified name and type.
@@ -39,10 +49,9 @@ struct MtAllocator : public MtObject
             - psName: Name of the allocator
             - type: Type of allocator
     */
-    MtAllocator(const char *psName, DWORD type)
-    {
-        _ctor(this, psName, type);
-    }
+    SHIM_API MtAllocator(const char *psName, DWORD type) SHIM_BODY(0x140623A00)
+
+    SHIM_API ~MtAllocator() SHIM_BODY_DTOR_VCALL()
 
     /*
         Description: Allocates a new block of memory from the allocator memory pool.
@@ -82,5 +91,8 @@ struct MtAllocator : public MtObject
     {
         (void)ThisPtrCallNoFixup(this->vtable[6], this, pAddress);
     }
+
+    // MtAllocator has a single static instance in the game executable. The game incorrectly implements an operator
+    // delete override but it can never be used so we ignore it here.
 };
 ASSERT_STRUCT_SIZE(MtAllocator, 0x50);

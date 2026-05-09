@@ -5,14 +5,13 @@
 #pragma once
 #include "LibMtFramework.h"
 #include "MtFramework/MtObject.h"
+#include "MtFramework/System/cSystem.h"
 #include "cResource.h"
 #include "MtFramework/System/MtThread.h"
 #include "rArchive.h"
 
-struct sResource;
-
 // sizeof = 0x24458
-struct sResource
+struct sResource : public cSystem
 {
     // sizeof = 0x20
     struct DecodeFileRequest
@@ -49,18 +48,19 @@ struct sResource
         inline static DecompressStream * (*_ctor)(DecompressStream *thisptr, DecompressStreamContext *context, DecodeFileRequest *pDecodeReq) =
             (DecompressStream*(*)(DecompressStream*, DecompressStreamContext*, DecodeFileRequest*))GetModuleAddress(0x14063AB60);
 
-        inline static DecompressStream * (*_dtor)(DecompressStream *thisptr, bool bFreeMemory) =
-            (DecompressStream*(*)(DecompressStream*, bool))GetModuleAddress(0x14063B2C0);
+        inline static void * (*_scalar_deleting_dtor)(DecompressStream *thisptr, unsigned int flags) =
+            (void*(*)(DecompressStream*, unsigned int))GetModuleAddress(0x14063B2C0);
 
         /*
             Parameters:
                 - context: Decompression context to read compressed data from
                 - pDecodeReq: Decode request for the file
         */
-        DecompressStream(DecompressStreamContext *context, DecodeFileRequest *pDecodeReq)
-        {
-            _ctor(this, context, pDecodeReq);
-        }
+        SHIM_API DecompressStream(DecompressStreamContext *context, DecodeFileRequest *pDecodeReq) SHIM_BODY(0x14063AB60)
+
+        SHIM_API ~DecompressStream() SHIM_BODY_DTOR_VCALL()
+
+        IMPLEMENT_OPERATOR_NEW_DELETE(g_pResourceHeapAllocator2, 16)
     };
     ASSERT_STRUCT_SIZE(DecompressStream, 0x78);
 
@@ -70,13 +70,22 @@ struct sResource
         /* 0x08 */ __int64    mAttr;        // I think this is actually a DWORD + padding
         /* 0x10 */ char        mExt[4];    // File extension
         /* 0x18 */ MtDTI    *pTypeInfo;
+
+        inline static TypeInfo* (*_ctor)(TypeInfo* thisptr) =
+            (TypeInfo * (*)(TypeInfo*))GetModuleAddress(0x14063ABF0);
+
+        inline static void* (*_scalar_deleting_dtor)(TypeInfo* thisptr, unsigned int flags) =
+            (void* (*)(TypeInfo*, unsigned int))MtObject::_scalar_deleting_dtor;
+
+        SHIM_API TypeInfo() SHIM_BODY(0x14063ABF0)
+
+        SHIM_API ~TypeInfo() SHIM_BODY_DTOR_VCALL()
+
+        IMPLEMENT_OPERATOR_NEW_DELETE(g_pResourceHeapAllocator2, 16)
     };
     ASSERT_STRUCT_SIZE(TypeInfo, 0x20);
 
 
-    /* 0x00 */ void                 **vtable;
-    /* 0x08 */ CRITICAL_SECTION     ListLock;
-    /* 0x30 */ bool                 LockOnAccess;               // Determines if the lock is held on read operations?
     /* 0x38 */ TypeInfo             mTypeInfo[256];             // pointer or not?
     /* 0x2038 */ DWORD              TypeInfoCount;
     /* 0x203C */ char               RootPath[MAX_PATH];         // GameDir + "\\resource"
@@ -123,6 +132,12 @@ struct sResource
     inline static sResource * (*_ctor)(sResource *thisptr) = 
         (sResource*(*)(sResource*))GetModuleAddress(0x14063AC10);
 
+    inline static void * (*_dtor)(sResource* thisptr) =
+        (void*(*)(sResource*))GetModuleAddress(0x14063B000);
+
+    inline static void* (*_scalar_deleting_dtor)(sResource* thisptr, unsigned int flags) =
+        (void*(*)(sResource*, unsigned int))GetModuleAddress(0x14063B370);
+
     inline static ULONGLONG(*_CalculateResourceId)(sResource *thisptr, MtDTI *pObjectType, char *psFileName) =
         (ULONGLONG(*)(sResource*, MtDTI*, char*))GetModuleAddress(0x14063DCB0);
 
@@ -150,10 +165,9 @@ struct sResource
     /*
         Description: sResource constructor
     */
-    sResource()
-    {
-        _ctor(this);
-    }
+    SHIM_API sResource() SHIM_BODY(0x14063AC10)
+
+    SHIM_API ~sResource() SHIM_BODY_DTOR_VCALL()
 
     // Resource load flags:
     #define RLF_SYNCHRONOUS         1       // File is loaded synchronously
@@ -232,5 +246,7 @@ struct sResource
     {
         return (T*)_FindResourceById(this, resourceId);
     }
+
+    IMPLEMENT_OPERATOR_NEW_DELETE(g_pSystemHeapAllocator, 16)
 };
 ASSERT_STRUCT_SIZE(sResource, 0x24458);

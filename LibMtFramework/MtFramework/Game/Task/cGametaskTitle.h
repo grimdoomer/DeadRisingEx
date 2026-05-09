@@ -16,4 +16,16 @@ struct cGametaskTitle : public cGametask
     /* 0xE8 */ //rSchedulerXml
 
     IMPLEMENT_MYDTI(cGametaskTitle, 0x141951E98, 0x1400AF010, 0x14020D2A0);
+
+    cGametaskTitle()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~cGametaskTitle()
+    {
+        // TODO:
+        DebugBreak();
+    }
 };

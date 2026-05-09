@@ -52,4 +52,16 @@ struct MtBinaryXmlReader
 
     inline static MtBinaryXmlReader * (*_ctor)(MtBinaryXmlReader *thisptr, MtStream *pStream) =
         (MtBinaryXmlReader*(*)(MtBinaryXmlReader*, MtStream*))GetModuleAddress(0x140001000);
+
+    MtBinaryXmlReader()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~MtBinaryXmlReader()
+    {
+        // TODO:
+        DebugBreak();
+    }
 };

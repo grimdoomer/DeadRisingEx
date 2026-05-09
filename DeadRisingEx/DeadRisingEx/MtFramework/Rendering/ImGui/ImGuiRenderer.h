@@ -70,4 +70,20 @@ public:
     {
         this->isVisible = isVisible;
     }
+
+    // Note: we can't use the cSystem operator new/delete overrides because they use a game engine memory allocator
+    // that hasn't been initialized before this class is instantiated.
+    void* operator new(size_t size)
+    {
+        void* ptr = malloc(size);
+        if (ptr != nullptr)
+            memset(ptr, 0, size);
+
+        return ptr;
+    }
+
+    void operator delete(void* ptr)
+    {
+        free(ptr);
+    }
 };

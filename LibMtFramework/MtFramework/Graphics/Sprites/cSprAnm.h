@@ -34,4 +34,16 @@ struct cSprAnm : public MtObject
 {
     /* 0x08 */
     /* 0x10 */ cAnmSprData  SpriteData;
+
+    cSprAnm()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~cSprAnm()
+    {
+        // TODO:
+        DebugBreak();
+    }
 };

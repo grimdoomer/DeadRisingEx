@@ -31,4 +31,16 @@ struct sGpuParticle : public cSystem
     /* 0x90 */ DWORD                gXPrimDepthBlendIndex;          // sShader::ParameterDesc index
     /* 0x94 */ DWORD                ViewZIndex;                     // sShader::ParameterDesc index
     /* 0x98 */ DWORD                DepthBlendIndex;                // sShader::ParameterDesc index
+
+    sGpuParticle()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~sGpuParticle()
+    {
+        // TODO:
+        DebugBreak();
+    }
 };

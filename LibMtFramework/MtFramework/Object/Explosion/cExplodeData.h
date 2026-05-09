@@ -12,13 +12,12 @@ struct cExplodeData : public MtObject
     inline static cExplodeData* (* _ctor)(cExplodeData* thisptr) =
         (cExplodeData * (*)(cExplodeData*))GetModuleAddress(0x14000E1E0);
 
-    inline static cExplodeData* (* _dtor)(cExplodeData* thisptr, bool bFreeMemory) =
-        (cExplodeData * (*)(cExplodeData*, bool))GetModuleAddress(0x1400C72B0);
+    inline static void* (* _scalar_deleting_dtor)(cExplodeData* thisptr, unsigned int flags) =
+        (void * (*)(cExplodeData*, unsigned int))GetModuleAddress(0x1400C72B0);
 
     IMPLEMENT_MYDTI(cExplodeData, 0x141930078, 0x1400AF010, 0x14000EEC0);
 
-    cExplodeData()
-    {
-        _ctor(this);
-    }
+    SHIM_API cExplodeData() SHIM_BODY(0x14000E1E0)
+
+    SHIM_API ~cExplodeData() SHIM_BODY_DTOR_VCALL()
 };

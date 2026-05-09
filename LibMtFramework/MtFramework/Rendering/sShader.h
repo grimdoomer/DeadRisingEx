@@ -36,6 +36,18 @@ struct sShader : public cSystem
         */
 
         /* 0x20 */ BYTE        Unknown[16];    // Not sure if this is ever used...
+
+        ParameterDesc()
+        {
+            // TODO:
+            DebugBreak();
+        }
+
+        ~ParameterDesc()
+        {
+            // TODO:
+            DebugBreak();
+        }
     };
     ASSERT_STRUCT_SIZE(ParameterDesc, 0x30);
 
@@ -44,6 +56,18 @@ struct sShader : public cSystem
     {
         /* 0x08 */ char     *mName;     // Shader name
         /* 0x10 */ DWORD    mID;        // Hashcode of the shader name
+
+        TechniqueDesc()
+        {
+            // TODO:
+            DebugBreak();
+        }
+
+        ~TechniqueDesc()
+        {
+            // TODO:
+            DebugBreak();
+        }
     };
     ASSERT_STRUCT_SIZE(TechniqueDesc, 0x18);
 
@@ -80,4 +104,16 @@ struct sShader : public cSystem
     /* 0xB550 */ Vector4            mTestParam;
 
     IMPLEMENT_SINGLETON(sShader, 0x141D179A0);
+
+    sShader()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~sShader()
+    {
+        // TODO:
+        DebugBreak();
+    }
 };

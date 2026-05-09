@@ -13,7 +13,7 @@ namespace DeadRisingLauncher
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             // If this is the first run after an update upgrade any previous settings.
             if (Properties.Settings.Default.UpdateSettings)
@@ -39,9 +39,23 @@ namespace DeadRisingLauncher
             catch (Exception e)
             { }
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            // Check if the -silent argument was provided.
+            if (args.Length > 0 && args[0] == "-silent")
+            {
+                // Launch the game with the DeadRisingEx dll.
+                if (DeadRisingEx.LaunchDeadRisingEx(Application.StartupPath) == false)
+                {
+                    // Display an error to the user.
+                    MessageBox.Show("Failed to start DeadRisingEx!");
+                    return;
+                }
+            }
+            else
+            {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new Form1());
+            }
         }
     }
 }

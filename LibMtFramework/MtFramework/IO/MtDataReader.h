@@ -5,7 +5,7 @@
 #pragma once
 #include "MtStream.h"
 
-// sizeof = 0x28?
+// sizeof = 0x28
 struct MtDataReader
 {
     /* 0x00 */ void         **vtable;
@@ -31,8 +31,11 @@ struct MtDataReader
     inline static MtDataReader * (*_ctor)(MtDataReader *thisptr, MtStream* pStream, DWORD scratchBufferSize) =
         (MtDataReader*(*)(MtDataReader*, MtStream*, DWORD))GetModuleAddress(0x14062C1F0);
 
-    inline static MtDataReader * (*_dtor)(MtDataReader *thisptr, bool bFreeMemory) =
-        (MtDataReader*(*)(MtDataReader*, bool))GetModuleAddress(0x14062C260);
+    inline static void * (*_dtor)(MtDataReader* thisptr) =
+        (void*(*)(MtDataReader*))GetModuleAddress(0x14062C240);
+
+    inline static void * (*_scalar_deleting_dtor)(MtDataReader *thisptr, unsigned int flags) =
+        (void*(*)(MtDataReader*, unsigned int))GetModuleAddress(0x14062C260);
 
     inline static WORD(*_ReadUInt16)(MtDataReader *thisptr) =
         (WORD(*)(MtDataReader*))GetModuleAddress(0x14062C4A0);
@@ -53,15 +56,9 @@ struct MtDataReader
         (DWORD(*)(MtDataReader*, void*, DWORD))GetModuleAddress(0x14062C330);
 
 
-    MtDataReader(MtStream* pStream, DWORD scratchBufferSize)
-    {
-        _ctor(this, pStream, scratchBufferSize);
-    }
+    SHIM_API MtDataReader(MtStream* pStream, DWORD scratchBufferSize) SHIM_BODY(0x14062C1F0)
 
-    ~MtDataReader()
-    {
-        (void)ThisPtrCallNoFixup(this->vtable[0], this, false);
-    }
+    SHIM_API ~MtDataReader() SHIM_BODY_DTOR_VCALL()
 
     WORD ReadUInt16()
     {
@@ -113,4 +110,7 @@ struct MtDataReader
     {
         return _ReadData(this, pBuffer, length);
     }
+
+    IMPLEMENT_OPERATOR_NEW_DELETE(g_pResourceHeapAllocator2, 16)
 };
+ASSERT_STRUCT_SIZE(MtDataReader, 0x28);

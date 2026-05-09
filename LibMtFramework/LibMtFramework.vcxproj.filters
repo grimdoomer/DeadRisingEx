@@ -221,6 +221,12 @@
     <ClCompile Include="Utilities\Module.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MtFramework\MtObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MtFramework\Utils\MtPropertyList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <MASM Include="Utilities\ModuleAsm.asm">

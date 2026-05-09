@@ -28,4 +28,16 @@ struct rTexture : public cResource
 
     inline static bool(*_LoadResource)(rTexture *thisptr, MtStream *pStream) =
         (bool(*)(rTexture*, MtStream*))GetModuleAddress(0x140646000);
+
+    rTexture()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~rTexture()
+    {
+        // TODO:
+        DebugBreak();
+    }
 };

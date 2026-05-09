@@ -20,6 +20,18 @@ struct sSoundSystem : public cSystem
 
     IMPLEMENT_SINGLETON(sSoundSystem, 0x141CF3128);
 
+    sSoundSystem()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~sSoundSystem()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
 
     rSoundSnd* LoadSoundSnd(const char* psFileName, int _notused)
     {

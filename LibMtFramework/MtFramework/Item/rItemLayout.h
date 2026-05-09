@@ -97,6 +97,18 @@ struct rItemLayout : public cResource
         /* 0x3DC */ DWORD   IconNo;
         /* 0x3E0 */ DWORD   ScrNo1;
         /* 0x3E4 */ DWORD   SrcNo2;
+
+        LayoutInfo()
+        {
+            // TODO:
+            DebugBreak();
+        }
+
+        ~LayoutInfo()
+        {
+            // TODO:
+            DebugBreak();
+        }
     };
 
     /* 0x60 */ LayoutInfo   *pLayoutInfoList;
@@ -104,6 +116,18 @@ struct rItemLayout : public cResource
 
     inline static void(*_SpawnItems)(rItemLayout *thisptr) =
         (void(*)(rItemLayout*))GetModuleAddress(0x1400CCB00);
+
+    rItemLayout()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~rItemLayout()
+    {
+        // TODO:
+        DebugBreak();
+    }
 
     /*
         Description: Loops through all item placements and spawns all items on the map.

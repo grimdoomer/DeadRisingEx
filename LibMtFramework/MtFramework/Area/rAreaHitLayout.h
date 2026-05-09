@@ -10,8 +10,9 @@
 struct rAreaHitLayout : public cResource
 {
     // sizeof = 0x780
-    struct LayoutInfo
+    struct LayoutInfo : public MtObject
     {
+        /* 0x08 */
         /* 0x10 */ BYTE         Shape;
         /* 0x14 */ float        mRectX;
         /* 0x18 */ float        mRectY;
@@ -196,8 +197,40 @@ struct rAreaHitLayout : public cResource
         /* 0x724 */ DWORD       BankNo;
         /* 0x728 */ DWORD       MoitonNo;
         /* 0x72C */ DWORD       IconNo;
+
+        LayoutInfo()
+        {
+            // TODO:
+            DebugBreak();
+        }
+
+        ~LayoutInfo()
+        {
+            // TODO:
+            DebugBreak();
+        }
     };
 
     /* 0x60 */ LayoutInfo   *pLayoutInfoList;
     /* 0x68 */ DWORD        LayoutCount;        // Number of items in the list
+    /* 0x6C */ DWORD        _unk;               // Is this a real field or just padding?
+
+    inline static void** _vtable = (void**)GetModuleAddress(0x140CC1EC8);
+
+    inline static void* (*_scalar_deleting_dtor)(rAreaHitLayout* thisptr, unsigned int flags) =
+        (void * (*)(rAreaHitLayout*, unsigned int))GetModuleAddress(0x1400B9450);
+
+    rAreaHitLayout()
+    {
+        this->vtable = rAreaHitLayout::_vtable;
+        this->pLayoutInfoList = nullptr;
+        this->LayoutCount = 0;
+        this->_unk = 0;
+        this->mAttr = 6;
+    }
+
+    SHIM_API ~rAreaHitLayout() SHIM_BODY_DTOR_VCALL()
+
+    IMPLEMENT_OPERATOR_NEW_DELETE(g_pResourceHeapAllocator, 16)
 };
+ASSERT_STRUCT_SIZE(rAreaHitLayout, 0x70);

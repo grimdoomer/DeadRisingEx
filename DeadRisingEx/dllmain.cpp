@@ -51,12 +51,43 @@ bool ResolveShimImports();
 
 bool ShimImportsResolved = ResolveShimImports();
 
+enum ShimFunctionType
+{
+    ShimFunc_Absolute,
+    ShimFunc_Vcall,
+    ShimFunc_DtorVcall,
+    ShimFunc_ScalarDtor,
+};
+
+struct ShimFunctionInfo
+{
+    ShimFunctionType Type;                  // Type of shim
+    void* SnatcherFuncAddress;              // Function address in the game executable
+};
 
 struct ShimExportInfo
 {
-    std::map<std::string, void*> SnatcherShimExportsMap;        // Map of export name -> address
-    std::map<void*, void*> SnatcherShimRedirectionMap;          // Map of snatcher shim export address -> game function address
+    std::map<std::string, void*> SnatcherShimExportsMap;                // Map of export name -> address
+    std::map<void*, ShimFunctionInfo> SnatcherShimRedirectionMap;       // Map of snatcher shim export address -> game function address
+    std::map<unsigned int, void*> SnatcherShimVcallLookupMap;           // Map of vcall ordinals -> dispatch stub address
 };
+
+// Shell code for the following instruction pattern:
+//      mov     rax, [rcx]
+//      jmp     qword ptr [rax + 0xXXXXXXXX]
+const BYTE ImportVcallCode[] = { 0x48, 0x8B, 0x01, 0xFF, 0xA0, 0x04, 0x01, 0x00, 0x00 };
+
+// Shell code for the following instruction pattern:
+//      xor     edx, edx
+//      mov     rax, [rcx]
+//      jmp     qword ptr[rax]
+const BYTE ImportDtorVcallCode[] = { 0x31, 0xD2, 0x48, 0x8B, 0x01, 0xFF, 0x20 };
+
+// Shell code for the following instruction pattern:
+//      mov     edx, 0xXXXXXXXX
+//      mov     rax, 0xXXXXXXXXXXXXXXXX
+//      jmp     rax
+const BYTE ImportScalarDtorCallCode[] = { 0xBA, 0x00, 0x00, 0x00, 0x00, 0x48, 0xB8, 0x88, 0x77, 0x66, 0x55, 0x44, 0x33, 0x22, 0x11, 0xFF, 0xE0 };
 
 // Version string for update 1 of the game exe.
 const char *g_SupportedGameVersionString = "Master Oct  6 2016 23:23:44";
@@ -97,57 +128,50 @@ __declspec(dllexport) void DummyExport()
     // Required for detours.
 }
 
-bool __declspec(dllexport) LaunchDeadRisingEx(const char *psGameDirectory)
-{
-    CHAR sGameExe[MAX_PATH];
-    CHAR sExDll[MAX_PATH];
-    STARTUPINFO StartupInfo = { 0 };
-    PROCESS_INFORMATION ProcInfo = { 0 };
-
-    // Initialize the startup info structure.
-    StartupInfo.cb = sizeof(STARTUPINFO);
-
-    // Format the file paths for the game exe and ex dll.
-    snprintf(sGameExe, sizeof(sGameExe), "%s\\DeadRising.exe", psGameDirectory);
-    snprintf(sExDll, sizeof(sExDll), "%s\\DeadRisingEx.dll", psGameDirectory);
-
-    // Build our list of dlls to inject.
-    LPCSTR DllsToInject[1] =
-    {
-        sExDll
-    };
-
-    // Create the game process in a suspended state with our dll.
-    if (DetourCreateProcessWithDllsA(sGameExe, NULL, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, 
-        psGameDirectory, &StartupInfo, &ProcInfo, 1, DllsToInject, NULL) == FALSE)
-    {
-        // Failed to create the game process.
-        return false;
-    }
-
-    // Resume the process.
-    ResumeThread(ProcInfo.hThread);
-
-    // Close the process and thread handles.
-    CloseHandle(ProcInfo.hProcess);
-    CloseHandle(ProcInfo.hThread);
-    return true;
-}
-
 BOOL EnumerateShimExportsCallback(PVOID pContext, ULONG nOrdinal, LPCSTR pszName, PVOID pCode)
 {
     ShimExportInfo* pExportsInfo = (ShimExportInfo*)pContext;
+    ShimFunctionInfo funcInfo;
 
     // Check if the export name starts with "snatcher_".
-    if (strncmp(pszName, "snatcher_", strlen("snatcher_")) == 0)
+    if (strncmp(pszName, "snatcher_scalar_dtor_", strlen("snatcher_scalar_dtor_")) == 0)
+    {
+        // Get the game address from the export name.
+        void* snatcherAddress = (void*)std::stoull(pszName + strlen("snatcher_scalar_dtor_"), nullptr, 16);
+        assert(snatcherAddress != nullptr);
+
+        // Adjust the game address for relocations and add it to the redirection dictionary.
+        funcInfo.Type = ShimFunc_ScalarDtor;
+        funcInfo.SnatcherFuncAddress = GetModuleAddress(snatcherAddress);
+        pExportsInfo->SnatcherShimRedirectionMap.emplace(pCode, funcInfo);
+    }
+    else if (strncmp(pszName, "snatcher_vcall_", strlen("snatcher_vcall_")) == 0)
+    {
+        // Get the game address from the export name.
+        unsigned int vtableOrdinal = std::stoul(pszName + strlen("snatcher_vcall_"), nullptr, 10);
+
+        // Add function info to the redirection dictionary.
+        funcInfo.Type = ShimFunc_Vcall;
+        funcInfo.SnatcherFuncAddress = (void*)vtableOrdinal;
+        pExportsInfo->SnatcherShimRedirectionMap.emplace(pCode, funcInfo);
+        pExportsInfo->SnatcherShimVcallLookupMap.emplace(vtableOrdinal, nullptr);
+    }
+    else if (strncmp(pszName, "snatcher_dtor_vcall__", strlen("snatcher_dtor_vcall__")) == 0)
+    {
+        // Add function info to the redirection dictionary.
+        funcInfo.Type = ShimFunc_DtorVcall;
+        pExportsInfo->SnatcherShimRedirectionMap.emplace(pCode, funcInfo);
+    }
+    else if (strncmp(pszName, "snatcher_", strlen("snatcher_")) == 0)
     {
         // Get the game address from the export name.
         void* snatcherAddress = (void*)std::stoull(pszName + strlen("snatcher_"), nullptr, 16);
         assert(snatcherAddress != nullptr);
 
         // Adjust the game address for relocations and add it to the redirection dictionary.
-        void* snatcherAddressReloc = GetModuleAddress(snatcherAddress);
-        pExportsInfo->SnatcherShimRedirectionMap.emplace(pCode, snatcherAddressReloc);
+        funcInfo.Type = ShimFunc_Absolute;
+        funcInfo.SnatcherFuncAddress = GetModuleAddress(snatcherAddress);
+        pExportsInfo->SnatcherShimRedirectionMap.emplace(pCode, funcInfo);
     }
     else
     {
@@ -194,6 +218,24 @@ bool ResolveShimImports()
         return false;
     }
 
+    // Calculate the numer of shim functions we need to create stubs for.
+    size_t stubFunctionAllocationSize = sizeof(ImportDtorVcallCode) + (exportsInfo.SnatcherShimVcallLookupMap.size() * sizeof(ImportVcallCode));
+    for (auto iter = exportsInfo.SnatcherShimRedirectionMap.begin(); iter != exportsInfo.SnatcherShimRedirectionMap.end(); iter++)
+    {
+        // Check if this import needs a stub function.
+        if (iter->second.Type == ShimFunc_ScalarDtor)
+            stubFunctionAllocationSize += sizeof(ImportScalarDtorCallCode);
+    }
+
+    // Allocate memory for the stub functions.
+    BYTE* pStubFunctionMemory = (BYTE*)VirtualAlloc(nullptr, stubFunctionAllocationSize, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+    if (pStubFunctionMemory == nullptr)
+    {
+        DbgPrint("Failed to allocate %d bytes of memory for shim import stub functions\n", stubFunctionAllocationSize);
+        DebugBreak();
+        return false;
+    }
+
     // Get the import table info for SnatcherShim.dll.
     IMAGE_DOS_HEADER* pDosHeader = (IMAGE_DOS_HEADER*)GetModuleHandle("DeadRisingEx.dll");
     if (pDosHeader->e_magic != IMAGE_DOS_SIGNATURE)
@@ -232,6 +274,26 @@ bool ResolveShimImports()
         return false;
     }
 
+    // Loop and setup dispatcher stubs for vcalls.
+    BYTE* pStubCodePtr = pStubFunctionMemory;
+    for (auto iter = exportsInfo.SnatcherShimVcallLookupMap.begin(); iter != exportsInfo.SnatcherShimVcallLookupMap.end(); iter++)
+    {
+        // Setup the jump stub.
+        memcpy(pStubCodePtr, ImportVcallCode, sizeof(ImportVcallCode));
+
+        // Ordinal:
+        *(unsigned int*)(pStubCodePtr + 5) = (unsigned int)iter->first * 8;
+
+        // Update stub address.
+        iter->second = pStubCodePtr;
+        pStubCodePtr += sizeof(ImportVcallCode);
+    }
+
+    // Add the stub for the dtor vcall dispatcher.
+    BYTE* pDtorVcallDispatchStub = pStubCodePtr;
+    memcpy(pDtorVcallDispatchStub, ImportDtorVcallCode, sizeof(ImportDtorVcallCode));
+    pStubCodePtr += sizeof(ImportDtorVcallCode);
+
     // Loop and walk the import directory until we find the entry for SnatcherShim.dll.
     for (; pImportDescriptor->OriginalFirstThunk != 0; pImportDescriptor++)
     {
@@ -263,19 +325,58 @@ bool ResolveShimImports()
                 void* shimAddress = exportsInfo.SnatcherShimExportsMap[psImportName];
                 if (exportsInfo.SnatcherShimRedirectionMap.find(shimAddress) == exportsInfo.SnatcherShimRedirectionMap.end())
                 {
-                    DbgPrint("Failed to entry for '%s' in redirection dictionary\n", psImportName);
+                    DbgPrint("Failed to find entry for '%s' in redirection dictionary\n", psImportName);
                     DebugBreak();
                 }
 
-                // Update the import address to point to the game executable instead.
-                void* snatcherAddress = exportsInfo.SnatcherShimRedirectionMap[shimAddress];
-                pImportAddresses[i] = snatcherAddress;
+                // Check if the import needs a stub function.
+                ShimFunctionInfo funcInfo = exportsInfo.SnatcherShimRedirectionMap[shimAddress];
+                if (funcInfo.Type == ShimFunc_Vcall)
+                {
+                    // Update the import address to point to the jump stub.
+                    pImportAddresses[i] = exportsInfo.SnatcherShimVcallLookupMap[(unsigned int)funcInfo.SnatcherFuncAddress];
+                    pStubCodePtr += sizeof(ImportVcallCode);
+                }
+                else if (funcInfo.Type == ShimFunc_DtorVcall)
+                {
+                    // Update the import address to point to the jump stub.
+                    pImportAddresses[i] = pDtorVcallDispatchStub;
+                }
+                else if (funcInfo.Type == ShimFunc_ScalarDtor)
+                {
+                    // Setup the jump stub.
+                    memcpy(pStubCodePtr, ImportScalarDtorCallCode, sizeof(ImportScalarDtorCallCode));
 
-                DbgPrint("Redirected '%s' to 0x%p\n", psImportName, snatcherAddress);
+                    // Flags:
+                    *(unsigned int*)(pStubCodePtr + 1) = 0;
+
+                    // Jump address:
+                    *(void**)(pStubCodePtr + 7) = funcInfo.SnatcherFuncAddress;
+
+                    // Update the import address to point to the jump stub.
+                    pImportAddresses[i] = pStubCodePtr;
+                    pStubCodePtr += sizeof(ImportScalarDtorCallCode);
+                }
+                else
+                {
+                    // Update the import address to point to the game executable instead.
+                    pImportAddresses[i] = funcInfo.SnatcherFuncAddress;
+                }
+
+                DbgPrint("Redirected '%s' to 0x%p\n", psImportName, funcInfo.SnatcherFuncAddress);
             }
         }
 
         break;
+    }
+
+    // Mark the jump stub allocation as read-only and executable.
+    DWORD scratch;
+    if (VirtualProtect(pStubFunctionMemory, stubFunctionAllocationSize, PAGE_EXECUTE_READ, &scratch) == FALSE)
+    {
+        DbgPrint(__FUNCTION__ ": failed to mark jump function allocation as executable 0x%08x\n", GetLastError());
+        DebugBreak();
+        return false;
     }
 
     // Restore page protections on the import table.

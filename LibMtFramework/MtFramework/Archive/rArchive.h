@@ -36,7 +36,7 @@ struct rArchive : public cResource
     /* 0x60 */ cResource    **pResources;           // Array of resource instances loaded from the archive
     /* 0x68 */ DWORD        ResourceNum;            // Number of resources in the pResources array
     /* 0x6C */ DWORD        DecompressedSize;       // Size of all decompressed files
-    /* 0x70 */
+    /* 0x70 */ DWORD        _unk;
 
     IMPLEMENT_MYDTI(rArchive, 0x141CF30F8, 0x1400AF010, 0x140650980);
 
@@ -44,7 +44,7 @@ struct rArchive : public cResource
         Performs ZLib decompression on the data read from the underlying file stream. Used for reading compressed
         data from a rArchive file.
     */
-    struct DecompressStream : public MtStream // sizeof = 0xA0
+    struct DecompressStream : public MtStream
     {
         /* 0x08 */ MtFileStream *pFileStream;
         /* 0x10 */ BYTE _[0x8];
@@ -58,8 +58,8 @@ struct rArchive : public cResource
         inline static DecompressStream * (*_ctor)(DecompressStream *thisptr, MtFileStream *pFileStream) =
             (DecompressStream*(*)(DecompressStream*, MtFileStream*))GetModuleAddress(0x14064FD90);
 
-        inline static DecompressStream * (*_dtor)(DecompressStream *thisptr, bool bFreeMemory) =
-            (DecompressStream*(*)(DecompressStream*, bool))GetModuleAddress(0x14064FE90);
+        inline static void * (*_scalar_deleting_dtor)(DecompressStream *thisptr, unsigned int flags) =
+            (void*(*)(DecompressStream*, unsigned int))GetModuleAddress(0x14064FE90);
 
         /*
             Description: Creates a new decompression stream from the file stream specified.
@@ -67,10 +67,33 @@ struct rArchive : public cResource
             Parameters:
                 - pFileStream: File stream to read from when performing decompression operations.
         */
-        DecompressStream(MtFileStream *pFileStream)
-        {
-            _ctor(this, pFileStream);
-        }
+        SHIM_API DecompressStream(MtFileStream *pFileStream) SHIM_BODY(0x14064FD90)
+
+        SHIM_API ~DecompressStream() SHIM_BODY_DTOR_VCALL()
+
+        IMPLEMENT_OPERATOR_NEW_DELETE(g_pResourceHeapAllocator2, 16)
     };
     ASSERT_STRUCT_SIZE(DecompressStream, 0xA0);
+
+
+    inline static void** _vtable = (void**)GetModuleAddress(0x14103EA50);
+
+    inline static void* (*_scalar_deleting_dtor)(rArchive* thisptr, unsigned int flags) =
+        (void * (*)(rArchive*, unsigned int))GetModuleAddress(0x14064FF10);
+
+    rArchive()
+    {
+        // rArchive doesn't have a non-inlined default constructor so implement it ourself.
+        this->vtable = rArchive::_vtable;
+        this->mAttr = 0x10;
+        this->pResources = nullptr;
+        this->ResourceNum = 0;
+        this->DecompressedSize = 0;
+        this->_unk = 0;
+    }
+
+    SHIM_API ~rArchive() SHIM_BODY_DTOR_VCALL()
+
+    IMPLEMENT_OPERATOR_NEW_DELETE(g_pResourceHeapAllocator, 16)
 };
+ASSERT_STRUCT_SIZE(rArchive, 0x78);

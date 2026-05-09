@@ -10,4 +10,16 @@ struct uSchedulerEdit : public cUnit
     /* 0x30 */ float mSpeed;
 
     /* 0x35 */ bool mPause;
+
+    uSchedulerEdit()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~uSchedulerEdit()
+    {
+        // TODO:
+        DebugBreak();
+    }
 };

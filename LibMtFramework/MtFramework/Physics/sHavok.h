@@ -6,4 +6,16 @@
 struct sHavok : public cSystem
 {
     IMPLEMENT_SINGLETON(sHavok, 0x1419460D0);
+
+    sHavok()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~sHavok()
+    {
+        // TODO:
+        DebugBreak();
+    }
 };

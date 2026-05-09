@@ -29,5 +29,17 @@ struct sToolBase : public cSystem
     /* 0x2260 */ DWORD          mSysMenuMargin;
     /* 0x2264 */ DWORD          Unk7; // might be padding, previous field might be qword
     /* 0x2268 */ DWORD          Unk8;
+
+    sToolBase()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~sToolBase()
+    {
+        // TODO:
+        DebugBreak();
+    }
 };
 ASSERT_STRUCT_SIZE(sToolBase, 0x2270);

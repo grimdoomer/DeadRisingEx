@@ -23,6 +23,18 @@ struct sPrim : public cSystem
         /* 0x3C */ // DWORD size of primitive in bytes?
 
         /* 0x58 */ // DWORD
+
+        sPrimSomething()
+        {
+            // TODO:
+            DebugBreak();
+        }
+
+        ~sPrimSomething()
+        {
+            // TODO:
+            DebugBreak();
+        }
     };
 
     /* 0x38 */ DWORD        mPrimNum;
@@ -47,4 +59,16 @@ struct sPrim : public cSystem
 
     inline static sPrim * (*_ctor)(sPrim *thisptr, DWORD entryCount) =
         (sPrim*(*)(sPrim*, DWORD))GetModuleAddress(0x14068D770);
+
+    sPrim()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~sPrim()
+    {
+        // TODO:
+        DebugBreak();
+    }
 };

@@ -24,6 +24,18 @@ struct sAreaManager : public cSystem
     inline static DWORD(*_GetAreaIdFromName)(sAreaManager *thisptr, const char *psAreaName) =
         (DWORD(*)(sAreaManager*, const char*))GetModuleAddress(0x14005FEB0);
 
+    sAreaManager()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~sAreaManager()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
     /*
         Description: Gets the area id from the specified area name.
 

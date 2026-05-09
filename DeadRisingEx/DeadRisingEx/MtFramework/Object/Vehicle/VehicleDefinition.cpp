@@ -2,11 +2,8 @@
 #include "VehicleDefinition.h"
 #include <MtFramework/IO/MtDataReader.h>
 
-// Fake destructor function to bypass not being able to take the address of a destructor:
-void VehicleDefinition_dtor(VehicleDefinition* thisptr)
-{
-    thisptr->~VehicleDefinition();
-}
+// Fake scalar deleting destructor:
+SCALAR_DELETING_DTOR(VehicleDefinition)
 
 int nullsub_return_0()
 {
@@ -28,7 +25,7 @@ VehicleDefinition::VehicleDefinition()
     {
         BuildVtableLayout(VehicleDefinition_vtable, ARRAYSIZE(VehicleDefinition_vtable),
             // MtObject:
-            VehicleDefinition_dtor,
+            VehicleDefinition_scalar_deleting_dtor,
             nullsub_return_0,
             nullsub_return_true,
             &VehicleDefinition::RegisterDebugOptions,

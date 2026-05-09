@@ -90,16 +90,17 @@ struct uVehicle : public uSnatcherModel
     inline static uVehicle* (* _ctor)(uVehicle* thisptr) =
         (uVehicle * (*)(uVehicle*))GetModuleAddress(0x1401BD720);
 
-    inline static uVehicle* (* _dtor)(uVehicle* thisptr, bool bFreeMemory) =
-        (uVehicle * (*)(uVehicle*, bool))GetModuleAddress(0x1401BDAB0);
+    inline static void* (* _scalar_deleting_dtor)(uVehicle* thisptr, unsigned int flags) =
+        (void * (*)(uVehicle*, unsigned int))GetModuleAddress(0x1401BDAB0);
 
     inline static void (* _LoadUnitResources)(uVehicle* thisptr) =
         (void(*)(uVehicle*))GetModuleAddress(0x1401C49D0);
 
     IMPLEMENT_MYDTI(uVehicle, 0x141950838, 0x1400AF010, 0x1401E94B0);
 
-    uVehicle()
-    {
-        _ctor(this);
-    }
+    SHIM_API uVehicle() SHIM_BODY(0x1401BD720)
+
+    SHIM_API ~uVehicle() SHIM_BODY_DTOR_VCALL()
+
+    IMPLEMENT_OPERATOR_NEW_DELETE(g_pUnitHeapAllocator, 32)
 };

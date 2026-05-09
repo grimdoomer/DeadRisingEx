@@ -9,4 +9,16 @@ struct uNpcMarker : public cUnit
 
     inline static void(*_Cleanup)(uNpcMarker *thisptr) =
         (void(*)(uNpcMarker*))GetModuleAddress(0x1402EB720);
+
+    uNpcMarker()
+    {
+        // TODO:
+        DebugBreak();
+    }
+
+    ~uNpcMarker()
+    {
+        // TODO:
+        DebugBreak();
+    }
 };

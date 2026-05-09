@@ -31,6 +31,18 @@ struct rHavokVehicleData : public cResource
         /* 0x60 */ Vector3Aligned 	directionCs;
         /* 0x70 */ float 	length;
         /* 0x74 */ float    _unused[3];
+
+        TireData()
+        {
+            // TODO:
+            DebugBreak();
+        }
+
+        ~TireData()
+        {
+            // TODO:
+            DebugBreak();
+        }
     };
     ASSERT_STRUCT_SIZE(TireData, 0x80);
 
@@ -87,14 +99,15 @@ struct rHavokVehicleData : public cResource
     inline static rHavokVehicleData* (* _ctor)(rHavokVehicleData* thisptr) =
         (rHavokVehicleData * (*)(rHavokVehicleData*))GetModuleAddress(0x1400C6E90);
 
-    inline static rHavokVehicleData* (* _dtor)(rHavokVehicleData* thisptr, bool bFreeMemory) =
-        (rHavokVehicleData * (*)(rHavokVehicleData*, bool))GetModuleAddress(0x1400C72E0);
+    inline static void* (* _scalar_deleting_dtor)(rHavokVehicleData* thisptr, unsigned int flags) =
+        (void * (*)(rHavokVehicleData*, unsigned int))GetModuleAddress(0x1400C72E0);
 
     IMPLEMENT_MYDTI(rHavokVehicleData, 0x141947488, 0x1400AF010, 0x1400C98A0);
 
-    rHavokVehicleData()
-    {
-        _ctor(this);
-    }
+    SHIM_API rHavokVehicleData() SHIM_BODY(0x1400C6E90)
+
+    SHIM_API ~rHavokVehicleData() SHIM_BODY_DTOR_VCALL()
+
+    IMPLEMENT_OPERATOR_NEW_DELETE(g_pResourceHeapAllocator, 16)
 };
 ASSERT_STRUCT_SIZE(rHavokVehicleData, 0x1B0);

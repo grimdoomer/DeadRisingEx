@@ -31,6 +31,18 @@ struct sRender : public cSystem
         /* 0x84 */ DWORD    mPrimitive;
         /* 0x88 */ DWORD    mClear;
         /* 0x8C */ DWORD    mResolve;
+
+        Pass()
+        {
+            // TODO:
+            DebugBreak();
+        }
+
+        ~Pass()
+        {
+            // TODO:
+            DebugBreak();
+        }
     };
 
     // sizeof = 0x20
@@ -39,6 +51,18 @@ struct sRender : public cSystem
         /* 0x08 */ char     *mPoolName;
         /* 0x10 */ char     *mName;
         /* 0x18 */ void     *mpTexture;
+
+        TempTexture()
+        {
+            // TODO:
+            DebugBreak();
+        }
+
+        ~TempTexture()
+        {
+            // TODO:
+            DebugBreak();
+        }
     };
     ASSERT_STRUCT_SIZE(TempTexture, 0x20);
 
@@ -60,6 +84,18 @@ struct sRender : public cSystem
 
         inline static void * (*_MapForWrite)(Buffer *thisptr, DWORD dwSize) =
             (void*(*)(Buffer*, DWORD))GetModuleAddress(0x14065DEC0);
+
+        Buffer()
+        {
+            // TODO:
+            DebugBreak();
+        }
+
+        ~Buffer()
+        {
+            // TODO:
+            DebugBreak();
+        }
 
         /*
             Description: Maps the buffer for writing. If the current position in the buffer is 0 the contents are discarded on mapping,

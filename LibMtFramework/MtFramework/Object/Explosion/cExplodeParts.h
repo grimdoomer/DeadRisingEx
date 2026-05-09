@@ -19,13 +19,14 @@ struct cExplodeParts : public MtObject
     inline static cExplodeParts* (* _ctor)(cExplodeParts* thisptr) =
         (cExplodeParts * (*)(cExplodeParts*))GetModuleAddress(0x14000E200);
 
-    inline static cExplodeParts* (* _dtor)(cExplodeParts* thisptr, bool bFreeMemory) =
-        (cExplodeParts * (*)(cExplodeParts*, bool))GetModuleAddress(0x14000E2E0);
+    inline static void* (* _scalar_deleting_dtor)(cExplodeParts* thisptr, unsigned int) =
+        (void * (*)(cExplodeParts*, unsigned int))GetModuleAddress(0x14000E2E0);
 
     IMPLEMENT_MYDTI(cExplodeParts, 0x1419300B0, 0x1400AF010, 0x14000EF00);
 
-    cExplodeParts()
-    {
-        _ctor(this);
-    }
+    SHIM_API cExplodeParts() SHIM_BODY(0x14000E200)
+
+    SHIM_API ~cExplodeParts() SHIM_BODY_DTOR_VCALL()
+
+    IMPLEMENT_OPERATOR_NEW_DELETE(g_pResourceHeapAllocator2, 16)
 };

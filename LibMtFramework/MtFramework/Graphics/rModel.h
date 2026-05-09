@@ -173,5 +173,17 @@ struct rModel : cResource
     /* 0x120 */ Vector4     Unk; // gets set to BBMin at load
 
     IMPLEMENT_MYDTI(rModel, 0x141CF2FD0, 0x1400AF010, 0x14064FA50);
+
+    inline static rModel* (*_ctor)(rModel* thisptr) =
+        (rModel * (*)(rModel*))GetModuleAddress(0x14064D7F0);
+
+    inline static void* (*_scalar_deleting_dtor)(rModel* thisptr, unsigned int flags) =
+        (void * (*)(rModel*, unsigned int))GetModuleAddress(0x14064DCB0);
+
+    SHIM_API rModel() SHIM_BODY(0x14064D7F0)
+
+    SHIM_API ~rModel() SHIM_BODY_DTOR_VCALL()
+
+    IMPLEMENT_OPERATOR_NEW_DELETE(g_pResourceHeapAllocator, 16)
 };
 ASSERT_STRUCT_SIZE(rModel, 0x130);

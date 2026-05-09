@@ -47,13 +47,7 @@ struct VehicleDefinition : public cResource
         MtObject* _CreateInstance()
         {
             // Allocate and initialize the vehicle definition.
-            void* pVehicleDefAlloc = g_pResourceHeapAllocator->Alloc(this->ObjectSize, 0x10);
-            if (pVehicleDefAlloc != nullptr)
-            {
-                return new(pVehicleDefAlloc) VehicleDefinition();
-            }
-
-            return nullptr;
+            return new VehicleDefinition();
         }
     };
 
@@ -80,4 +74,6 @@ struct VehicleDefinition : public cResource
     {
         return "vehicle";
     }
+
+    IMPLEMENT_OPERATOR_NEW_DELETE(g_pResourceHeapAllocator, 16)
 };

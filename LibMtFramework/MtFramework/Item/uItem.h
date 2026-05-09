@@ -88,7 +88,7 @@ struct ItemCollisionProperties
     /* 0x92 */ // BYTE RotationAngleType?
 };
 
-// sizeof = 0x3740
+// sizeof = 0x3740 (abstract?)
 struct uItem : public uSnatcherModel
 {
     /* 0x1390 */
@@ -137,6 +137,15 @@ struct uItem : public uSnatcherModel
             0x298 void UpdateState()    // called during model update routine
     */
 
+    inline static uItem* (*_ctor)(uItem* thisptr) =
+        (uItem * (*)(uItem*))GetModuleAddress(0x140175F50);
+
+    inline static void* (*_dtor)(uItem* thisptr) =
+        (void*(*)(uItem*))GetModuleAddress(0x140176200);
+
+    inline static void* (*_scalar_deleting_dtor)(uItem* thisptr, unsigned int flags) =
+        (void * (*)(uItem*, unsigned int))GetModuleAddress(0x14006DAC0);
+
     inline static bool(*_HasLowHealth)(uItem *thisptr) =
         (bool(*)(uItem*))GetModuleAddress(0x14018B1A0);
 
@@ -160,6 +169,10 @@ struct uItem : public uSnatcherModel
 
     inline static NpcBonusBoxItems *NpcBonusBoxItemsTable =
         (NpcBonusBoxItems*)GetModuleAddress(0x1411BF4C0);
+
+    SHIM_API uItem() SHIM_BODY(0x140175F50)
+
+    SHIM_API ~uItem() SHIM_BODY_DTOR_VCALL()
 
     /*
         Description: Called when the item is destroyed
@@ -202,4 +215,6 @@ struct uItem : public uSnatcherModel
     {
         _GetItemPosition(this, pPosition);
     }
+
+    IMPLEMENT_OPERATOR_NEW_DELETE(g_pUnitHeapAllocator, 32)
 };

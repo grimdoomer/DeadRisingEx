@@ -92,6 +92,8 @@
     </MASM>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="MtFramework\MtObject.cpp" />
+    <ClCompile Include="MtFramework\Utils\MtPropertyList.cpp" />
     <ClCompile Include="Utilities\Module.cpp" />
     <ClCompile Include="MtFramework\Utils\Utilities.cpp" />
   </ItemGroup>
@@ -185,6 +187,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)Detours\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
